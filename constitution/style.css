@@ -1,0 +1,21 @@
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    margin: 20px;
+  }
+  
+  h1, h2, h3 {
+    color: #003366;
+  }
+  
+  section {
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  @media (max-width: 600px) {
+    body {
+      font-size: 14px;
+    }
+  }
+  
