@@ -1,12 +1,16 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Georgia', 'Times New Roman', serif;
   line-height: 1.6;
   color: #333;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f4f4f4;
+  background-image: url('assets/constitution.webp');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
+
 
 header {
   background-color: #311B92;
@@ -54,7 +58,7 @@ nav ul li a:hover {
 }
 
 main {
-  background-color: white;
+  background-image: url('assets/page.webp');
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
