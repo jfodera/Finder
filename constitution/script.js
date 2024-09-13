@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Smooth scroll for nav bar
+    // Smooth scroll for nav ba
     const navLinks = document.querySelectorAll("nav a");
     navLinks.forEach((link) => {
         link.addEventListener("click", function (e) {
