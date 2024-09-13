@@ -1,32 +1,44 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Make articles and amendments collapsible
-  const articles = document.querySelectorAll("article");
-  articles.forEach((article) => {
-    // Gets h3 and p tags of html
-    const heading = article.querySelector("h3");
-    const content = article.querySelector("p");
-
-    // Code hides content by default but if if heading is clicked, it will show the content
-    content.style.display = "none";
-    heading.addEventListener("click", () => {
-      if (content.style.display === "none") content.style.display = "block";
-      else content.style.display = "none";
-      heading.classList.toggle("active");
+    // Make articles and amendments collapsible
+    const articles = document.querySelectorAll("article");
+    // Select the heading, content, and sections of each article/amendment
+    articles.forEach((article) => {
+        const heading = article.querySelector("h3");
+        const content = article.querySelector("p");
+        const sections = article.querySelectorAll("section");
+        if (sections.length > 0) {
+            // For articles/amendments with multiple sections
+            sections.forEach((section) => {
+                section.style.display = "none";
+            });
+            // Event listener to toggle the display of sections
+            heading.addEventListener("click", () => {
+                sections.forEach((section) => {
+                    if (section.style.display === "none")section.style.display = "block";
+                    else section.style.display = "none";
+                });
+                heading.classList.toggle("active");
+            });
+        } else if (content) {
+            // For articles with a single section/paragraph
+            content.style.display = "none";
+            // Event listener to toggle the display of sections
+            heading.addEventListener("click", () => {
+                if (content.style.display === "none") content.style.display = "block";
+                else content.style.display = "none";
+                heading.classList.toggle("active");
+            });
+        }
     });
-  });
 
-  // Implement smooth scroll for navigation
-  const navLinks = document.querySelectorAll("nav a");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", function (e) {
-      // Prevent default link behavior
-      e.preventDefault();
-      // Get the target element's id from the href attribute
-      const targetId = this.getAttribute("href").substring(1);
-      // Find the target element
-      const targetElement = document.getElementById(targetId);
-      // Scroll to the target element smoothly
-      targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Smooth scroll for nav bar
+    const navLinks = document.querySelectorAll("nav a");
+    navLinks.forEach((link) => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href").substring(1);
+            const targetElement = document.getElementById(targetId);
+            targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
     });
-  });
 });
