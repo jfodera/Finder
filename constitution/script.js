@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Event listener to toggle the display of sections
             heading.addEventListener("click", () => {
                 sections.forEach((section) => {
-                    if (section.style.display === "none")section.style.display = "block";
+                    if (section.style.display === "none") section.style.display = "block";
                     else section.style.display = "none";
                 });
                 heading.classList.toggle("active");
@@ -29,5 +29,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 heading.classList.toggle("active");
             });
         }
+    });
+
+    // Make timeline items interactive
+    const timelineItems = document.querySelectorAll('.timeline ul li');
+    timelineItems.forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+
+        item.addEventListener('mouseenter', () => {
+            item.style.transform = item.classList.contains('active') ? 'scale(1.05)' : 'scale(1.02)';
+        });
+
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = 'scale(1)';
+        });
     });
 });
