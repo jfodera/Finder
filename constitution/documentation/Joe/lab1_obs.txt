@@ -4,6 +4,17 @@ Lab 1 notes:
 
 Plan: 
 
+Website with the constitution: https://constitution.congress.gov/constitution/
+   supposed to copy and paste the articles into our site 
+Annotate the articles and amendments only 
+   in these annotations "cite how it relates to your lives today" 
+   paraphrase annotations from other websites 
+   Our annotation Format roughly: https://law.justia.com/constitution/us/article-3/06-legislative-courts.html#fn-119
+History Page: 
+   outlining the history of the constitution
+   interactive timeline where you click on and it gives you more info 
+
+HTML, CSS, and Javascript
 
 
 Questions: 
@@ -12,8 +23,13 @@ Questions:
 
 
 to do: 
-
-
+make shared azure 
+Annotate sections 1-4, amendments 8-19
+Amendments
+Look over Dereks code 
+Start making annotation code
+Validate all pages 
+   no warnings!
 
 Things I learned: 
 
