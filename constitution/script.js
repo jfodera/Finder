@@ -32,14 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Make timeline items interactive
-    const timelineItems = document.querySelectorAll('.timeline ul li');
+    const timelineItems = document.querySelectorAll('.timeline ul > li');
     timelineItems.forEach(item => {
         item.addEventListener('click', () => {
             item.classList.toggle('active');
         });
 
         item.addEventListener('mouseenter', () => {
-            item.style.transform = item.classList.contains('active') ? 'scale(1.05)' : 'scale(1.02)';
+            item.style.transform = 'scale(1.02)';
         });
 
         item.addEventListener('mouseleave', () => {
