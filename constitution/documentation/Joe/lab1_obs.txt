@@ -24,8 +24,8 @@ Questions:
 
 to do: 
 make shared azure 
-Annotate sections 1-4, amendments 8-19
-Amendments
+Annotate sections 1-4, amendments 8-19 √
+Amendments √
 Look over Dereks code 
 Start making annotation code
 Validate all pages 
