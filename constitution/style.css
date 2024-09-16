@@ -228,7 +228,7 @@ footer {
 
 .timeline ul li:hover {
   transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .timeline-content h1 {
@@ -240,12 +240,13 @@ footer {
 
 .timeline-content p {
   font-size: 16px;
-  line-height: 30px;
+  line-height: 1.6;
   font-weight: 300;
+  margin-top: 10px;
   max-height: 0;
   opacity: 0;
-  transition: all 0.3s ease;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .timeline-content .date {
@@ -255,9 +256,47 @@ footer {
   letter-spacing: 2px;
 }
 
+.timeline ul li.active .timeline-content p {
+  max-height: 1000px;
+  opacity: 1;
+  margin-top: 15px;
+}
+
 .timeline ul li.active p {
   max-height: 150px;
   opacity: 1;
+}
+
+.timeline-content .bullet-points {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.timeline ul li.active .timeline-content .bullet-points {
+  max-height: 1000px;
+  opacity: 1;
+  margin-top: 15px;
+}
+
+.timeline-content .bullet-points ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.timeline-content .bullet-points ul li {
+  background: none;
+  border-radius: 0;
+  margin-bottom: 5px;
+  padding: 0;
+  cursor: default;
+}
+
+.timeline-content .bullet-points ul li:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 @media only screen and (min-width: 768px) {
