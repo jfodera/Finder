@@ -6,6 +6,7 @@ Log:
 Sections are now styled to be more readable and the website is more responsive.
 9/13/24: Separated the website into multiple pages
 Made a vertical timeline for our history page. Copied tutorials in order to make the timeline.
+9/16/24: Added the history that Cooper made into our timeline code and added some summarys of amendment eras
 References:
 https://www.youtube.com/watch?v=zNccqv0g6Q4
 https://codepen.io/Web_Cifar/pen/jObBvqN
