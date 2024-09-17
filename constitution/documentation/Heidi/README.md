@@ -50,5 +50,20 @@ propose because of a 18 year old were old enough to fight in war but unable to v
 27:the purpose of this amendment is to forbit any change of salary or compensation until the election end. This amendment was orginally propose by 
 James Madison and was forgotten until reintroduce by Gregory Watson, a college student in Texas.(1992)
 
+
+article 6: debts before the constitution is also valid under the constitution. federal laws are superior than state/local laws
+
+article 7: outline the precedence to approve the constituion. The constitution will be put into affect when 9 out of 13 state ratificate it.
+declare the establishment of the constitution
 source: Britannica, The Editors of Encyclopaedia. "amendment". Encyclopedia Britannica, 2 Feb. 2023, https://www.britannica.com/topic/amendment. Accessed 16 September 2024.
 https://www.history.com/topics/united-states-constitution/amendments-us-constitution
+
+
+Note: Some section of the constitution were confusing to understand so i search them up and learn more about their history and purpose. I think
+it's fascinating to see how a good portion of the amendment were fought to be ratify and how it affect today's lives.
+
+Any challenges: 
+
+Intinally, i was just summerizing the content of the constitution without analysising the history behind it's creation and I felt my notes were 
+too general and messy for people to understand. I try to fix this by going back to organize the structure of my notes and include more details. 
+It did felt I improve the readability and gain better understanding of the constitution.
