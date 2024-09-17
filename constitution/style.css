@@ -1,3 +1,5 @@
+/* Main amendment and article styling */
+
 body {
   font-family: 'Roboto', Arial, sans-serif;
   line-height: 1.6;
@@ -74,9 +76,6 @@ section {
   
 }
 
-.secLast{
-  border-bottom: 5px solid #06136a;
-}
 
 h2 {
   color: #1a237e;
@@ -209,6 +208,10 @@ footer {
 }
 
 /* Annotation Styling */
+
+.secLast{
+  border-bottom: 5px solid #06136a;
+}
 
 .super{
   vertical-align: top;

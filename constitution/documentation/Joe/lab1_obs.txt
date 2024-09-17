@@ -29,7 +29,7 @@ Annotate sections 1-4, amendments 8-19 √
 Amendments √
 Look over Dereks code √
 Start making annotation code√
-fix js edits so that everything opens and closes properly 
+fix js edits so that everything opens and closes properly √
 Validate all pages 
    no warnings!
 
