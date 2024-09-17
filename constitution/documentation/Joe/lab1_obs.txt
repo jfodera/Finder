@@ -18,11 +18,6 @@ History Page:
 HTML, CSS, and Javascript
 
 
-Questions: 
-
-
-
-
 to do: 
 make shared azure 
 Annotate sections 1-4, amendments 8-19 √
@@ -30,11 +25,10 @@ Amendments √
 Look over Dereks code √
 Start making annotation code√
 fix js edits so that everything opens and closes properly √
-Validate all pages 
+Validate all pages √
    no warnings!
-
+Make sure CSS sheet is divided up and labled properly√
 when coding is done, restructure files so index.html is first in line
-Make sure CSS sheet is divided up and labled properly
 
 
 id naming conventions: 
