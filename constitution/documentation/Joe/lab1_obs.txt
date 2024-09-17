@@ -19,7 +19,7 @@ HTML, CSS, and Javascript
 
 
 to do: 
-make shared azure 
+make shared azure √
 Annotate sections 1-4, amendments 8-19 √
 Amendments √
 Look over Dereks code √
@@ -48,3 +48,12 @@ lots of history regarding hte constitution and how it relates back to today
 Future improvements: 
    Could probably make it so that website is built dynamically and I didn't need to tag each annotation induvidually 
 
+
+Any challenges I came across: 
+The main thing I had trouble with was figuring out a good format for the annotations and how to implement them as efficently as possible. At first I was 
+considering using a combonation of js listening functions but then I read through some documentation on W3: https://www.w3schools.com/tags/tag_a.asp
+and found out that I can use an anchortag to travel to a certain instance in a page. I then created the naming conventions seen above and thus set a good 
+structure to keep consitency throughout the page. The process of figuring that out was the greatest struggle but I'm glad I did. 
+
+Also good to note that I did a decent amount of code review here, reading others comments and trying to figure out what they did which I'm defintley 
+happy I got some good practice with. 
