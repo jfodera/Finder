@@ -1,3 +1,5 @@
+<?php include 'php/header.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,10 +18,11 @@
         <p class="description">A secure lost and found application built to manage, protect, and return your misplaced
             possessions safely.</p>
         <div class="buttons">
-            <a href="#" class="button">Login</a>
-            <a href="#" class="button">Register</a>
+            <a href="php/login.php" class="button">Login</a>
+            <a href="php/register.php" class="button">Register</a>
         </div>
     </div>
+    <script src="script.js"></script>
 </body>
 
 </html>

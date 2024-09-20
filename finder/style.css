@@ -40,3 +40,102 @@ body, html {
 .button:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
+
+/* styles for login and register pages */
+.form-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    color: white;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-container input {
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 16px;
+}
+
+.form-container input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.form-container .button {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.switch {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.switch a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* header */
+
+.global-header {
+    background-color: rgba(0, 102, 204, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+.global-header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.global-header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.global-header nav ul li {
+    margin-left: 20px;
+}
+
+.global-header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: opacity 0.3s;
+}
+
+.global-header nav ul li a:hover {
+    opacity: 0.8;
+}
