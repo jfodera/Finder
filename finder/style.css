@@ -10,7 +10,6 @@ body, html {
     justify-content: center;
     align-items: center;
     background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
-    color: white;
     text-align: center;
 }
 .logo {
@@ -32,7 +31,6 @@ body, html {
     border: 2px solid white;
     border-radius: 30px;
     text-decoration: none;
-    color: white;
     font-weight: bold;
     font-size: 18px;
     transition: background-color 0.3s;
@@ -53,7 +51,6 @@ body, html {
 
 .form-container h2 {
     margin-bottom: 20px;
-    color: white;
 }
 
 .form-container form {
@@ -71,9 +68,6 @@ body, html {
     font-size: 16px;
 }
 
-.form-container input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
 
 .form-container .button {
     margin-top: 10px;
@@ -85,10 +79,7 @@ body, html {
     font-size: 14px;
 }
 
-.switch a {
-    color: white;
-    text-decoration: underline;
-}
+
 
 /* header styles */
 
