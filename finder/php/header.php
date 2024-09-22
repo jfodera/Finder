@@ -19,7 +19,7 @@
             <nav>
                 <ul>
                     <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/login.php' : 'login.php'; ?>">Login</a></li>
-                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/register.php' : 'register.php'; ?>">Register</a></li>
+                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/user_type.php' : 'user_type.php'; ?>">Register</a></li>
                 </ul>
             </nav>
         </div>

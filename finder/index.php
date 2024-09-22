@@ -19,7 +19,7 @@
             possessions safely.</p>
         <div class="buttons">
             <a href="php/login.php" class="button">Login</a>
-            <a href="php/register.php" class="button">Register</a>
+            <a href="php/user_type.php" class="button">Register</a>
         </div>
     </div>
     <script src="script.js"></script>
