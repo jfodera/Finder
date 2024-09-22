@@ -20,7 +20,7 @@
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <button type="submit" class="button">Sign Up</button>
+                <button type="submit" class="button button-account">Sign Up</button>
             </form>
             <div class="switch">
                 Already have an account? <a href="login.php">Login</a>

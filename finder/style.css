@@ -1,8 +1,10 @@
-body, html {
+body,
+html {
     height: 100%;
     margin: 0;
     font-family: 'Montserrat', sans-serif;
 }
+
 .container {
     height: 100%;
     display: flex;
@@ -10,32 +12,53 @@ body, html {
     justify-content: center;
     align-items: center;
     background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
+    color: white;
     text-align: center;
 }
+
 .logo {
     font-size: 48px;
     font-weight: bold;
     margin-bottom: 20px;
 }
+
 .description {
     font-size: 18px;
     max-width: 600px;
     margin-bottom: 30px;
 }
+
 .buttons {
     display: flex;
     gap: 20px;
 }
+
 .button {
     padding: 15px 40px;
     border: 2px solid white;
+    border-radius: 30px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.button-account {
+    padding: 15px 40px;
+    border: 2px solid white;
+    color: black;
     border-radius: 30px;
     text-decoration: none;
     font-weight: bold;
     font-size: 18px;
     transition: background-color 0.3s;
 }
-.button:hover {
+.button-account:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -68,6 +91,9 @@ body, html {
     font-size: 16px;
 }
 
+.form-container input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
 
 .form-container .button {
     margin-top: 10px;
@@ -79,12 +105,15 @@ body, html {
     font-size: 14px;
 }
 
-
+.switch a {
+    color: white;
+    text-decoration: underline;
+}
 
 /* header styles */
 
 .global-header {
-    background-color: transparent; 
+    background-color: transparent;
     position: fixed;
     top: 0;
     left: 0;
@@ -97,9 +126,9 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; 
+    width: 100%;
     padding: 15px 20px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .global-header nav ul {
@@ -118,7 +147,7 @@ body, html {
 }
 
 .global-header nav ul li a {
-    color: white; 
+    color: white;
     text-decoration: none;
     font-weight: bold;
     font-size: 25px;
