@@ -45,7 +45,6 @@ CREATE TABLE users (
 );
 
 -- Recorder Codes Table
--- make code to generate random codes and put in the table
 CREATE TABLE recorder_codes (
     code_id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(255) UNIQUE NOT NULL,
@@ -64,6 +63,8 @@ CREATE TABLE lost_items (
     status ENUM('lost', 'found', 'claimed') DEFAULT 'lost',
     user_id INT,
     recorder_id INT,
+    image_url VARCHAR(255),
+    image_public_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (recorder_id) REFERENCES users(user_id)
@@ -78,6 +79,8 @@ CREATE TABLE found_items (
     found_time DATETIME NOT NULL,
     status ENUM('available', 'claimed') DEFAULT 'available',
     recorder_id INT,
+    image_url VARCHAR(255),
+    image_public_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (recorder_id) REFERENCES users(user_id)
 );
