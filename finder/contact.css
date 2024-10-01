@@ -5,7 +5,7 @@
     padding:0;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     /* background: linear-gradient(to right, #0066cc 20%, #01f573 80%); */
-    /* background-color: #c7f8ff; */
+    background-color: #c7f8ff;
 
 
 }
@@ -79,7 +79,7 @@
 {
     width: 40%;
     padding: 40px;
-    background: #e0e0e0;
+    background: #ffffff;
 }
 .contactForm h2 
 {
@@ -92,7 +92,7 @@
     position: relative;
     width: 100%;
     margin-top: 10px;
-    color: #fff;
+    color: #ffffff;
 }
 .contactForm .inputBox input
 {
@@ -100,8 +100,11 @@
     padding: 5px 0;
     font-size: 16px;
     margin: 10px 0;
+    color: #ffffff;
+    /* border-bottom: 2px soild #030303; */
     border:none;
-    border-bottom: 2px soild #333;
+   
+    
     outline: none;
     resize: none;
 }
