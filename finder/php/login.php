@@ -23,7 +23,7 @@
                 <button type="submit" class="button button-account">Login</button>
             </form>
             <div class="switch">
-                Don't have an account? <a href="register.php">Sign up</a>
+                Don't have an account? <a href="user_type.php">Sign up</a>
             </div>
         </div>
     </div>

@@ -6,14 +6,14 @@ html {
 }
 
 .container {
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
     color: white;
     text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -22,15 +22,58 @@ html {
     margin-bottom: 20px;
 }
 
-.description {
-    font-size: 18px;
-    max-width: 600px;
+h1 {
+    font-size: 36px;
     margin-bottom: 30px;
 }
 
-.buttons {
-    display: flex;
-    gap: 20px;
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px; 
+    margin-top: 30px; 
+}
+
+.item-card {
+    background: rgba(255, 255, 255, 0.2); 
+    border-radius: 15px; 
+    padding: 25px; 
+    backdrop-filter: blur(15px); 
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    text-align: left;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3); 
+}
+
+.item-image {
+    width: 100%;
+    height: 180px; 
+    object-fit: cover;
+    border-radius: 10px; 
+    margin-bottom: 15px; 
+}
+
+.item-type {
+    font-weight: bold;
+    margin-bottom: 10px; 
+    font-size: 1.1em; 
+    color: #0066cc; 
+}
+
+.item-description {
+    font-size: 1em; 
+    margin-bottom: 15px; 
+    color: #333; 
+}
+
+.item-details {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.8); 
+    margin-top: 10px; 
 }
 
 .button {
@@ -42,75 +85,13 @@ html {
     font-weight: bold;
     font-size: 18px;
     transition: background-color 0.3s;
+    display: inline-block;
+    margin-top: 20px;
 }
 
 .button:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
-
-.button-account {
-    padding: 15px 40px;
-    border: 2px solid white;
-    color: black;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 18px;
-    transition: background-color 0.3s;
-}
-.button-account:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* styles for login and register pages */
-.form-container {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 40px;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
-
-.form-container h2 {
-    margin-bottom: 20px;
-}
-
-.form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-container input {
-    padding: 12px;
-    border: none;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    font-size: 16px;
-}
-
-.form-container input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.form-container .button {
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-.switch {
-    margin-top: 20px;
-    font-size: 14px;
-}
-
-.switch a {
-    color: white;
-    text-decoration: underline;
-}
-
-/* header styles */
 
 .global-header {
     background-color: transparent;
