@@ -11,12 +11,10 @@
 </head>
 <body>
 
-
-    <div class="container">
-        <div class="logo">Finder</div>
-        <h1>Your Lost Items</h1>
-        <div class="items-grid" id="itemsGrid"></div>
-        <a href="report-lost.php" class="button">Report Lost Item</a>
+    <div class ="container">
+            <h1>Your Lost Items</h1>
+            <div class="items-grid" id="itemsGrid"></div>
+            <a href="report-lost.php" class="button">Report Lost Item</a>
     </div>
 
     <script src="/finder/script.js"></script>
