@@ -3,7 +3,7 @@
 {
     margin: 0;
     padding:0;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Montserrat', sans-serif;
     /* background: linear-gradient(to right, #0066cc 20%, #01f573 80%); */
    box-sizing: border-box;
 }
@@ -15,32 +15,6 @@ body{
 }
 
 
-
-.logo {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #fff;
-}
-
-.logo-image {
-    width: 50px;
-    height: auto;
-}
-header{
-    width:100%;
-    height:75px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 10%;
-    background: rgba(0,0,0,0,2);
-}
-nav li{
-    display: inline-block;
-    list-style: none;
-    padding: 0px 20px;
-}
 
 
  .contact
@@ -66,6 +40,7 @@ nav li{
 .contact .content h2{
     font-size: 36px;
     font-weight: 500;
+    color: #fff;
 
 }
 
@@ -73,10 +48,12 @@ nav li{
 {
  
     font-weight: 300;
+    color: #fff;
+  
 }
 
 
-.container{
+.contact_container{
     width: 100%;
     display:flex;
     justify-content: center;
@@ -86,20 +63,20 @@ nav li{
     
 }
 
-.container .contactInfo {
+.contact_container .contactInfo {
     width:50%;
     display : flex;
     flex-direction: column;
 }
 
 
-.container .contactInfo .box{
+.contact_container .contactInfo .box{
     position: relative;
     padding: 20px 0;
     display:flex;
 }
 
-.container .contactInfo .box .icon{
+.contact_container .contactInfo .box .icon{
     min-width: 60px;
     height: 60px;
     display: flex;
@@ -110,13 +87,18 @@ nav li{
 
 }
 
-.container .contactInfo .box .text h3 
+.contact_container .contactInfo .box .text h3 
 {
     font-weight: 500;
     color:navy;
 
 }
+.contact_container .contactInfo .box .text p 
+{
+    font-weight: 500;
+    color:#fff;
 
+}
 .contactForm 
 {
     width: 40%;
@@ -223,11 +205,11 @@ nav li{
     {
         padding:50px
     }
-    .container
+    .contact_container
     {
         flex-direction: column;
     }
-    .container .contactInfo .contactForm
+    .contact_container .contactInfo .contactForm
     {
         width: 100%;
         
