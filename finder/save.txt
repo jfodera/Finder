@@ -1,0 +1,8 @@
+/* .contactForm .inputBox textarea:valid ~ span{
+    color: #e91e63;
+    font-size: 12px;
+    transform: translateY(-20px);
+} */
+
+/* color: #ffffff; */
+    /* border-bottom: 2px soild #030303; */
