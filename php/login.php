@@ -7,28 +7,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Finder - Recorder Register</title>
-    <link rel="stylesheet" href="/finder/style.css">
+    <title>Finder - Login</title>
+    <link rel="stylesheet" href="../style.css">
+    
 </head>
 
 <body>
     <div class="container">
         <div class="form-container">
             <div class="logo">Finder</div>
-            <form action="register.php" method="post">
-                <input type="text" name="full_name" placeholder="Full Name" required>
+            <h2>Login</h2>
+            <form action="login.php" method="post">
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <input type="code" name="code" placeholder="Recorder Code" required>
-                <button type="submit" class="button button-account">Sign Up</button>
+                <button type="submit" class="button button-account">Login</button>
             </form>
             <div class="switch">
-                Already have an account? <a href="login.php">Login</a>
+                Don't have an account? <a href="user_type.php">Sign up</a>
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
 </body>
 
 </html>
