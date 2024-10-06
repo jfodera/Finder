@@ -9,7 +9,7 @@
 
 
 }
-.contact
+ .contact
 {
     position: relative;
     min-height: 100vh;
@@ -27,16 +27,21 @@
     max-width: 800px;
     text-align: center;
 }
+
+
 .contact .content h2{
     font-size: 36px;
     font-weight: 500;
-    /* color: #fff; */
+
 }
+
 .contact .content p
 {
  
     font-weight: 300;
 }
+
+
 .container{
     width: 100%;
     display:flex;
@@ -44,12 +49,15 @@
     align-items: center;
     margin-top: 30px;
     
+    
 }
+
 .container .contactInfo {
     width:50%;
     display : flex;
     flex-direction: column;
 }
+
 
 .container .contactInfo .box{
     position: relative;
@@ -81,6 +89,7 @@
     padding: 40px;
     background: #ffffff;
 }
+
 .contactForm h2 
 {
     font-size: 30px;
@@ -100,8 +109,7 @@
     padding: 5px 0;
     font-size: 16px;
     margin: 10px 0;
-    color: #ffffff;
-    /* border-bottom: 2px soild #030303; */
+    
     border:none;
    
     
@@ -109,7 +117,7 @@
     resize: none;
 }
 
-.contactForm .inputBox textarea{
+/* .contactForm .inputBox textarea{
     width: 100%;
     padding: 5px 0;
     font-size: 16px;
@@ -119,6 +127,20 @@
     outline: none;
     resize: none;
 
+} */
+
+.contactForm .inputBox textarea{
+    border-radius: 20px;
+
+    height: 140px;
+    width: 100%;
+    padding: 5px 0;
+    font-size: 16px;
+    margin: 10px 0;
+    border:none;
+    border-bottom: 2px soild #333;
+    outline: none;
+    resize: none;
 }
 .contactForm .inputBox span 
 {
@@ -133,19 +155,22 @@
 }
 
 .contactForm .inputBox input:focus ~ span,
-.contactForm .inputBox input:valid ~ span,
-.contactForm .inputBox textarea:focus ~ span
+.contactForm .inputBox input:valid ~ span
 {
     color: #e91e63;
     font-size: 12px;
     transform: translateY(-20px);
 }
 
-/* .contactForm .inputBox textarea:valid ~ span{
+
+.contactForm .inputBox textarea:focus ~ span,
+.contactForm .inputBox textarea:valid ~ span
+{
     color: #e91e63;
     font-size: 12px;
     transform: translateY(-20px);
-} */
+}
+
 
 .contactForm .inputBox input[type ="submit"]
 {
@@ -172,5 +197,6 @@
     .container .contactInfo .contactForm
     {
         width: 100%;
+        
     }
-}
+} 
