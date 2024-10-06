@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Profile Page</title>
-    <link rel="stylesheet" href="/finder/style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
@@ -17,6 +17,6 @@
             <a href="report-lost.php" class="button">Report Lost Item</a>
     </div>
 
-    <script src="/finder/script.js"></script>
+    <script src="../script.js"></script>
 </body>
 </html>

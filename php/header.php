@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="/finder/style.css">
+    <link rel="stylesheet" href="../style.css">
     
 </head>
 <body>
 <header class="global-header">
     <div class="header-content">
        
-        <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? '/finder/assets/logo.svg' : '../assets/logo.svg'); ?>" alt="Finder Logo">
+        <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo.svg' : '../assets/logo.svg'); ?>" alt="Finder Logo">
         
         <div class="hamburger" id="hamburger">
             &#9776; <!-- Hamburger icon -->
