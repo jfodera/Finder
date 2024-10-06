@@ -22,6 +22,11 @@ html {
     margin-bottom: 20px;
 }
 
+.logo-image {
+    width: 50px;
+    height: auto;
+}
+
 .description {
     font-size: 18px;
     max-width: 600px;
@@ -114,7 +119,6 @@ html {
 /* header styles */
 
 .global-header {
-    background-color: transparent;
     position: fixed;
     top: 0;
     left: 0;
@@ -127,36 +131,100 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     padding: 15px 20px;
     box-sizing: border-box;
 }
 
-.global-header nav ul {
+.logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.hamburger {
+    display: none; /* Hidden by default */
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+}
+
+.nav-menu ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
     display: flex;
 }
 
-.global-header nav ul li {
+.nav-menu ul li {
     margin-left: 20px;
 }
 
-.global-header nav ul li:first-child {
-    margin-left: 0;
-}
-
-.global-header nav ul li a {
+.nav-menu ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 18px;
     transition: opacity 0.3s;
 }
 
-.global-header nav ul li a:hover {
+.nav-menu ul li a:hover {
     opacity: 0.8;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+
+    .logo img {
+        width: 80%; 
+        height: auto; 
+    }
+
+    .hamburger {
+        display: block; 
+    }
+
+    .nav-menu {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: 60px; 
+        left: 0;
+        right: 0;
+        z-index: 999;
+    }
+
+    .nav-menu.active {
+        display: flex; 
+    }
+
+    .nav-menu ul {
+        flex-direction: column; 
+        width: 100%;
+    }
+
+    .nav-menu ul li {
+        margin: 10px 0; 
+        text-align: center;
+    }
+
+    .profile-container {
+        margin-top: 80px;
+        padding: 15px;
+    }
+
+    .items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
 }
 
 .left-nav {
@@ -226,21 +294,4 @@ h1 {
     font-size: 14px;
     opacity: 0.8;
     line-height: 1.6;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .profile-container {
-        margin-top: 80px;
-        padding: 15px;
-    }
-
-    .items-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
 }
