@@ -1,6 +1,6 @@
 # Finder Project Proposal
 
-## Summary of Project Proposal
+## Summary of Project Proposal 
 
 We are making a lost and found app for connecting and matching similar to Tinder hence our group name finder (FIN-dur). Our project is a website designed to match lost items, found around the RPI campus, with descriptions submitted by those who have lost them. Our rationale for this project is that no apps or websites currently at RPI can quickly match you with an item you lost. Currently, you would have to physically go to the APO or Pubsafe. The APO’s website for lost and found items would be your only other option. But that gives zero immediate feedback and doesn’t do anything other than say a lost report has been submitted. When you lose something, you're often in a rush and feel desperate to find it. A simple form submission, like the one on APO's lost and found website, isn't very helpful at that moment. It doesn't give you any sort of quick response, such as ‘We may have found your item' or 'There are no items in the database that match your description’. That's what we want Finder to provide, an immediate answer to our user as in, what to do next.
 
