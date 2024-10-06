@@ -5,10 +5,35 @@
     padding:0;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     /* background: linear-gradient(to right, #0066cc 20%, #01f573 80%); */
-    background-color: #c7f8ff;
+   
 
 
 }
+body{
+    background-color: aliceblue;
+    height:100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.logo{
+    font-size: 30px;
+    font-weight: bold;
+    color:#fff;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    
+}
+header{
+    width:100%;
+    height:75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+    background: rgba(0,0,0,0,2);
+}
+
  .contact
 {
     position: relative;
