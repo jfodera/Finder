@@ -1,4 +1,58 @@
-<?php include 'header.php'; ?>
+<?php
+session_start();
+require_once '../db/db_connect.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    
+    // Validation
+    if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password)) {
+        $_SESSION['error'] = "All fields are required";
+        header("Location: user_register.php");
+        exit();
+    }
+    
+    if ($password !== $confirm_password) {
+        $_SESSION['error'] = "Passwords do not match";
+        header("Location: user_register.php");
+        exit();
+    }
+    
+    try {
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            $_SESSION['error'] = "Email already exists";
+            header("Location: user_register.php");
+            exit();
+        }
+        
+        // Insert new user
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Split full name into first and last name
+        $name_parts = explode(" ", $full_name, 2);
+        $first_name = $name_parts[0];
+        $last_name = isset($name_parts[1]) ? $name_parts[1] : "";
+        
+        $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, is_recorder) VALUES (?, ?, ?, ?, FALSE)");
+        $stmt->execute([$email, $hashed_password, $first_name, $last_name]);
+        
+        $_SESSION['success'] = "Registration successful! Please log in.";
+        header("Location: login.php");
+        exit();
+        
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Database error: " . $e->getMessage();
+        header("Location: user_register.php");
+        exit();
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +69,13 @@
     <div class="container">
         <div class="form-container">
             <div class="logo">Finder</div>
-            <form action="register.php" method="post"> 
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo '<div class="error">' . $_SESSION['error'] . '</div>';
+                unset($_SESSION['error']);
+            }
+            ?>
+            <form action="user_register.php" method="post"> 
                 <input type="text" name="full_name" placeholder="Full Name" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
