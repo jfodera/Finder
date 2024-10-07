@@ -1,5 +1,6 @@
-<?php
+<?php 
 session_start();
+include 'header.php';
 require_once '../db/db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

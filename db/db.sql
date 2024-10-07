@@ -105,3 +105,8 @@ CREATE TABLE submission_cooldowns (
     last_submission TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+INSERT INTO recorder_codes (code, user_id) VALUES 
+('test1', NULL),
+('test2', NULL),
+('test3', NULL);
