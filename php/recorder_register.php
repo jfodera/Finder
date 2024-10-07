@@ -10,12 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirm_password = $_POST['confirm_password'];
     $code = $_POST['code'];
     
-    // Validation
     if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password) || empty($code)) {
         $_SESSION['error'] = "All fields are required";
         header("Location: recorder_register.php");
         exit();
     }
+
+    //only rpi users with a @rpi.edu email can register
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
+        $_SESSION['error'] = "Email must be an @rpi.edu address";
+        header("Location: recorder_register.php");
+        exit();
+    }
+
     
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match";

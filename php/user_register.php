@@ -15,6 +15,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: user_register.php");
         exit();
     }
+
+    //only rpi users with a @rpi.edu email can register
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
+        $_SESSION['error'] = "Email must be an @rpi.edu address";
+        header("Location: recorder_register.php");
+        exit();
+    }
     
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match";

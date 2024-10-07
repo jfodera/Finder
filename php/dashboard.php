@@ -26,6 +26,12 @@ if (!isset($_SESSION['user_id'])) {
         <?php else: ?>
             <h2>Your Lost Items</h2>
         <?php endif; ?>
+
+        <div class="container">
+            <h1>Your Lost Items</h1>
+            <div class="items-grid" id="itemsGrid"></div>
+            <a href="report-lost.php" class="button">Report Lost Item</a>
+        </div>
         
     </div>
     <script src="../script.js"></script>
