@@ -1,5 +1,6 @@
-<?php
+<?php 
 session_start();
+include 'header.php';
 require_once '../db/db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -12,6 +13,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password)) {
         $_SESSION['error'] = "All fields are required";
         header("Location: user_register.php");
+        exit();
+    }
+
+    //only rpi users with a @rpi.edu email can register
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
+        $_SESSION['error'] = "Email must be an @rpi.edu address";
+        header("Location: recorder_register.php");
         exit();
     }
     
