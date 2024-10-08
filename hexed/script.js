@@ -43,7 +43,9 @@ function calculateScore() {
     const green = parseInt(document.getElementById('greenSlider').value);
     const blue = parseInt(document.getElementById('blueSlider').value);
 
-    const score = 255 - (Math.abs(red - targetColor.r) + Math.abs(green - targetColor.g) + Math.abs(blue - targetColor.b));
+    const maxDifference = 255 * 3; 
+    const actualDifference = Math.abs(red - targetColor.r) + Math.abs(green - targetColor.g) + Math.abs(blue - targetColor.b);
+    const score = Math.max(0, Math.round((1 - actualDifference / maxDifference) * 100));
     
     document.getElementById('scoreDisplay').innerText = `Your Score: ${score}`;
     clearInterval(countdown);
