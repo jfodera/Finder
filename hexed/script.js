@@ -61,3 +61,25 @@ function restartGame() {
     document.getElementById('scoreDisplay').innerText = '';
     document.getElementById('timerDisplay').innerText = '';
 }
+
+// Add these lines at the beginning of your script
+const redSlider = document.getElementById('redSlider');
+const greenSlider = document.getElementById('greenSlider');
+const blueSlider = document.getElementById('blueSlider');
+const colorPreview = document.getElementById('colorPreview');
+
+// Add this function to update the color preview
+function updateColorPreview() {
+    const red = redSlider.value;
+    const green = greenSlider.value;
+    const blue = blueSlider.value;
+    colorPreview.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+}
+
+// Add event listeners to the sliders
+redSlider.addEventListener('input', updateColorPreview);
+greenSlider.addEventListener('input', updateColorPreview);
+blueSlider.addEventListener('input', updateColorPreview);
+
+// Call updateColorPreview initially to set the initial color
+updateColorPreview();
