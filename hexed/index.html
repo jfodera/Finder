@@ -15,6 +15,11 @@
         <div class="game-container">
             <div class="color-display" id="colorDisplay"></div>
             <div id="timerDisplay" class="timer neon-text">Time: 10</div>
+            <div id="gameModes" class="game-modes">
+                <button id="easyMode" class="neon-button mode-button" title="15 seconds to match, max score 100">Easy</button>
+                <button id="normalMode" class="neon-button mode-button" title="10 seconds to match, max score 100">Normal</button>
+                <button id="hardMode" class="neon-button mode-button" title="7 seconds to match, max score 150, time penalty">Hard</button>
+            </div>
             <button id="startButton" class="neon-button">Start Game</button>
             <div id="sliders" class="hidden">
                 <div class="sliders-preview-container">
@@ -40,9 +45,6 @@
             <button id="restartButton" class="neon-button hidden">Restart</button>
         </div>
     </main>
-    <footer>
-        <p class="neon-text">&copy; 2024 Neon Hex Color Game</p>
-    </footer>
     <script src="script.js"></script>
 </body>
 </html>

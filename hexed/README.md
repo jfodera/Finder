@@ -426,3 +426,9 @@ document.getElementById('startButton').disabled = false;
 document.getElementById('scoreDisplay').innerText = '';
 document.getElementById('timerDisplay').innerText = '';
 }
+
+6) css too laggy
+
+7)make multiple gammemdoes
+
+8)gamemode buttons should be removed when started and show tooltips containing info for gammeodes
