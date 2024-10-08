@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexed Color Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hexed Color Game</h1>
+        <div id="colorDisplay" class="color-display"></div>
+        <button id="startButton">Start Game</button>
+        <div id="sliders" class="hidden">
+            <label>Red: <input type="range" id="redSlider" min="0" max="255"></label>
+            <label>Green: <input type="range" id="greenSlider" min="0" max="255"></label>
+            <label>Blue: <input type="range" id="blueSlider" min="0" max="255"></label>
+            <button id="submitButton">Submit</button>
+        </div>
+        <p id="scoreDisplay"></p>
+        <button id="restartButton" class="hidden">Restart</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
