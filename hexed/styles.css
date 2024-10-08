@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.container {
+    text-align: center;
+}
+
+.color-display {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    border: 1px solid #000;
+}
+
+.hidden {
+    display: none;
+}
+
+label {
+    display: block;
+    margin: 10px 0;
+}
