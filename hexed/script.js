@@ -1,6 +1,7 @@
 let targetColor = { r: 0, g: 0, b: 0 };
 let gameStarted = false;
 let timer;
+let countdown;
 const gameDuration = 10; // seconds
 
 document.getElementById('startButton').addEventListener('click', startGame);
@@ -20,9 +21,17 @@ function startGame() {
     document.getElementById('scoreDisplay').innerText = '';
     document.getElementById('restartButton').classList.add('hidden');
 
-    timer = setTimeout(() => {
-        calculateScore();
-    }, gameDuration * 1000);
+    let timeRemaining = gameDuration;
+    document.getElementById('timerDisplay').innerText = `Time Remaining: ${timeRemaining}`;
+    
+    countdown = setInterval(() => {
+        timeRemaining--;
+        document.getElementById('timerDisplay').innerText = `Time Remaining: ${timeRemaining}`;
+        if (timeRemaining <= 0) {
+            clearInterval(countdown);
+            calculateScore();
+        }
+    }, 1000);
     
     gameStarted = true;
 }
@@ -37,7 +46,7 @@ function calculateScore() {
     const score = 255 - (Math.abs(red - targetColor.r) + Math.abs(green - targetColor.g) + Math.abs(blue - targetColor.b));
     
     document.getElementById('scoreDisplay').innerText = `Your Score: ${score}`;
-    clearTimeout(timer);
+    clearInterval(countdown);
     gameStarted = false;
 
     document.getElementById('startButton').disabled = false;
@@ -48,4 +57,5 @@ function restartGame() {
     document.getElementById('sliders').classList.add('hidden');
     document.getElementById('startButton').disabled = false;
     document.getElementById('scoreDisplay').innerText = '';
+    document.getElementById('timerDisplay').innerText = '';
 }
