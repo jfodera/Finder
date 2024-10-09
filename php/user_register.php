@@ -5,9 +5,7 @@ require_once '../db/db_connect.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'path/to/PHPMailer/src/Exception.php';
-require 'path/to/PHPMailer/src/PHPMailer.php';
-require 'path/to/PHPMailer/src/SMTP.php';
+require 'vendor/autoload.php';
 
 function sendVerificationEmail($email, $token) {
     $mail = new PHPMailer(true);
