@@ -2,39 +2,6 @@
 session_start();
 include 'header.php';
 require_once '../db/db_connect.php';
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'vendor/autoload.php';
-
-function sendVerificationEmail($email, $token) {
-    $mail = new PHPMailer(true);
-    
-    try {
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'finderitws@gmail.com';
-        $mail->Password   = 'finderDaGoat5';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
-
-        // Recipients
-        $mail->setFrom('finderitws@gmail.com', 'Finder App');
-        $mail->addAddress($email);
-
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Verify your email for Finder App (Recorder)';
-        $mail->Body    = "Please click the following link to verify your email: <a href='http://yourwebsite.com/verify_recorder.php?email=$email&token=$token'>Verify Email</a>";
-
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
-        return false;
-    }
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
@@ -49,11 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    //only rpi users with a @rpi.edu email can register
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
         $_SESSION['error'] = "Email must be an @rpi.edu address";
         header("Location: recorder_register.php");
         exit();
     }
+
     
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match";
@@ -92,10 +61,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $first_name = $name_parts[0];
         $last_name = isset($name_parts[1]) ? $name_parts[1] : "";
         
-        $verification_token = bin2hex(random_bytes(16));
-        
-        $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, is_recorder, is_verified, verification_token) VALUES (?, ?, ?, ?, TRUE, FALSE, ?)");
-        $stmt->execute([$email, $hashed_password, $first_name, $last_name, $verification_token]);
+        $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, is_recorder) VALUES (?, ?, ?, ?, TRUE)");
+        $stmt->execute([$email, $hashed_password, $first_name, $last_name]);
         $user_id = $pdo->lastInsertId();
         
         // Update recorder code
@@ -104,15 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $pdo->commit();
         
-        if (sendVerificationEmail($email, $verification_token)) {
-            $_SESSION['success'] = "Registration successful! Please check your email to verify your account.";
-            header("Location: login.php");
-            exit();
-        } else {
-            $_SESSION['error'] = "Registration successful, but failed to send verification email. Please contact support.";
-            header("Location: login.php");
-            exit();
-        }
+        $_SESSION['success'] = "Registration successful! Please log in.";
+        header("Location: login.php");
+        exit();
         
     } catch (PDOException $e) {
         if ($pdo->inTransaction()) {
