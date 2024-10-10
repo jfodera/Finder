@@ -1,9 +1,22 @@
+
 <?php 
 session_start();
 include 'header.php';
 require_once '../db/db_connect.php';
 require_once '../vendor/autoload.php';
 
+
+/* 
+
+Thought process:
+only users should need to verify their emails to confirm they go to RPI as the recorders technically
+don't need verification because we give them a unique recorder code
+
+
+How it works:
+the sendVerificationEmail sends email when u register and when you click on the link it auto verifies email
+
+*/
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
