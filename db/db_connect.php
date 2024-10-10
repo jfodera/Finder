@@ -2,7 +2,7 @@
 $host = 'localhost';
 $dbname = 'finder_db';
 $username = 'root';
-$password = '1';
+$password = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
