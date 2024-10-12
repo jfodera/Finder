@@ -9,13 +9,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Selection</title>
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
     <div class="container">
         <section class="about-us">
-            <h1>What Item Are You Recording?</h1>
+            <h1>How can we help you today?</h1>
             
         </section>
         <div class="buttons">
