@@ -27,6 +27,12 @@ Current State:
 Notes for future: 
    Only really need one phpmyadmin for an entire server 
 
+Takeaways from presentation: 
+   prebuilt location categories
+   prebuilt item type categories
+   maybe defining feature
+   
+
 XAMMP Notes: 
    Literally just a live webserver good for development that running locally off my computer, no pulling needed. 
    made an Alias of htDocs and that is where my repo is going to live for now 
