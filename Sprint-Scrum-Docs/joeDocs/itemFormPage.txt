@@ -18,10 +18,14 @@ Important Notes:
    In order for a lost item to be added to the database, a user must find it, they can click on a report lost item button and it will give them 
       instructions to bring it to the neareast apo office. Once it gets there, a recorder can add it to the database
 
+   PhpMailer: 
+      does not work when you are sending an email to yourself froom XAMPP 
+
 Current State: 
    Vendor is where all of our libraries are stored 
 
-
+Notes for future: 
+   Only really need one phpmyadmin for an entire server 
 
 XAMMP Notes: 
    Literally just a live webserver good for development that running locally off my computer, no pulling needed. 
