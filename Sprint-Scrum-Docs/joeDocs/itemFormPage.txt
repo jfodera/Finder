@@ -1,0 +1,17 @@
+Current State: 
+   Vendor is being used for php mailing 
+
+
+Vendor is the Library folder holding all of the libraries that we are using for the project
+Current State: 
+   Vendor is where all of our libraries are stored 
+
+XAMMP Notes: 
+   Literally just a live webserver good for development that running locally off my computer, no pulling needed. 
+   made an Alias of htDocs and that is where my repo is going to live for now 
+   Auto updated testing: http://localhost/ITWS-2110-F24-Find-er/
+
+to do: 
+   Make this page
+   Make env page for myself using .env example in root
+      This is added to the server through concatenation of file using VM 
