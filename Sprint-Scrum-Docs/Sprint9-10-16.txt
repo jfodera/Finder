@@ -1,0 +1,169 @@
+Description: 
+During the meeting, Fodera, Joseph apologizes for missing the previous meeting and class on Tuesday. He asks if anything important happened during his absence and if anyone has heard from Miles. Lee, Derek informs him that nothing significant occurred on Tuesday and that Miles was present in class. Miles mentioned being busy and needing to catch up with the work. Fodera, Joseph asks about the progress made in the last meeting and the changes that have been implemented. Lee, Derek explains that he set up the email system but encountered issues with RPI not accepting the emails. He plans to resolve this by the end of the week. He also mentions implementing environmental variables for the databases, which allows for storing code separately. Fodera, Joseph asks about the accessibility of the database for external users, and Lee, Derek explains that it is accessed through the server and the environmental file is stored in the root directory. They discuss the need to remove the file from the repository later. Fodera, Joseph expresses his concern about the upcoming midterm presentation and asks about the timeline. Lee, Derek and Cooper Kelly mention that the presentation is scheduled for the 25th, after the quiz. They discuss the goal of having a working front end before the presentation and mention the bug with RPI mail. Fodera, Joseph mentions his upcoming exams and expresses his stress about the busy schedule. They conclude the meeting by discussing their tasks and plans for the upcoming week.
+
+
+Transcript: 
+Meeting Transcript:
+
+Fodera, Joseph: What's up, guys? How are you doing? Can you hear me?
+Fodera, Joseph: Okay perfect. Sorry about that last meeting. Things I've just been crazy. I was just not home in time.
+Fodera, Joseph: I also missed class on Tuesday. I was did anything crazy happen? I imagine that it was TAs, right?
+Heidi Zhou: Yeah, the professor was in Los Vegas so it was a TA.
+Heidi Zhou: Managing the class.
+Lee, Derek: Okay nothing happened on Tuesday.
+Fodera, Joseph: That's what I figured honestly, so it wasn't too stressful. Has anyone heard from Miles or is he's like.
+Lee, Derek: Getting that feedback.
+Fodera, Joseph: Was he at the last meeting or.
+Lee, Derek: No, he wasn't. We didn't This is our first meeting on the week but he was in class yesterday, so.
+Fodera, Joseph: That's good.
+Fodera, Joseph: That's. Did he say anything about, like.
+Fodera, Joseph: Where he's at?
+Lee, Derek: Essentially should be fine I think.
+Fodera, Joseph: That's been.
+Heidi Zhou: Yeah. He said like he's gonna be pretty busy since he's need to catch up with like the work.
+Fodera, Joseph: Yeah, I can't even imagine that. That's insane.
+Heidi Zhou: Yeah.
+Fodera, Joseph: That's Insane.
+Fodera, Joseph: Are you watching the meds game right now? My fri.
+Cooper Kelly: Yeah I am watching it right now.
+Fodera, Joseph: They're ending, right?
+Cooper Kelly: Yeah, they're down to days is loaded for the Dodgers.
+Cooper Kelly: So.
+Fodera, Joseph: Okay, so I am honestly a little behind. Could someone just catch me up in terms of like what happened at the last meeting and like, I guess what has changed really? I saw that Derek you made, you put some stuff in.
+Lee, Derek: So last meeting, we just talked about, like, like our captional week, so, well, I did was that I set up like the email stuff, you know, like how he sent you a verification email, but for some reason, I installed like a library and stuff, but for some reason, RPI.
+Lee, Derek: Can't like accept like the email I talked about the rest of the group. So, I still haven't gotten around to finding that because I'm pretty busy this week, but no like I'm gonna do like find out by end of the week. What I want to.
+Lee, Derek: Environment variables I think this is what Kyle was talking about, so.
+Lee, Derek: That's cool as well. I don't know if you know what environmental variables are, but.
+Fodera, Joseph: So that we don't have to.
+Lee, Derek: Basically like your own like, like.
+Lee, Derek: Like document to store all all of your codes so you don't have to put it, put them in your code base.
+Fodera, Joseph: Okay, and that.
+Fodera, Joseph: Did he go over that on Tuesday.
+Lee, Derek: He, he didn't go over that.
+Fodera, Joseph: Meeting over yeah what was he gonna say? That is Did you already implement that for the databases?
+Lee, Derek: I implemented that already, but everyone has to make their own file. So like you would have to like go to the server and then like nato, like the dot m file. So you're just like, I made it like an example I think you look at the.
+Lee, Derek: GitHub, find it real quick.
+Lee, Derek: Yeah, if you see the dot in file, is that the top?
+Fodera, Joseph: Is it n. What folder is it in there?
+Fodera, Joseph: The Vendor.
+Lee, Derek: It's started in the border, it's in the room.
+Fodera, Joseph: Our environmental example geez. Okay, database user, so we just put it.
+Fodera, Joseph: So we we each have that, our old.
+Lee, Derek: Each had like our own. So the dot f file isn't actually supposed to be in the hub, but I committed it so we should definitely later but like if you like open up the file, you see how there's like.
+Lee, Derek: A place where you put your PHP by admin stuff.
+Fodera, Joseph: Huh.
+Lee, Derek: That's what that's the day you change. So.
+Fodera, Joseph: When some random person accesses our.
+Fodera, Joseph: Our website, how do they access the database then.
+Lee, Derek: Service.
+Fodera, Joseph: Where does that dot ENV live?
+Lee, Derek: It lives in the room.
+Fodera, Joseph: On our server.
+Lee, Derek: Yeah, and.
+Fodera, Joseph: In a root on our server which isn't like in the HTML, folder, right?
+Lee, Derek: Oh, like, like you were lone with the repository, right? You were just.
+Lee, Derek: Type nano dot M and then you would just put the dot m file. So.
+Fodera, Joseph: How can, so people can't see that, like.
+Lee, Derek: So currently it's on the repository because like trying to show you guys how it works, but we should remove it like later.
+Fodera, Joseph: Don't be remote.
+Lee, Derek: You have your own platform file, and like the dotm file will hold like the passwords for like the admin, all that stuff.
+Fodera, Joseph: And if we remove it from the repository won't it remove it from the server as well once we pull.
+Lee, Derek: The thing is that, right?
+Lee, Derek: You were just make like the file in the repository.
+Fodera, Joseph: Oh, I got you.
+Lee, Derek: You know like you type nato, dot, so like make it five repository and you would just edit.
+Lee, Derek: So like the I have in here is just example, and then we just remove it like once everything's set up.
+Fodera, Joseph: You know, by default dot NV files are hidden by like the server so that other people can't see them.
+Lee, Derek: Yeah. Okay.
+Fodera, Joseph: Good to know.
+Fodera, Joseph: Imagine how to go over that.
+Fodera, Joseph: At some point too. Alright, that's sick.
+Fodera, Joseph: What else here?
+Fodera, Joseph: I feel like, is the midterm presentation coming up soon?
+Lee, Derek: It's like in two weeks or I think it's like next week, right?
+Cooper Kelly: I think it's I think it's next week the test, the tests and then.
+Lee, Derek: Friday after a test rate I'm pretty sure.
+Cooper Kelly: If the test Tuesday and the presentation Friday I think.
+Fodera, Joseph: To the presentation is the twenty fifth.
+Cooper Kelly: Yeah, I think so. Okay. All right.
+Lee, Derek: Okay, so I don't know what, like, the goal is though, I mean, I guess I mean I don't Heidi's working on like the form who per soon during the.
+Lee, Derek: Styling. Yeah, honestly.
+Fodera, Joseph: I'm like.
+Fodera, Joseph: I'm still on that first task, but I am hope I'm hopefully in a position where I can lock in to this.
+Lee, Derek: Change again I forgot.
+Fodera, Joseph: Weekend it was the.
+Fodera, Joseph: Let me just go to my branch. The latest thing i was working on was the where.
+Fodera, Joseph: Where is it.
+Fodera, Joseph: I honestly don't even know where it's at. I it's in that board.
+Fodera, Joseph: It's wrong one backlog.
+Fodera, Joseph: The.
+Fodera, Joseph: HTTP server I did.
+Fodera, Joseph: My admin page. Honestly I'm not gonna lie.
+Fodera, Joseph: Where is that task? Oh, oh, the, the page where someone who lost something to submit a form, so just like a PHP page. Okay form. So that shouldn't actually take me that long.
+Lee, Derek: Katie's working on that, too.
+Lee, Derek: You should probably like talk to her about it.
+Fodera, Joseph: Okay, and then our presentation is yeah.
+Lee, Derek: That's actually good.
+Heidi Zhou: On the twenty fourth, sorry, sorry.
+Heidi Zhou: It should be like the next class after the quiz, right? I think for the midterm presentation. Yeah.
+Lee, Derek: Class after a presentation. Yeah, so we should probably like.
+Lee, Derek: I don't know, maybe we'll have like finished product like before the quiz stuff. Yeah.
+Lee, Derek: We have the login working, the registering working just had there's a bug where RPI mail is like stupid this bug, but.
+Lee, Derek: Everything should be working fine. I mean, yeah, I think we're good for you just got to implemented for pretty much should be good for.
+Fodera, Joseph: So our goal for before the presentation was just to have like a working front end, right? Yeah.
+Fodera, Joseph: So I think, yeah, we're, we're definitely in good shape.
+Lee, Derek: Yeah, I like was talking to other people's depository and did like did like way. So I think it should be fine.
+Fodera, Joseph: Yeah, I, I'm yeah.
+Fodera, Joseph: Yeah, we just have to look at the guidelines for that.
+Fodera, Joseph: And get that right. Is it only our midterm presentation just one day.
+Heidi Zhou: It says that ten minutes so I will assume it's one day. Is it ten minutes or yeah. It's pretty.
+Lee, Derek: One day, yeah. There's not that many groups, you know.
+Fodera, Joseph: Good to know, good to know.
+Fodera, Joseph: Alright.
+Fodera, Joseph: That is actually insane. The next week is gonna be actually crazy.
+Fodera, Joseph: Do you yeah cause we have the full.
+Fodera, Joseph: Alright.
+Fodera, Joseph: Got it.
+Lee, Derek: To be part of the.
+Fodera, Joseph: So I yeah, I'm not worried about the presentation. It's just Monday I have a psychology exam Tuesday we have the quiz Wednesday I have a Fox exam. Thursday I don't have anything and then Friday I have the presentation.
+Fodera, Joseph: So I just gotta I gotta be ready, I gotta be ready for that.
+Fodera, Joseph: That's, Holy ****. And then we're probably gonna have another lab to do.
+Fodera, Joseph: I'm gonna email Bro from now that.
+Fodera, Joseph: I might be cooked.
+Fodera, Joseph: In terms of like, I'm probably gonna submit that lably.
+Fodera, Joseph: Alright.
+Fodera, Joseph: I'll be right back.
+Fodera, Joseph: Alright, so I'm just gonna lock in on getting that that form page in, done.
+Fodera, Joseph: Where's.
+Fodera, Joseph: Alright.
+Fodera, Joseph: Anything else.
+Fodera, Joseph: Specifically dire.
+Heidi Zhou: I don't have any else to discuss so I'll probably be leading leaving this meeting soon.
+Fodera, Joseph: Yeah, I have I think I have a good summary.
+Fodera, Joseph: In terms of what we talked about.
+Fodera, Joseph: Github.
+Fodera, Joseph: Alright, and then I'm good otherwise, if you guys are good.
+Fodera, Joseph: I'm.
+Cooper Kelly: India.
+Fodera, Joseph: Alright cool.
+Heidi Zhou: Okay.
+Cooper Kelly: Resets for the future.
+Heidi Zhou: I see you on friday. Bye.
+Cooper Kelly: That how you can own the next year from. Next chair dot com, show.
+Fodera, Joseph: Do you know when our last scrum was?
+Lee, Derek: That was.
+Lee, Derek: The last one was yesterday.
+Fodera, Joseph: If you guys did it or I mean your last or the last daily meeting.
+Lee, Derek: Yeah, and we just rubbed yesterday but like it wasn't really a scrubbed down the scrub, which.
+Fodera, Joseph: Like in class.
+Lee, Derek: That was in class.
+Fodera, Joseph: And then you guys did one Sunday too, right?
+Lee, Derek: Yeah, so this will be scrum nine.
+Fodera, Joseph: Put it in the repo. Yeah.
+Lee, Derek: Scrum eight was yesterday and I put in a repo and scrum nine is today.
+Fodera, Joseph: Oh, did you, did you like just push them to main.
+Lee, Derek: Yeah.
+Fodera, Joseph: I was on the other branch alright sounds good. Okay.
+Lee, Derek: Yeah, so.
+Lee, Derek: There we go. Yeah.
+Fodera, Joseph: No, you're all good. I just gotta sitting here with AI. Just.
