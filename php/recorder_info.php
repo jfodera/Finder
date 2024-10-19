@@ -26,10 +26,49 @@
                 <div class="error"><?php echo $error; ?></div>
             <?php endif; ?>
             <form id = "infoForm" action="recorder_info.php" method="post">
-                <input type="text" name="Description" placeholder="General Description of the item?" required>
-                <input type="text" name="Brand" placeholder="Brand?" required>
-                <input type="text" name="Color" placeholder="Color?" required>
-                <button type="submit" class="button button-account">Continue</button>
+                <div class="page page-1 active">
+                    <div class="form_group">
+                         <input type="text" name="Description" placeholder="General Description of the item?" required>
+                    </div>
+                <div class="form_group">
+                    <input type="text" name="Brand" placeholder="Brand?" required>
+                </div>
+                <div class="form_group">
+                    <input type="text" name="Color" placeholder="Color?" required>
+                </div>
+                
+                <button type="button" id = "first-btn" class="next-btn">Continue</button> 
+
+                </div>
+
+                <div class="page page-2">
+                 
+                    <div class="form_group">
+                         <input type="text" name="Date" placeholder="Date?" required>
+                    </div>
+                <div class="form_group">
+                    <input type="text" name="Timr" placeholder="Time?" required>
+                </div>
+       
+                <button type="button" class="prev-btn">Go Back</button> 
+                <button type="button" class="next-btn">Continue</button> 
+
+                </div>
+
+                <div class="page page-3 ">
+                 
+                    <div class="form_group">
+                         <input type="text" name="Location" placeholder="Location Type?" required>
+                    </div>
+       
+                <button type="button" class="prev-btn">Go Back</button> 
+                <button type="submit" class="submit-btn">Submit</button> 
+
+                </div>
+                 
+
+           
+             
             </form>
 
     
