@@ -12,6 +12,7 @@
     <title>Finder - RecorderInfo</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../css/info.css">
+    <script src="../js/lost_item_form.js" defer></script>
 
 </head>
 
@@ -37,7 +38,7 @@
                     <input type="text" name="Color" placeholder="Color?" required>
                 </div>
                 
-                <button type="button" id = "first-btn" class="next-btn">Continue</button> 
+                <button type="button" class="next-btn">Continue</button> 
 
                 </div>
 
