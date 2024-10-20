@@ -7,6 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Color = $_POST['Color'];
     $Date = $_POST['Date'];
     $Time = $_POST['Time'];
+    $Image = $_POST['Image'];
+
     $Location = $_POST['Location'];
     
     
@@ -75,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <img id="upload_image" src="../default_image.png" alt="image of the item">
                 <label id = "item_img" for = "input-file">upload image</label>
                     <div class="form_group">
-                            <input id = "input-file" type="file" accept = "image/jpeg,image/png,image/jpg" >
+                            <input id = "input-file" type="file" name="Image" accept = "image/jpeg,image/png,image/jpg" >
                     </div>
         
                     <button type="button" class="prev-btn">Go Back</button> 
