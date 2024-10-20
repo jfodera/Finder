@@ -70,3 +70,27 @@ document.addEventListener("DOMContentLoaded", function () {
         navMenu.classList.toggle("active");
     });
 });
+
+function populateLocationDropdown() {
+    fetch('php/locations.php')
+        .then(response => response.json())
+        .then(locationCategories => {
+            const locationSelect = document.getElementById('location');
+            if (locationSelect) {
+                for (const [category, locations] of Object.entries(locationCategories)) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = category;
+                    locations.forEach(location => {
+                        const option = document.createElement('option');
+                        option.value = location;
+                        option.textContent = location;
+                        optgroup.appendChild(option);
+                    });
+                    locationSelect.appendChild(optgroup);
+                }
+            }
+        })
+        .catch(error => console.error('Error fetching locations:', error));
+}
+
+document.addEventListener('DOMContentLoaded', populateLocationDropdown);
