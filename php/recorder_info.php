@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../css/info.css">
     <script src="../js/lost_item_form.js" defer></script>
 
+
 </head>
 
 <body>
@@ -48,7 +49,7 @@
                             <input type="text" name="Date" placeholder="Date?" required>
                     </div>
                     <div class="form_group">
-                        <input type="text" name="Timr" placeholder="Time?" required>
+                        <input type="text" name="Time" placeholder="Time?" required>
                     </div>
             
                     <button type="button" class="prev-btn">Go Back</button> 
@@ -67,15 +68,13 @@
 
                 </div>
                     
-
-            
-                
             </form>
 
         </div>
 
     </div>
-   
+
+
 
 </body>
 
