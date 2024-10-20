@@ -1,4 +1,20 @@
-<?php include 'header.php'; ?>
+<?php include 'header.php'; 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require_once '../db/db_connect.php';
+    
+    $Description = $_POST['Description'];
+    $Brand = $_POST['Brand'];
+    $Color = $_POST['Color'];
+    $Date = $_POST['Date'];
+    $Time = $_POST['Time'];
+    $Image = $_POST['Image'];
+
+    $Location = $_POST['Location'];
+    
+    
+  
+}
+?>
 
 
 
@@ -27,7 +43,7 @@
                 <div class="error"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form id = "infoForm" action="recorder_info.php" method="post">
+            <form id = "infoForm" action="item_form_recorder.php" method="post">
                 <div class="page page-1 index active">
                     <div class="form_group">
                             <input type="text" name="Description" placeholder="General Description of the item?" required>
@@ -58,6 +74,18 @@
                 </div>
 
                 <div class="page page-3 ">
+                <img id="upload_image" src="../default_image.png" alt="image of the item">
+                <label id = "item_img" for = "input-file">upload image</label>
+                    <div class="form_group">
+                            <input id = "input-file" type="file" name="Image" accept = "image/jpeg,image/png,image/jpg" >
+                    </div>
+        
+                    <button type="button" class="prev-btn">Go Back</button> 
+                    <button type="button" class="next-btn">Continue</button> 
+
+                </div>
+
+                <div class="page page-4 ">
                     
                     <div class="form_group">
                             <input type="text" name="Location" placeholder="Location Type?" required>
@@ -106,6 +134,12 @@
         }
         pages[index].classList.add('active')
         console.log(index)
+    }
+
+    let uploadImg = document.getElementById("upload_image");
+    let inputFile = document.getElementById("input-file");
+    inputFile.onchange = function(){
+        uploadImg.src = URL.createObjectURL(inputFile.files[0]);
     }
 
         

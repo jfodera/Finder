@@ -27,7 +27,7 @@
                 <div class="error"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form id = "infoForm" action="recorder_info.php" method="post">
+            <form id = "infoForm" action="item_form_user.php" method="post">
                 <div class="page page-1 index active">
                     <div class="form_group">
                             <input type="text" name="Description" placeholder="General Description of the item?" required>
