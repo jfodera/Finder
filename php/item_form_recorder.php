@@ -8,7 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Date = $_POST['Date'];
     $Time = $_POST['Time'];
     $Image = $_POST['Image'];
-
     $Location = $_POST['Location'];
     
     
