@@ -1,44 +1,67 @@
-Important Notes: 
-   Vendor is the Library folder holding all of the libraries that we are using for the project
+Task: 
+Make Item Form PAge -> front end looking nice, Understand how to link that to the sql database setup -> use ITWS lab
+   Connect form to DB 
 
-   Database: 
-      One in XAMPP Testing and one for our actual group server. Load in the db.sql for Xampp testing, 
 
-      When developing, just use .env variables, if our group server database is the same as our xampp database then all of the code should work
-      perfect and the only thing you would need to change when switching between the 2 is the .env files (for the mysqli calls) 
-         in order to do so on our group server, you would use nano 
 
-      .env for xampp (already set up in github rn ):
-      DB_HOST=localhost
-      DB_NAME=finder_db
-      DB_USER=root
-      DB_PASS=''
+Summary: 
 
-   Normal users without a recorder passkey can only make lost item requests
-   In order for a lost item to be added to the database, a user must find it, they can click on a report lost item button and it will give them 
-      instructions to bring it to the neareast apo office. Once it gets there, a recorder can add it to the database
 
-   PhpMailer: 
-      does not work when you are sending an email to yourself froom XAMPP 
 
-Current State: 
-   Vendor is where all of our libraries are stored 
 
-Notes for future: 
-   Only really need one phpmyadmin for an entire server 
+Plan: 
 
-Takeaways from presentation: 
-   prebuilt location categories
-   prebuilt item type categories
-   maybe defining feature
-   
+   Going to have field for: 
 
-XAMMP Notes: 
-   Literally just a live webserver good for development that running locally off my computer, no pulling needed. 
-   made an Alias of htDocs and that is where my repo is going to live for now 
-   Auto updated testing through XAMPP: http://localhost/ITWS-2110-F24-Find-er/
-   Link to our DB 
-to do: 
-   Make this page -> front end looking nice, Understand how to link that to the sql database setup -> use ITWS lab
-   Make env page for myself using .env example in root
-      This is added to the server through concatenation of file using VM 
+      
+      Type -> item_type (varchar for no but will change)
+      Color -> color 
+      brand -> brand
+      Location Lost -> location (varchar for now but will change)
+      When did you lose it -> lost_time
+      Additional info -> description 
+      Image -> *no box for that yet*
+
+
+
+
+Before submit checklist: 
+
+
+
+Questions: 
+
+
+
+Outline: 
+
+
+
+Debug: 
+
+
+
+Things I learned: 
+   .form-container h2 {
+      margin-bottom: 20px;
+   }
+      Any element within class 'form-container' with the name h2 will have this 
+
+
+
+
+Any challenges I came across: 
+
+Citations:
+
+
+
+
+Current:
+
+
+Helpful Code Chunks: 
+
+
+
+
