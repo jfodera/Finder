@@ -26,9 +26,12 @@
             <?php endif; ?>
 
             <form id = "infoForm" action="item_form_user.php" method="post">
-                <h2>What type of item was it? </h2>
                 <div class="page page-1 index active">
+                    <h2>What type of item was it? </h2>
 
+                     <div class="form_group">
+                        <input type="text" name="type" placeholder="Type?" required>
+                    </div>
                     <div class="form_group">
                         <input type="text" name="Brand" placeholder="Brand?" required>
                     </div>
@@ -36,7 +39,7 @@
                         <input type="text" name="Color" placeholder="Color?" required>
                     </div>
                     <div class="form_group">
-                            <input type="text" name="addInfo" placeholder="Any Additional Informtion" required>
+                        <input type="text" name="addInfo" placeholder="Any Additional Informtion" required>
                     </div>
                     
                     <button type="button" class="next-btn">Continue</button> 
@@ -44,12 +47,10 @@
                 </div>
 
                 <div class="page page-2">
-                    
+                    <h2>When did you loose it?</h2>
+                    <h3>*Give approximate time*</h3>
                     <div class="form_group">
-                            <input type="text" name="Date" placeholder="Date?" required>
-                    </div>
-                    <div class="form_group">
-                        <input type="text" name="Time" placeholder="Time?" required>
+                            <input type="datetime-local" name="Date" placeholder="Date?" required>
                     </div>
             
                     <button type="button" class="prev-btn">Go Back</button> 
@@ -58,7 +59,7 @@
                 </div>
 
                 <div class="page page-3 ">
-                    
+                    <h2>When did you loose it? (can select multiple)</h2>
                     <div class="form_group">
                             <input type="text" name="Location" placeholder="Location Type?" required>
                     </div>
