@@ -61,7 +61,8 @@ Citations:
 
 
 Current:
-   Going through and appending form pages , on where did you loose it. 
+   Going through and appending form pages , on where did you loose item_type
+   update item_form_recorder accordingly 
 
 
 Helpful Code Chunks: 
