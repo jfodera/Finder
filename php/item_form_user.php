@@ -170,42 +170,47 @@ foreach ($locations as $location) {
                 </div>
 
                 <div class="page page-4">
-                    <h2>Where did you lose it?</h2>
-                    <h3>*Required - select at least one location*</h3>
-                    
-                    <input type="text" 
-                           class="location-search" 
-                           placeholder="Search locations..." 
-                           id="locationSearch">
-                    
-                           <div class="locations-container">
-                                <?php foreach ($grouped_locations as $category => $locs): ?>
-                                    <div class="location-group">
-                                        <h3><?php echo htmlspecialchars($category); ?></h3>
-                                        <div class="location-checkboxes">
-                                            <?php foreach ($locs as $location): ?>
-                                                <div class="location-checkbox">
-                                                    <input type="checkbox" 
-                                                        name="locations[]" 
-                                                        id="loc<?php echo $location['location_id']; ?>" 
-                                                        value="<?php echo htmlspecialchars($location['name']); ?>">
-                                                    <label for="loc<?php echo $location['location_id']; ?>">
-                                                        <?php echo htmlspecialchars($location['name']); ?>
-                                                    </label>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
+                <h2>Where did you <?php echo isset($is_recorder) ? 'find' : 'lose'; ?> it?</h2>
+                <h3>*Can select multiple locations*</h3>
+                
+                <input type="text" 
+                    class="location-search" 
+                    placeholder="Search locations..." 
+                    id="locationSearch">
+                
+                <div class="location-section">
+                    <div class="locations-main">
+                        <div class="locations-container">
+                            <?php foreach ($grouped_locations as $category => $locs): ?>
+                                <div class="location-group">
+                                    <h3><?php echo htmlspecialchars($category); ?></h3>
+                                    <div class="location-checkboxes">
+                                        <?php foreach ($locs as $location): ?>
+                                            <div class="location-checkbox">
+                                                <input type="checkbox" 
+                                                    name="locations[]" 
+                                                    id="loc<?php echo $location['location_id']; ?>" 
+                                                    value="<?php echo htmlspecialchars($location['name']); ?>">
+                                                <label for="loc<?php echo $location['location_id']; ?>">
+                                                    <?php echo htmlspecialchars($location['name']); ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                <?php endforeach; ?>
-                            </div>
-
-                    <div class="selected-locations">
-                        Selected locations: <span id="selectedCount">0</span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-
-                    <button type="button" class="prev-btn">Go Back</button>
-                    <button type="submit" class="submit-btn" disabled>Submit</button>
+                    
+                    <div class="locations-selected">
+                        <h3>Selected Locations (<span id="selectedCount">0</span>)</h3>
+                        <div class="selected-list" id="selectedList"></div>
+                    </div>
                 </div>
+
+                <button type="button" class="prev-btn">Go Back</button>
+                <button type="submit" class="submit-btn" disabled>Submit</button>
+            </div>
             </form>
         </div>
     </div>

@@ -156,9 +156,69 @@ function initializeNavigation() {
     }
 }
 
+function initializeLocationHandling() {
+    const searchBox = document.getElementById('locationSearch');
+    const locationCheckboxes = document.querySelectorAll('.location-checkbox');
+    const selectedList = document.getElementById('selectedList');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const submitBtn = document.querySelector('.submit-btn');
+
+    function updateSelectedLocations() {
+        const selectedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        selectedList.innerHTML = '';
+        selectedCountSpan.textContent = selectedBoxes.length;
+        
+        selectedBoxes.forEach(box => {
+            const div = document.createElement('div');
+            div.className = 'selected-item';
+            div.innerHTML = `
+                ${box.value}
+                <button type="button" onclick="this.closest('.selected-item').remove(); document.getElementById('${box.id}').click();">×</button>
+            `;
+            selectedList.appendChild(div);
+        });
+
+        if (submitBtn) {
+            submitBtn.disabled = selectedBoxes.length === 0;
+        }
+    }
+
+    function handleSearch() {
+        const searchTerm = searchBox.value.toLowerCase();
+        locationCheckboxes.forEach(checkbox => {
+            const label = checkbox.querySelector('label').textContent.toLowerCase();
+            const locationGroup = checkbox.closest('.location-group');
+            const shouldShow = label.includes(searchTerm);
+            checkbox.style.display = shouldShow ? 'block' : 'none';
+
+            // Update group visibility
+            if (locationGroup) {
+                const visibleCheckboxes = [...locationGroup.querySelectorAll('.location-checkbox')]
+                    .some(cb => cb.style.display !== 'none');
+                locationGroup.style.display = visibleCheckboxes ? 'block' : 'none';
+            }
+        });
+    }
+
+    if (searchBox) {
+        searchBox.addEventListener('input', handleSearch);
+    }
+
+    if (locationCheckboxes.length) {
+        locationCheckboxes.forEach(checkbox => {
+            checkbox.querySelector('input').addEventListener('change', updateSelectedLocations);
+        });
+    }
+
+    // Initialize selected locations
+    updateSelectedLocations();
+}
+
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     renderItems();
     initializeForm();
     initializeNavigation();
+    initializeLocationHandling();
 });
