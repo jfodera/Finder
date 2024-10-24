@@ -1,5 +1,4 @@
 // FAKE ITEMS
-
 const lostItems = [
     {
         item_id: 1,
@@ -47,50 +46,186 @@ function createItemCard(item) {
 
 function renderItems() {
     const itemsGrid = document.getElementById('itemsGrid');
-    itemsGrid.innerHTML = lostItems.map(createItemCard).join('');
+    if (itemsGrid) {
+        itemsGrid.innerHTML = lostItems.map(createItemCard).join('');
+    }
 }
 
-document.addEventListener('DOMContentLoaded', renderItems);
+// Form navigation and validation
+function initializeForm() {
+    const infoForm = document.getElementById('infoForm');
+    if (!infoForm) return; // Exit if not on a form page
 
-document.addEventListener('DOMContentLoaded', function () {
+    const pages = Array.from(document.querySelectorAll('#infoForm .page'));
+    const nextBtns = document.querySelectorAll('.next-btn');
+    const prevBtns = document.querySelectorAll('.prev-btn');
+
+    // Form navigation
+    nextBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            changePage('next');
+        });
+    });
+
+    prevBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            changePage('prev');
+        });
+    });
+
+    function changePage(btn) {
+        const active = document.querySelector('#infoForm .page.active');
+        let index = pages.indexOf(active);
+        pages[index].classList.remove('active');
+        if (btn === 'next') {
+            index++;
+        } else if (btn === 'prev') {
+            index--;
+        }
+        pages[index].classList.add('active');
+    }
+
+    // Image preview
+    const uploadImg = document.getElementById("upload_image");
+    const inputFile = document.getElementById("input-file");
+    if (inputFile) {
+        inputFile.onchange = function() {
+            uploadImg.src = URL.createObjectURL(inputFile.files[0]);
+        }
+    }
+
+    // Location search and selection
+    const searchBox = document.getElementById('locationSearch');
+    const locationCheckboxes = document.querySelectorAll('.location-checkbox');
+    const selectedCountSpan = document.getElementById('selectedCount');
+
+    if (searchBox) {
+        searchBox.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            locationCheckboxes.forEach(checkbox => {
+                const label = checkbox.querySelector('label').textContent.toLowerCase();
+                const locationGroup = checkbox.closest('.location-group');
+                checkbox.style.display = label.includes(searchTerm) ? 'flex' : 'none';
+                
+                // Show/hide category headers based on visible checkboxes
+                if (locationGroup) {
+                    const visibleCheckboxes = locationGroup.querySelectorAll('.location-checkbox[style="display: flex"]');
+                    locationGroup.style.display = visibleCheckboxes.length > 0 ? 'block' : 'none';
+                }
+            });
+        });
+    }
+
+    // Update selected locations count
+    if (locationCheckboxes.length > 0) {
+        locationCheckboxes.forEach(checkbox => {
+            checkbox.querySelector('input').addEventListener('change', updateSelectedCount);
+        });
+
+        function updateSelectedCount() {
+            const selectedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            selectedCountSpan.textContent = selectedCount;
+            
+            // Validate minimum selection
+            const submitBtn = document.querySelector('.submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = selectedCount === 0;
+            }
+        }
+    }
+}
+
+// Navigation and header functionality
+function initializeNavigation() {
+    // Active page highlighting
     var currentPage = window.location.pathname.split('/').pop();
     var navLinks = document.querySelectorAll('.global-header nav ul li a');
-    navLinks.forEach(function (link) {
+    navLinks.forEach(function(link) {
         if (link.getAttribute('href') === currentPage) {
             link.parentElement.classList.add('active');
         }
     });
-});
 
-document.addEventListener("DOMContentLoaded", function () {
+    // Mobile menu toggle
     const hamburger = document.getElementById("hamburger");
     const navMenu = document.getElementById("nav-menu");
-
-    hamburger.addEventListener("click", function () {
-        navMenu.classList.toggle("active");
-    });
-});
-
-function populateLocationDropdown() {
-    fetch('php/locations.php')
-        .then(response => response.json())
-        .then(locationCategories => {
-            const locationSelect = document.getElementById('location');
-            if (locationSelect) {
-                for (const [category, locations] of Object.entries(locationCategories)) {
-                    const optgroup = document.createElement('optgroup');
-                    optgroup.label = category;
-                    locations.forEach(location => {
-                        const option = document.createElement('option');
-                        option.value = location;
-                        option.textContent = location;
-                        optgroup.appendChild(option);
-                    });
-                    locationSelect.appendChild(optgroup);
-                }
-            }
-        })
-        .catch(error => console.error('Error fetching locations:', error));
+    if (hamburger && navMenu) {
+        hamburger.addEventListener("click", function() {
+            navMenu.classList.toggle("active");
+        });
+    }
 }
 
-document.addEventListener('DOMContentLoaded', populateLocationDropdown);
+function initializeLocationHandling() {
+    const searchBox = document.getElementById('locationSearch');
+    const locationCheckboxes = document.querySelectorAll('.location-checkbox');
+    const selectedList = document.getElementById('selectedList');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const submitBtn = document.querySelector('.submit-btn');
+
+    function updateSelectedLocations() {
+        const selectedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        selectedList.innerHTML = '';
+        selectedCountSpan.textContent = selectedBoxes.length;
+        
+        selectedBoxes.forEach(box => {
+            const div = document.createElement('div');
+            div.className = 'selected-item';
+            div.innerHTML = `
+                ${box.value}
+                <button type="button" onclick="this.closest('.selected-item').remove(); document.getElementById('${box.id}').click();">×</button>
+            `;
+            selectedList.appendChild(div);
+        });
+
+        if (submitBtn) {
+            if (selectedBoxes.length === 0) {
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+            }
+        }
+    }
+
+    function handleSearch() {
+        const searchTerm = searchBox.value.toLowerCase();
+        locationCheckboxes.forEach(checkbox => {
+            const label = checkbox.querySelector('label').textContent.toLowerCase();
+            const locationGroup = checkbox.closest('.location-group');
+            const shouldShow = label.includes(searchTerm);
+            if (shouldShow) checkbox.style.display = 'block';
+            else checkbox.style.display = 'none';
+
+            // Update group visibility
+            if (locationGroup) {
+                const visibleCheckboxes = [...locationGroup.querySelectorAll('.location-checkbox')].some(cb => cb.style.display !== 'none');
+                if (visibleCheckboxes) locationGroup.style.display = 'block';
+                else locationGroup.style.display = 'none';
+            }
+                
+            
+        });
+    }
+
+    if (searchBox) {
+        searchBox.addEventListener('input', handleSearch);
+    }
+
+    if (locationCheckboxes.length) {
+        locationCheckboxes.forEach(checkbox => {
+            checkbox.querySelector('input').addEventListener('change', updateSelectedLocations);
+        });
+    }
+
+    // Initialize selected locations
+    updateSelectedLocations();
+}
+
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    renderItems();
+    initializeForm();
+    initializeNavigation();
+    initializeLocationHandling();
+});

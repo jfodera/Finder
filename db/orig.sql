@@ -57,8 +57,9 @@ CREATE TABLE recorder_codes (
 CREATE TABLE lost_items (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
     item_type VARCHAR(100) NOT NULL,
-    description TEXT NOT NULL,
-    location VARCHAR(255) NOT NULL,
+    brand VARCHAR(100),
+    color VARCHAR(50),
+    additional_info TEXT,
     lost_time DATETIME NOT NULL,
     status ENUM('lost', 'found', 'claimed') DEFAULT 'lost',
     user_id INT,
@@ -74,8 +75,9 @@ CREATE TABLE lost_items (
 CREATE TABLE found_items (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
     item_type VARCHAR(100) NOT NULL,
-    description TEXT NOT NULL,
-    location VARCHAR(255) NOT NULL,
+    brand VARCHAR(100),
+    color VARCHAR(50),
+    additional_info TEXT,
     found_time DATETIME NOT NULL,
     status ENUM('available', 'claimed') DEFAULT 'available',
     recorder_id INT,
@@ -83,6 +85,23 @@ CREATE TABLE found_items (
     image_public_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (recorder_id) REFERENCES users(user_id)
+);
+
+-- Item Locations Junction Table
+CREATE TABLE item_locations (
+    location_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT NOT NULL,
+    item_type ENUM('lost', 'found') NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_lost_item FOREIGN KEY (item_id) 
+        REFERENCES lost_items(item_id) 
+        ON DELETE CASCADE,
+    CONSTRAINT fk_found_item FOREIGN KEY (item_id) 
+        REFERENCES found_items(item_id) 
+        ON DELETE CASCADE,
+    INDEX idx_item_type (item_type),
+    INDEX idx_location (location)
 );
 
 -- Matches Table
@@ -106,7 +125,97 @@ CREATE TABLE submission_cooldowns (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+-- Locations Reference Table
+CREATE TABLE locations (
+    location_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category ENUM('Academic & Research', 'Student Life', 'Student Housing', 'Operations & Administration') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert test recorder codes
 INSERT INTO recorder_codes (code, user_id) VALUES 
 ('test1', NULL),
 ('test2', NULL),
 ('test3', NULL);
+
+-- Insert predefined locations
+INSERT INTO locations (name, category) VALUES
+-- Academic & Research
+('Amos Eaton Hall', 'Academic & Research'),
+('Carnegie Building', 'Academic & Research'),
+('Center for Biotechnology and Interdisciplinary Studies (CBIS)', 'Academic & Research'),
+('Cogswell Laboratory', 'Academic & Research'),
+('Darrin Communications Center', 'Academic & Research'),
+('Empire State Hall', 'Academic & Research'),
+('Experimental Media & Performing Arts Center (EMPAC)', 'Academic & Research'),
+('Folsom Library', 'Academic & Research'),
+('Greene Building', 'Academic & Research'),
+('Jonsson Engineering Center (JEC)', 'Academic & Research'),
+('Jonsson-Rowland Science Center', 'Academic & Research'),
+('Lally Hall', 'Academic & Research'),
+('LINAC Facility (Gaerttner Laboratory)', 'Academic & Research'),
+('Low Center for Industrial Innovation (CII)', 'Academic & Research'),
+('Materials Research Center (MRC)', 'Academic & Research'),
+('Pittsburgh Building', 'Academic & Research'),
+('Ricketts Building', 'Academic & Research'),
+('Russell Sage Laboratory', 'Academic & Research'),
+('Walker Laboratory', 'Academic & Research'),
+('West Hall', 'Academic & Research'),
+('Winslow Building', 'Academic & Research'),
+
+-- Student Life
+('87 Gymnasium', 'Student Life'),
+('Academy Hall', 'Student Life'),
+('Alumni Sports & Recreation Center', 'Student Life'),
+('Chapel + Cultural Center', 'Student Life'),
+('Commons Dining Hall', 'Student Life'),
+('East Campus Athletic Village Arena (ECAV)', 'Student Life'),
+('East Campus Athletic Village Stadium', 'Student Life'),
+('Houston Field House', 'Student Life'),
+('Mueller Center', 'Student Life'),
+('Playhouse', 'Student Life'),
+('Radio Club W2SZ', 'Student Life'),
+('Rensselaer Union', 'Student Life'),
+('Robison Swimming Pool', 'Student Life'),
+('Russell Sage Dining Hall', 'Student Life'),
+
+-- Student Housing
+('Barton Hall', 'Student Housing'),
+('Blitman Commons', 'Student Housing'),
+('Bray Hall', 'Student Housing'),
+('Bryckwyck', 'Student Housing'),
+('Burdett Avenue Residence Hall', 'Student Housing'),
+('Colonie Apartments', 'Student Housing'),
+('Hall Hall', 'Student Housing'),
+('Nason Hall', 'Student Housing'),
+('North Hall', 'Student Housing'),
+('Nugent Hall', 'Student Housing'),
+('Polytechnic Residence Commons', 'Student Housing'),
+('Quadrangle Complex', 'Student Housing'),
+('Rensselaer Apartment Housing Project A', 'Student Housing'),
+('Rensselaer Apartment Housing Project B', 'Student Housing'),
+('Rousseau Apartments', 'Student Housing'),
+('Sharp Hall', 'Student Housing'),
+('Stacwyck Apartments', 'Student Housing'),
+('Warren Hall', 'Student Housing'),
+('Williams Apartments', 'Student Housing'),
+
+-- Operations & Administration
+('2021 15th Street', 'Operations & Administration'),
+('2144 Burdett Avenue', 'Operations & Administration'),
+('41 Ninth Street', 'Operations & Administration'),
+('Admissions', 'Operations & Administration'),
+('Alumni House (Heffner)', 'Operations & Administration'),
+('Blaw-Knox 1 & 2', 'Operations & Administration'),
+('Boiler House, 11th Street', 'Operations & Administration'),
+('Boiler House, Sage Avenue', 'Operations & Administration'),
+('Graduate Education', 'Operations & Administration'),
+('Greenhouses and Grounds Barn', 'Operations & Administration'),
+('H Building', 'Operations & Administration'),
+('J Building', 'Operations & Administration'),
+('Patroon Manor', 'Operations & Administration'),
+('Public Safety', 'Operations & Administration'),
+('Service Building', 'Operations & Administration'),
+('Troy Building', 'Operations & Administration'),
+('Voorhees Computing Center (VCC)', 'Operations & Administration');
