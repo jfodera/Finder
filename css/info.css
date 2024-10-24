@@ -1,5 +1,6 @@
 
 
+
 .item_form_container {
     background: rgba(255, 255, 255, 0.1);
     padding: 40px;
@@ -21,8 +22,16 @@
 }
 
 .item_form_container h2 {
-    margin-bottom: 20px;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
 }
+
+
+.item_form_container h3{
+    font-weight: 100;
+    font-size: 1em; 
+}
+
 
 .item_form_container form {
     display: flex;

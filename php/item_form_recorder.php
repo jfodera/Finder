@@ -9,8 +9,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Time = $_POST['Time'];
     $Image = $_POST['Image'];
     $Location = $_POST['Location'];
-    
-    
   
 }
 ?>
@@ -24,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Finder - RecorderInfo</title>
+    <title>Finder - Recorder Item Info</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../css/info.css">
     <!-- <script src="../js/lost_item_form.js" defer></script> -->
@@ -35,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <section class="question">
-            <h1>What Item are you recording?</h1>
+            <h1>Describe the Item Being Recorded:</h1>
         </section>
         <div class="item_form_container">
             <?php if (isset($error)): ?>
@@ -44,48 +42,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <form id = "infoForm" action="item_form_recorder.php" method="post">
                 <div class="page page-1 index active">
-                    <div class="form_group">
-                            <input type="text" name="Description" placeholder="General Description of the item?" required>
-                    </div>
-                    <div class="form_group">
-                        <input type="text" name="Brand" placeholder="Brand?" required>
-                    </div>
-                    <div class="form_group">
-                        <input type="text" name="Color" placeholder="Color?" required>
-                    </div>
-                    
-                    <button type="button" class="next-btn">Continue</button> 
+                        <h2>What type of item? </h2>
+
+                        <div class="form_group">
+                            <input type="text" name="type" placeholder="Type?" required>
+                        </div>
+                        <div class="form_group">
+                            <input type="text" name="Brand" placeholder="Brand?" required>
+                        </div>
+                        <div class="form_group">
+                            <input type="text" name="Color" placeholder="Color?" required>
+                        </div>
+                        <div class="form_group">
+                            <input type="text" name="addInfo" placeholder="Any Additional Informtion" required>
+                        </div>
+                        
+                        <button type="button" class="next-btn">Continue</button> 
 
                 </div>
 
                 <div class="page page-2">
-                    
-                    <div class="form_group">
-                            <input type="text" name="Date" placeholder="Date?" required>
-                    </div>
-                    <div class="form_group">
-                        <input type="text" name="Time" placeholder="Time?" required>
-                    </div>
-            
-                    <button type="button" class="prev-btn">Go Back</button> 
-                    <button type="button" class="next-btn">Continue</button> 
+                        <h2>When was it Found?</h2>
+                        <h3>*Give approximate time*</h3>
+                        <div class="form_group">
+                                <input type="datetime-local" name="Date" placeholder="Date?" required>
+                        </div>
+                
+                        <button type="button" class="prev-btn">Go Back</button> 
+                        <button type="button" class="next-btn">Continue</button> 
 
                 </div>
 
                 <div class="page page-3 ">
-                <img id="upload_image" src="../default_image.png" alt="image of the item">
-                <label id = "item_img" for = "input-file">upload image</label>
-                    <div class="form_group">
-                            <input id = "input-file" type="file" name="Image" accept = "image/jpeg,image/png,image/jpg" >
-                    </div>
-        
-                    <button type="button" class="prev-btn">Go Back</button> 
-                    <button type="button" class="next-btn">Continue</button> 
+                    <h2>Upload Item Image</h2>
+                    <h3>*not required*</h3>
+                    <img id="upload_image" src="../default_image.png" alt="image of the item">
+                    <label id = "item_img" for = "input-file">upload image</label>
+                        <div class="form_group">
+                                <input id = "input-file" type="file" name="Image" accept = "image/jpeg,image/png,image/jpg" >
+                        </div>
+            
+                        <button type="button" class="prev-btn">Go Back</button> 
+                        <button type="button" class="next-btn">Continue</button> 
 
                 </div>
 
+
                 <div class="page page-4 ">
-                    
+                    <h2>Where was it found?</h2>
+                    <h3>*Can select multiple*</h3>
                     <div class="form_group">
                             <input type="text" name="Location" placeholder="Location Type?" required>
                     </div>
