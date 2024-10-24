@@ -308,3 +308,181 @@ h1 {
     color: white;
     text-decoration: underline;
 }
+
+/* Location Selection Styles */
+.locations-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.locations-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.locations-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.locations-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.location-group {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.location-group:last-child {
+    margin-bottom: 0;
+}
+
+.location-group h3 {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 8px;
+}
+
+.location-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.location-checkbox {
+    flex: 0 0 calc(33.333% - 10px);
+    min-width: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.location-checkbox:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.location-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.location-checkbox label {
+    display: flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    user-select: none;
+    position: relative;
+    padding-left: 35px;
+}
+
+.location-checkbox label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.location-checkbox input[type="checkbox"]:checked + label:before {
+    background: #01f573;
+    border-color: #01f573;
+}
+
+.location-checkbox input[type="checkbox"]:checked + label:after {
+    content: '✓';
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.location-search {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 16px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.location-search:focus {
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(1, 245, 115, 0.3);
+}
+
+.location-search::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.selected-locations {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 20px;
+    border-radius: 25px;
+    margin-top: 15px;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.selected-locations span {
+    background: rgba(1, 245, 115, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+/* Make location section responsive */
+@media (max-width: 768px) {
+    .locations-container {
+        max-height: 450px;
+        padding: 15px;
+    }
+
+    .location-checkbox {
+        flex: 0 0 calc(50% - 10px);
+        min-width: 150px;
+    }
+
+    .location-group h3 {
+        font-size: 16px;
+    }
+
+    .location-checkbox label {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .location-checkbox {
+        flex: 0 0 100%;
+    }
+}
