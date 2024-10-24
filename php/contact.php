@@ -9,6 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Contact</title>
     <link rel="stylesheet" href="../contact.css">
+   
+    <link href="../fontawesome-free-6.6.0-web/css/all.css" rel="stylesheet" />
+
     
 </head>
 
