@@ -179,7 +179,11 @@ function initializeLocationHandling() {
         });
 
         if (submitBtn) {
-            submitBtn.disabled = selectedBoxes.length === 0;
+            if (selectedBoxes.length === 0) {
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+            }
         }
     }
 
@@ -189,14 +193,17 @@ function initializeLocationHandling() {
             const label = checkbox.querySelector('label').textContent.toLowerCase();
             const locationGroup = checkbox.closest('.location-group');
             const shouldShow = label.includes(searchTerm);
-            checkbox.style.display = shouldShow ? 'block' : 'none';
+            if (shouldShow) checkbox.style.display = 'block';
+            else checkbox.style.display = 'none';
 
             // Update group visibility
             if (locationGroup) {
-                const visibleCheckboxes = [...locationGroup.querySelectorAll('.location-checkbox')]
-                    .some(cb => cb.style.display !== 'none');
-                locationGroup.style.display = visibleCheckboxes ? 'block' : 'none';
+                const visibleCheckboxes = [...locationGroup.querySelectorAll('.location-checkbox')].some(cb => cb.style.display !== 'none');
+                if (visibleCheckboxes) locationGroup.style.display = 'block';
+                else locationGroup.style.display = 'none';
             }
+                
+            
         });
     }
 
