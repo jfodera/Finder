@@ -45,5 +45,10 @@ XAMMP Notes:
    
 
 to do: 
-   Make Item Form PAge -> front end looking nice, Understand how to link that to the sql database setup -> use ITWS lab
+   Make Item Form PAge -> front end looking nice, √
+   connect to xampp database and get .env's working 
+   familiar with entire site operations 
+   predefined tags -> put char limits on html's 
+   Understand how to link that to the sql database setup -> use ITWS lab
+      required and non-required fields
 

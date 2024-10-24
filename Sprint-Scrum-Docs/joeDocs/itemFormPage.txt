@@ -13,15 +13,26 @@ Plan:
 
    Going to have field for: 
 
-      
-      Type -> item_type (varchar for no but will change) -> predefined
-      Color -> color 
-      brand -> brand
-      Additional info -> description 
-      Location Lost -> location (varchar for now but will change) -> predefined, convert 
-      When did you lose it -> lost_time
+      user: 
+         Type -> item_type (varchar for no but will change) -> predefined
+         Color -> color 
+         brand -> brand
+         Additional info -> description 
+         Location Lost -> location (varchar for now but will change) -> predefined, convert 
+         When did you lose it -> lost_time
 
-      Image -> *no box for that yet*
+         Image -> *no box for that yet*
+
+      recorder: 
+
+         Type -> item_type (varchar for no but will change) -> predefined
+         Color -> color 
+         brand -> brand
+         Additional info -> description 
+         Location Lost -> location (varchar for now but will change) -> predefined, convert 
+         When was it found -> found_time
+
+         Image -> *no box for that yet*
 
 
 
@@ -61,8 +72,8 @@ Citations:
 
 
 Current:
-   Going through and appending form pages , on where did you loose item_type
-   update item_form_recorder accordingly 
+   Going through and appending form pages , on where did you loose item_type √
+   update item_form_recorder accordingly √
 
 
 Helpful Code Chunks: 

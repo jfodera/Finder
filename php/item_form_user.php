@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Finder - RecorderInfo</title>
+    <title>Finder - User Item Info</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../css/info.css">
     
@@ -59,7 +59,24 @@
                 </div>
 
                 <div class="page page-3 ">
-                    <h2>When did you loose it? (can select multiple)</h2>
+
+                <h2>Upload Item Image</h2>
+                <h3>*not required*</h3>
+
+                <img id="upload_image" src="../default_image.png" alt="image of the item">
+                <label id = "item_img" for = "input-file">upload image</label>
+                    <div class="form_group">
+                            <input id = "input-file" type="file" name="Image" accept = "image/jpeg,image/png,image/jpg" >
+                    </div>
+        
+                    <button type="button" class="prev-btn">Go Back</button> 
+                    <button type="button" class="next-btn">Continue</button> 
+
+                </div>
+
+                <div class="page page-4 ">
+                    <h2>When did you loose it?</h2>
+                    <h3>*Can select multiple*</h3>
                     <div class="form_group">
                             <input type="text" name="Location" placeholder="Location Type?" required>
                     </div>
