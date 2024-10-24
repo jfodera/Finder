@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Hex Color Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../hexed/styles.css">
+</head>
+<body>
+    <header>
+        <h1 class="neon-text">Neon Hex Color Game</h1>
+    </header>
+    <main>
+        <div class="game-container">
+            <div class="color-display" id="colorDisplay"></div>
+            <div id="timerDisplay" class="timer neon-text">Time: 10</div>
+            <div id="gameModes" class="game-modes">
+                <button id="easyMode" class="neon-button mode-button" title="15 seconds to match, max score 100">Easy</button>
+                <button id="normalMode" class="neon-button mode-button" title="10 seconds to match, max score 100">Normal</button>
+                <button id="hardMode" class="neon-button mode-button" title="7 seconds to match, max score 150, time penalty">Hard</button>
+            </div>
+            <button id="startButton" class="neon-button">Start Game</button>
+            <div id="sliders" class="hidden">
+                <div class="sliders-preview-container">
+                    <div class="sliders">
+                        <div class="slider-container">
+                            <label for="redSlider" class="neon-text">Red:</label>
+                            <input type="range" id="redSlider" min="0" max="255" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label for="greenSlider" class="neon-text">Green:</label>
+                            <input type="range" id="greenSlider" min="0" max="255" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label for="blueSlider" class="neon-text">Blue:</label>
+                            <input type="range" id="blueSlider" min="0" max="255" value="0">
+                        </div>
+                    </div>
+                    <div class="color-preview" id="colorPreview"></div>
+                </div>
+                <button id="submitButton" class="neon-button">Submit</button>
+            </div>
+            <div id="scoreDisplay" class="score neon-text"></div>
+            <button id="restartButton" class="neon-button hidden">Restart</button>
+        </div>
+    </main>
+    <script src="../hexed/script.js"></script>
+</body>
+</html>

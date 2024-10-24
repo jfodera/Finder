@@ -1,0 +1,117 @@
+
+
+.item_form_container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+
+
+.item_form_container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.item_form_container h2 {
+    margin-bottom: 20px;
+}
+
+.item_form_container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item_form_container input {
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 16px;
+}
+
+.item_form_container input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.item_form_container .button {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.page{
+    display: none;
+}
+.page.active{
+    display: block;
+}
+
+.form_group {
+    margin-top: 20px;
+    width: 100%;
+}
+.form_group input{
+    width:90%
+}
+
+
+
+button.next-btn,
+button.submit-btn{
+    float:right;
+}
+#first-btn{
+    text-align: center;
+}
+button.prev-btn{
+    float:left;
+}
+
+button.prev-btn,
+button.next-btn,
+button.submit-btn{
+    
+    margin-top: 20px;
+    padding: 10px 30px;
+    border: 2px solid white;
+    color: black;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+button.prev-btn:hover,
+button.next-btn:hover,
+button.submit-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+} 
+
+#upload_image{
+    width:180px;
+    height:180px
+}
+
+#item_img{
+    display: block;
+    width: 200px;
+    background: navy;
+    color:#fff;
+    padding: 12px;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#input-file{
+    display: none;
+}

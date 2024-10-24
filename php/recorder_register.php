@@ -1,4 +1,90 @@
-<?php include 'header.php'; ?>
+<?php 
+session_start();
+include 'header.php';
+require_once '../db/db_connect.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $code = $_POST['code'];
+    
+    if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password) || empty($code)) {
+        $_SESSION['error'] = "All fields are required";
+        header("Location: recorder_register.php");
+        exit();
+    }
+
+    //only rpi users with a @rpi.edu email can register
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
+        $_SESSION['error'] = "Email must be an @rpi.edu address";
+        header("Location: recorder_register.php");
+        exit();
+    }
+
+    
+    if ($password !== $confirm_password) {
+        $_SESSION['error'] = "Passwords do not match";
+        header("Location: recorder_register.php");
+        exit();
+    }
+    
+    try {
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            $_SESSION['error'] = "Email already exists";
+            header("Location: recorder_register.php");
+            exit();
+        }
+        
+        // Validate recorder code
+        $stmt = $pdo->prepare("SELECT code_id FROM recorder_codes WHERE code = ? AND user_id IS NULL");
+        $stmt->execute([$code]);
+        $recorder_code = $stmt->fetch();
+        
+        if (!$recorder_code) {
+            $_SESSION['error'] = "Invalid or used recorder code";
+            header("Location: recorder_register.php");
+            exit();
+        }
+        
+        // Insert new user
+        $pdo->beginTransaction();
+        
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Split full name into first and last name
+        $name_parts = explode(" ", $full_name, 2);
+        $first_name = $name_parts[0];
+        $last_name = isset($name_parts[1]) ? $name_parts[1] : "";
+        
+        $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, is_recorder) VALUES (?, ?, ?, ?, TRUE)");
+        $stmt->execute([$email, $hashed_password, $first_name, $last_name]);
+        $user_id = $pdo->lastInsertId();
+        
+        // Update recorder code
+        $stmt = $pdo->prepare("UPDATE recorder_codes SET user_id = ? WHERE code = ?");
+        $stmt->execute([$user_id, $code]);
+        
+        $pdo->commit();
+        
+        $_SESSION['success'] = "Registration successful! Please log in.";
+        header("Location: login.php");
+        exit();
+        
+    } catch (PDOException $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        $_SESSION['error'] = "Database error: " . $e->getMessage();
+        header("Location: recorder_register.php");
+        exit();
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,12 +101,18 @@
     <div class="container">
         <div class="form-container">
             <div class="logo">Finder</div>
-            <form action="register.php" method="post">
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo '<div class="error">' . $_SESSION['error'] . '</div>';
+                unset($_SESSION['error']);
+            }
+            ?>
+            <form action="recorder_register.php" method="post">
                 <input type="text" name="full_name" placeholder="Full Name" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <input type="code" name="code" placeholder="Recorder Code" required>
+                <input type="text" name="code" placeholder="Recorder Code" required>
                 <button type="submit" class="button button-account">Sign Up</button>
             </form>
             <div class="switch">
