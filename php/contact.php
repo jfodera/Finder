@@ -52,8 +52,9 @@
             </div>
             
             <div class = "contactForm">
-                <form>
+                <form action="https://api.web3forms.com/submit" method="POST">
                     <h2> Send Message</h2>
+                    <input type="hidden" name="access_key" value="d282ad35-0e50-45be-8cdc-a08565f915ce">
                     <div class = "inputBox">
                         <input type = "text" name = "" required = "required">
                         <span> Full Name</span>
