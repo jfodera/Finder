@@ -21,18 +21,14 @@ if (!isset($_SESSION['user_id'])) {
     <div class="container">
         <h1>Welcome to your Dashboard</h1>
         
-        <?php if ($_SESSION['is_recorder']): ?>
-            <h2>Your Found Items</h2>
-        <?php else: ?>
-            <h2>Your Lost Items</h2>
-        <?php endif; ?>
+        <div class="action-buttons">
+            <a href="item_form_user.php" class="button">Report Lost Item</a>
+        </div>
 
-        
-        <h1>Your Lost Items</h1>
-        <div class="items-grid" id="itemsGrid"></div>
-
-        
-        
+        <h2>Your Lost Items</h2>
+        <div class="items-grid" id="itemsGrid">
+            <div class="loading">Loading your items...</div>
+        </div>
     </div>
     <script src="../script.js"></script>
 </body>
