@@ -92,6 +92,7 @@ function checkSubmissionCooldown($pdo, $user_id) {
     } catch (PDOException $e) {
         debug_log("Cooldown check error", $e->getMessage());
         return true;
+    }
 }
 
 // Update cooldown timestamp

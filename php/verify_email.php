@@ -15,10 +15,6 @@ if (isset($_GET['email']) && isset($_GET['token'])) {
         if ($user = $stmt->fetch()) {
             $updateStmt = $pdo->prepare("UPDATE users SET is_verified = 1, verification_token = NULL WHERE user_id = ?");
             $updateStmt->execute([$user['user_id']]);
-            
-            $_SESSION['success'] = "Your account has been verified! You can now log in.";
-        } else {
-            $_SESSION['error'] = "Invalid verification link or account already verified.";
         }
     } catch (PDOException $e) {
         $_SESSION['error'] = "Database error occurred.";
