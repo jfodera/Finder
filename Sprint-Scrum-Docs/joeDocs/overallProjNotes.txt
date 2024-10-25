@@ -42,7 +42,15 @@ XAMMP Notes:
    Link to our DB 
 
 
-   
+Preface for Midterm Presentation: 
+   "before we get started with the demo, we just wanted to preface you with some areas in which we are specifically looking for feedback: 
+      we are going to go over some lost item submission forms, We'd love to know if you think theres anything we should also add. 
+      We have a home dashboard so our user has easy acsess to all of there actions, We'd love some constructive critisism on the layout. 
+      Also any comments on the layout of the form submissions would be appreciated
+
+Midterm Takeaways: 
+   When trying to match an item, It should respond with either "FOUND" or "not found yet, will notify you if anything enters the database 
+   matching this description" 
 
 to do: 
    Make Item Form PAge -> front end looking nice, √
@@ -52,3 +60,5 @@ to do:
    Understand how to link that to the sql database setup -> use ITWS lab
       required and non-required fields
 
+Questions: 
+   how did you block users from just messing with 

@@ -92,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $verification_token = bin2hex(random_bytes(32));
         
+        //encrypts so cannot be seen in database 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
         $name_parts = explode(" ", $full_name, 2);
