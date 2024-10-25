@@ -83,11 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $update_stmt = $pdo->prepare("UPDATE users SET verification_token = ? WHERE email = ?");
                         $update_stmt->execute([$new_verification_token, $email]);
                         
-                        if (sendVerificationEmail($email, $new_verification_token)) {
-                            $error = "A new verification email has been sent. Please check your inbox.";
-                        } else {
-                            $error = "Failed to send verification email. Please try again later.";
-                        }
+                        sendVerificationEmail($email, $verification_token);
                     } else {
                         $error = "Please verify your email before logging in. 
                                 <form method='post' style='display:inline;'>

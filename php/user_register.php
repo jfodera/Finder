@@ -101,11 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, is_recorder, verification_token) VALUES (?, ?, ?, ?, FALSE, ?)");
         $stmt->execute([$email, $hashed_password, $first_name, $last_name, $verification_token]);
         
-        if (sendVerificationEmail($email, $verification_token)) {
-            $_SESSION['success'] = "Registration successful! Please check your email to verify your account.";
-        } else {
-            $_SESSION['warning'] = "Account created, but verification email could not be sent. Please contact support.";
-        }
+        sendVerificationEmail($email, $verification_token);
         
         header("Location: login.php");
         exit();
