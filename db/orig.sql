@@ -219,3 +219,18 @@ INSERT INTO locations (name, category) VALUES
 ('Service Building', 'Operations & Administration'),
 ('Troy Building', 'Operations & Administration'),
 ('Voorhees Computing Center (VCC)', 'Operations & Administration');
+
+DROP TABLE IF EXISTS item_locations;
+
+CREATE TABLE item_locations (
+    location_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT NOT NULL,
+    item_type ENUM('lost', 'found') NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_lost_item_loc FOREIGN KEY (item_id)
+        REFERENCES lost_items(item_id)
+        ON DELETE CASCADE,
+    INDEX idx_item_type (item_type),
+    INDEX idx_location (location)
+);
