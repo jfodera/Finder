@@ -56,17 +56,17 @@
                     <h2> Send Message</h2>
                     <input type="hidden" name="access_key" value="d282ad35-0e50-45be-8cdc-a08565f915ce">
                     <div class = "inputBox">
-                        <input type = "text" name = "" required = "required">
+                        <input type = "text" name = "full_name" required = "required">
                         <span> Full Name</span>
                     </div>
 
                     <div class = "inputBox">
-                        <input type = "text" name = "" required = "required">
+                        <input type = "text" name = "email" required = "required">
                         <span>Email</span>
                     </div>
 
                     <div class = "inputBox">
-                        <textarea type = "text" name = "" required = "required"> </textarea>
+                        <textarea type = "text" name = "message" required = "required"> </textarea>
                         <span>Type your message...</span>
 
                     </div>
