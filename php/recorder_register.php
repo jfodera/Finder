@@ -71,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $pdo->commit();
         
-        $_SESSION['success'] = "Registration successful! Please log in.";
         header("Location: login.php");
         exit();
         
