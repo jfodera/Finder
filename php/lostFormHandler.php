@@ -132,11 +132,13 @@ function validateLocations($locations, $pdo) {
 
 // Handle image upload to Cloudinary
 function handleCloudinaryUpload($image) {
+    //checks if can support image
     if ($image['error'] !== UPLOAD_ERR_OK) {
         debug_log("Image upload error", $image['error']);
         return [null, null];
     }
 
+    //checks if actual image (png, jpeg, jpg extension)
     $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
     if (!in_array($image['type'], $allowed_types)) {
         debug_log("Invalid image type", $image['type']);
@@ -144,6 +146,7 @@ function handleCloudinaryUpload($image) {
     }
 
     try {
+        //UploadAPI instance from the library on our server. 
         $upload = new UploadApi();
         $result = $upload->upload($image['tmp_name'], [
             'folder' => 'lost_items',
