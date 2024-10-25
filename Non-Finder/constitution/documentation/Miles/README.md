@@ -1,0 +1,1 @@
+I was tasked with looking into and summarizing specific parts of the Constitution. However, I fell ill the night I began my work with tonsillitis and was out of commission for 1.5 weeks. Thus, my contributions to this lab were extremely limited. 
