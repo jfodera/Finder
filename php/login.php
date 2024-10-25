@@ -74,6 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location: dashboard.php");
                     exit();
                 } else {
+                    //User is not verified 
                     // Resend verification email if requested
                     if (isset($_POST['resend_verification'])) {
                         // Generate new verification token
@@ -85,6 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         sendVerificationEmail($email, $verification_token);
                     } else {
+                        
                         $error = "Please verify your email before logging in. 
                                 <form method='post' style='display:inline;'>
                                     <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
