@@ -63,4 +63,4 @@ to do:
       required and non-required fields
 
 Questions: 
-   how did you block users from just messing with 
+   how did you block users from just messing with the title, in order to get to the next page 
