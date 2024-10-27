@@ -1,0 +1,37 @@
+General description: 
+- Joseph Fodera mentions waiting for the rest of the attendees to show up.
+- Cooper Kelly asks if everyone is ready to start.
+- Joseph Fodera suggests scheduling the sprint retrospective for the end of sprint two and mentions texting or messaging Derek about it.
+- Joseph Fodera confirms that the second sprint is supposed to start on November 1st.
+- Joseph Fodera proposes scheduling the retrospective for the current week and asks for available days.
+- Cooper Kelly asks if the retrospective is already in their schedule.
+- Joseph Fodera mentions that the start of sprint two is on Friday.
+- Cooper Kelly suggests scheduling the retrospective after Tuesday due to a conflict.
+- Joseph Fodera agrees and asks if Wednesday night works for everyone.
+- Cooper Kelly and Heidi Zhou confirm their availability on Wednesday.
+- Thomas Mius mentions not being available past 7 PM on Wednesday.
+- Joseph Fodera asks for an alternative day and Thomas suggests Thursday after 4 PM.
+- Joseph Fodera suggests Thursday at 7:30 PM and Cooper Kelly suggests 8 PM.
+- Heidi Zhou confirms her availability on Thursday.
+- Joseph Fodera proposes discussing the plans for sprint three during the Thursday meeting.
+- Joseph Fodera mentions that he and some others may not have much time to work on vendor tasks due to upcoming exams.
+- Joseph Fodera suggests working on the issues listed on GitHub if there is available time.
+- The team agrees on Thursday at 8 PM for the retrospective.
+- Joseph Fodera concludes the meeting and asks Heidi Zhou to merge the summary into the main GitHub branch.
+
+Summary: 
+The meeting discussed scheduling the sprint retrospective and planning for the next sprint.
+	•	Schedule sprint retrospective for the end of sprint two, preferably after Tuesday.
+	•	Consider Wednesday night or Thursday evening for the retrospective, in person at the union.
+	•	Discuss plans for sprint three during the next meeting on Thursday at 8 PM.
+
+
+
+Action Items: 
+
+	•	Schedule the sprint retrospective for sprint two with Eric
+	•	Determine a time for the retrospective, preferably after Tuesday's conboard test
+	•	Text/discord message Eric about scheduling the retrospective
+	•	Confirm availability for in-person meeting at the union on Wednesday or Thursday
+	•	Aim for Thursday at 8 pm for the in-person retrospective meeting
+	•	Discuss plans for sprint three during the next meeting on Thursday 
