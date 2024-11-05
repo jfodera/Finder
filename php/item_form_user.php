@@ -48,8 +48,6 @@ foreach ($locations as $location) {
             <?php endif; ?>
 
             <form id="infoForm" action="lostFormHandler.php" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="form_token" value="<?php echo generateFormToken(); ?>">
-                <input type="hidden" name="request_id" value="<?php echo uniqid('request_', true); ?>">
                 <div class="page page-1 index active">
                     <h2>What type of item was it?</h2>
                     <div class="form_group">
