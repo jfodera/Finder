@@ -57,6 +57,9 @@ function initializeForm() {
     const nextBtns = document.querySelectorAll('.next-btn');
     const prevBtns = document.querySelectorAll('.prev-btn');
     const submitBtn = document.querySelector('.submit-btn');
+    
+    // Add submission lock
+    let isSubmitting = false;
 
     // Form validation
     function validatePage(pageIndex) {
@@ -168,99 +171,80 @@ function initializeForm() {
     // Location search and selection
     initializeLocationHandling();
 
-    // Form submission
+    // Single form submission handler
     if (infoForm) {
         infoForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            if (!validatePage(3)) { // Validate final page
+            console.log('Form submission started');
+
+            // Prevent duplicate submissions
+            if (isSubmitting) {
+                console.log('Form is already being submitted');
                 return;
             }
 
+            if (!validatePage(3)) {
+                console.log('Validation failed');
+                return;
+            }
+
+            // Set submission lock
+            isSubmitting = true;
+
+            // Disable submit button and show loading state
+            const submitBtn = document.querySelector('.submit-btn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
+            // Log the form data being sent
+            const formData = new FormData(this);
+            console.log('Form data being sent:');
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
             try {
-                const formData = new FormData(this);
                 const response = await fetch(this.action, {
                     method: 'POST',
                     body: formData
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                console.log('Raw response:', response);
+
+                // Try to parse the response as JSON
+                let jsonResponse;
+                try {
+                    const responseText = await response.text();
+                    console.log('Raw response text:', responseText);
+                    jsonResponse = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Failed to parse response:', parseError);
+                    throw new Error('Invalid response format');
                 }
 
-                window.location.href = 'dashboard.php';
+                console.log('Parsed response:', jsonResponse);
+
+                if (jsonResponse.success) {
+                    console.log('Success! Redirecting to:', jsonResponse.redirect);
+                    window.location.href = jsonResponse.redirect;
+                } else {
+                    console.error('Server reported error:', jsonResponse.message);
+                    if (jsonResponse.error_details) {
+                        console.error('Error details:', jsonResponse.error_details);
+                    }
+                    alert(jsonResponse.message || 'An error occurred while submitting the form.');
+                }
             } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while submitting the form. Please try again.');
+                console.error('Submission error:', error);
+                alert('An error occurred while submitting the form. Please check the console for details.');
+            } finally {
+                // Reset submission lock and button state
+                isSubmitting = false;
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit';
             }
         });
     }
-    infoForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        console.log('Form submission started');
-    
-        if (!validatePage(3)) {
-            console.log('Validation failed');
-            return;
-        }
-    
-        // Disable submit button and show loading state
-        const submitBtn = document.querySelector('.submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-    
-        // Log the form data being sent
-        const formData = new FormData(this);
-        console.log('Form data being sent:');
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-    
-        try {
-            const response = await fetch(this.action, {
-                method: 'POST',
-                body: formData
-            });
-    
-            console.log('Raw response:', response);
-    
-            // Try to parse the response as JSON
-            let jsonResponse;
-            try {
-                const responseText = await response.text();
-                console.log('Raw response text:', responseText);
-                jsonResponse = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error('Failed to parse response:', parseError);
-                throw new Error('Invalid response format');
-            }
-    
-            console.log('Parsed response:', jsonResponse);
-    
-            if (jsonResponse.success) {
-                console.log('Success! Redirecting to:', jsonResponse.redirect);
-                window.location.href = jsonResponse.redirect;
-            } else {
-                console.error('Server reported error:', jsonResponse.message);
-                if (jsonResponse.error_details) {
-                    console.error('Error details:', jsonResponse.error_details);
-                }
-                alert(jsonResponse.message || 'An error occurred while submitting the form.');
-            }
-        } catch (error) {
-            console.error('Submission error:', error);
-            alert('An error occurred while submitting the form. Please check the console for details.');
-        } finally {
-            // Re-enable submit button
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit';
-        }
-    });
 }
 
 // Location handling functionality
@@ -361,4 +345,3 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeForm();
     initializeNavigation();
 });
-
