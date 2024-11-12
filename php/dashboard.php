@@ -19,7 +19,7 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to your Dashboard</h1>
+        <h1 class="dashboard-heading">Welcome to your Dashboard</h1>
         
         <div class="action-buttons">
             <a href="item_form_user.php" class="button">Report Lost Item</a>
