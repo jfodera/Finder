@@ -6,6 +6,8 @@ html {
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
+    color: white;
 }
 
 .container {
@@ -13,12 +15,13 @@ html {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-top: 100px;
+    justify-content: flex-start; 
+    padding-top: 80px; 
     align-items: center;
-    background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
     color: white;
     text-align: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .logo {
