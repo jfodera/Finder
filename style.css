@@ -14,8 +14,7 @@ html {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 20px;
-    padding-top: 50px;
+    padding-top: 100px;
     align-items: center;
     background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
     color: white;
