@@ -6,9 +6,10 @@ html {
 }
 
 .container {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    padding-top: 50px;
+    padding-top: 100px;
     align-items: center;
     background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
     color: white;
@@ -306,10 +307,6 @@ h1 {
 .error a {
     color: white;
     text-decoration: underline;
-}
-
-.dashboard-heading {
-    margin-bottom: 20px; 
 }
 
 /* Location Selection Styles */
