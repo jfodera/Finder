@@ -309,6 +309,10 @@ h1 {
     text-decoration: underline;
 }
 
+.dashboard-heading {
+    margin-bottom: 20px; 
+}
+
 /* Location Selection Styles */
 .locations-container {
     background: rgba(255, 255, 255, 0.1);
