@@ -8,7 +8,7 @@ html {
 .container {
     display: flex;
     flex-direction: column;
-    padding-top: 500px;
+    padding-top: 50px;
     align-items: center;
     background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
     color: white;
