@@ -46,6 +46,12 @@ html {
     height: auto;
 }
 
+.description {
+    font-size: 18px;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
 .buttons {
     display: flex;
     gap: 20px;
@@ -608,7 +614,8 @@ h1 {
     width: 60%;
 }
 
-.description {
-    font-size: 24px;
+.about-description {
+    font-size: 28px;
     padding: 40px;
+    line-heighy: 1.5;
 }
