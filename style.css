@@ -610,6 +610,5 @@ h1 {
 
 .description {
     font-size: 24px;
-    max-width: 600px;
-    margin-bottom: 30px;
+    padding: 40px;
 }
