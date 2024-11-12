@@ -46,12 +46,6 @@ html {
     height: auto;
 }
 
-.description {
-    font-size: 18px;
-    max-width: 600px;
-    margin-bottom: 30px;
-}
-
 .buttons {
     display: flex;
     gap: 20px;
@@ -612,4 +606,10 @@ h1 {
     backdrop-filter: blur(10px);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     width: 60%;
+}
+
+.description {
+    font-size: 24px;
+    max-width: 600px;
+    margin-bottom: 30px;
 }
