@@ -30,6 +30,7 @@ function sendVerificationEmail($email, $token) {
     $domain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'yourdomain.com';
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     
+    // makes the link to send to our emails
     $verificationLink = $protocol . $domain . "/" . $_ENV['URL'] . "/php/verify_email.php?email=" . urlencode($email) . "&token=" . $token;
 
     $message = (new Swift_Message('Verify your Finder account'))
