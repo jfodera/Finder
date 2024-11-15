@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    
+    //password confirm
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match";
         header("Location: recorder_register.php");
@@ -51,7 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
         
-        // Insert new user
+        
+
+        // Insert new user, making multiple sql statement so put in commit block
         $pdo->beginTransaction();
         
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -76,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
     } catch (PDOException $e) {
         if ($pdo->inTransaction()) {
-            $pdo->rollBack();
+            $pdo->rollBack(); //sql insertion failed
         }
         $_SESSION['error'] = "Database error: " . $e->getMessage();
         header("Location: recorder_register.php");
