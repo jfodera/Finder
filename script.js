@@ -67,15 +67,59 @@ function initializeTabs() {
 
       button.classList.add("active");
       const baseId = button.dataset.tab;
-      const tabId = window.isRecorder ? baseId + "ItemsGrid" : 
+      const tabId = window.isRecorder ? 
+                    baseId + "ItemsGrid" : 
                     (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
       
       const content = document.getElementById(tabId);
-      if (content) {
-        content.classList.add("active");
-      }
+      if (content) content.classList.add("active");
     });
   });
+}
+
+
+async function renderItems() {
+  if (window.isRecorder) {
+    const lostItemsGrid = document.getElementById("lostItemsGrid");
+    const foundItemsGrid = document.getElementById("foundItemsGrid");
+
+    try {
+      const [lostItems, foundItems] = await Promise.all([
+        fetchItems("getLostItems.php"),
+        fetchItems("getFoundItems.php")
+      ]);
+
+      if (lostItemsGrid) {
+        lostItemsGrid.innerHTML = lostItems.length > 0
+          ? lostItems.map(item => createItemCard(item, "lost")).join("")
+          : '<p class="no-items">No lost items reported.</p>';
+      }
+
+      if (foundItemsGrid) {
+        foundItemsGrid.innerHTML = foundItems.length > 0
+          ? foundItems.map(item => createItemCard(item, "found")).join("")
+          : '<p class="no-items">No found items reported.</p>';
+      }
+    } catch (error) {
+      console.error("Error rendering items:", error);
+      const errorMessage = '<p class="error-message">Failed to load items.</p>';
+      if (lostItemsGrid) lostItemsGrid.innerHTML = errorMessage;
+      if (foundItemsGrid) foundItemsGrid.innerHTML = errorMessage;
+    }
+  } else {
+    const itemsGrid = document.getElementById("itemsGrid");
+    if (!itemsGrid) return;
+
+    try {
+      const items = await fetchItems("getUserItems.php");
+      itemsGrid.innerHTML = items.length > 0
+        ? items.map(item => createItemCard(item)).join("")
+        : '<p class="no-items">No items found.</p>';
+    } catch (error) {
+      console.error("Error rendering items:", error);
+      itemsGrid.innerHTML = '<p class="error-message">Failed to load items.</p>';
+    }
+  }
 }
 
 function createMatchFlow(matches) {
@@ -171,6 +215,52 @@ function createUserMatchCard(match) {
         }
       </div>
     `;
+}
+
+async function handleMatch(matchId, action) {
+  try {
+    const response = await fetch('handleMatch.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ match_id: matchId, action: action })
+    });
+    
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const result = await response.json();
+    if (result.success) {
+      // Refresh both matches and items views after action
+      await Promise.all([renderMatches(), renderItems()]);
+    } else {
+      alert(result.message || 'Failed to process match');
+    }
+  } catch (error) {
+    console.error('Error handling match:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
+
+async function handleUserMatch(matchId, action) {
+  try {
+    const response = await fetch('handleUserMatch.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ match_id: matchId, action: action })
+    });
+    
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const result = await response.json();
+    if (result.success) {
+      // Refresh both matches and items views after action
+      await Promise.all([renderMatches(), renderItems()]);
+    } else {
+      alert(result.message || 'Failed to process match');
+    }
+  } catch (error) {
+    console.error('Error handling user match:', error);
+    alert('An error occurred. Please try again.');
+  }
 }
 
 async function renderMatches() {
