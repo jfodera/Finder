@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1>About Finder</h1>
         <div class="about-container">
             <div class="about-description">
