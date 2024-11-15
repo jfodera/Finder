@@ -102,9 +102,9 @@ html {
 }
 
 .form-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .form-container input {
