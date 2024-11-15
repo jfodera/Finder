@@ -51,7 +51,6 @@ function sendVerificationEmail($email, $token) {
 
     try {
         $result = $mailer->send($message);
-        $_SESSION['mess']= "Verification Email Sent! Check email and verify to log in!";
         return true;
     } catch (Exception $e) {
         $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
@@ -72,12 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Only RPI users with a @rpi.edu email can register
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
-        $_SESSION['error'] = "Email must be an @rpi.edu address";
-        header("Location: user_register.php");
-        exit();
-    }
+    // // Only RPI users with a @rpi.edu email can register
+    // if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
+    //     $_SESSION['error'] = "Email must be an @rpi.edu address";
+    //     header("Location: user_register.php");
+    //     exit();
+    // }
         
 
     if ($password !== $confirm_password) {
@@ -108,6 +107,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$email, $hashed_password, $first_name, $last_name, $verification_token]);
         
         sendVerificationEmail($email, $verification_token);
+
+        //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
+        $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
+        <form method='post' style='display:inline;'>
+            <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
+            <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
+            <input type='hidden' name='resend_verification' value='1'>
+            <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
+                Resend verification email
+            </button>
+        </form>";
         
         header("Location: login.php");
         exit();

@@ -1163,3 +1163,18 @@ textarea:-webkit-autofill:focus {
     text-align: center;
   }
 }
+
+
+/* Errors  */
+.error {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  color: white;
+}
+.error a, .error button {
+  color: white;
+  text-decoration: underline;
+}
