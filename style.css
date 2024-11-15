@@ -102,9 +102,9 @@ html {
 }
 
 .form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .form-container input {
@@ -1044,30 +1044,6 @@ textarea:-webkit-autofill:focus {
   font-size: 0.9rem;
 }
 
-.match-status {
-  padding: 6px 15px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.match-status.pending {
-  background: #ffd700;
-  color: black;
-}
-
-.match-status.confirmed {
-  background: #4CAF50;
-  color: white;
-}
-
-.match-status.rejected {
-  background: #f44336;
-  color: white;
-}
-
 .match-actions {
   grid-column: 1 / -1;
   display: flex;
@@ -1089,7 +1065,7 @@ textarea:-webkit-autofill:focus {
 }
 
 .action-button.confirm {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
@@ -1107,19 +1083,10 @@ textarea:-webkit-autofill:focus {
   .match-content {
     grid-template-columns: 1fr;
   }
-  
+
   .connection-line {
     display: none;
   }
-}
-
-.flow-card {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px 0;
 }
 
 .item-thumb {
@@ -1157,16 +1124,6 @@ textarea:-webkit-autofill:focus {
   flex: 1;
 }
 
-.match-status.pending {
-  background: #ffd700;
-}
-.match-status.confirmed {
-  background: #4caf50;
-}
-.match-status.rejected {
-  background: #f44336;
-}
-
 .action-btn {
   padding: 5px 10px;
   border-radius: 15px;
@@ -1183,21 +1140,6 @@ textarea:-webkit-autofill:focus {
 .action-btn.reject {
   background: #f44336;
   color: white;
-}
-
-@media (max-width: 1024px) {
-  .match-flow {
-    grid-template-columns: 1fr;
-  }
-
-  .connections {
-    order: 2;
-  }
-
-  .connection {
-    transform: rotate(90deg);
-    margin: 50px 0;
-  }
 }
 
 .user-dashboard {
@@ -1236,51 +1178,96 @@ textarea:-webkit-autofill:focus {
   border-color: #01f573;
 }
 
-.tab-content {
-  display: none;
-  width: 100%;
-}
-
 .tab-content.active {
-  display: block;
-  animation: fadeIn 0.3s ease;
+  display: block !important;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.match-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  overflow-x: auto;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
+.match-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.flow-card {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  margin: 20px 0;
+  border-radius: 10px;
+  padding: 15px;
   backdrop-filter: blur(5px);
 }
 
-.action-buttons {
+.connections {
+  min-width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 20px;
-  margin-bottom: 30px;
 }
 
-@media (max-width: 768px) {
-  .dashboard-tabs {
+.connection {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+/* Match status indicators */
+.match-status {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.match-status.pending {
+  background: #ffd700;
+  color: black;
+}
+
+.match-status.confirmed {
+  background: #4caf50;
+  color: white;
+}
+
+.match-status.rejected {
+  background: #f44336;
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .match-flow {
     flex-direction: column;
-    align-items: stretch;
-    padding: 0 20px;
   }
 
-  .tab-button {
+  .match-column {
     width: 100%;
-    text-align: center;
+  }
+
+  .connections {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+
+  .connection {
+    min-width: 200px;
   }
 }
