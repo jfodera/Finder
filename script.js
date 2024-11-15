@@ -267,24 +267,37 @@ async function handleUserMatch(matchId, action) {
     alert('An error occurred. Please try again.');
   }
 }
-
 async function renderMatches() {
+  // Clear current content first
   const matchesGrid = window.isRecorder ? 
     document.getElementById("matchesGrid") : 
     document.getElementById("userMatchesGrid");
     
   if (!matchesGrid) return;
+  matchesGrid.innerHTML = '<div class="loading">Loading matches...</div>';
 
   try {
     const matches = await fetchItems("getMatches.php");
 
     if (window.isRecorder) {
-      matchesGrid.innerHTML = matches.length
+      matchesGrid.innerHTML = matches.length 
         ? createMatchFlow(matches)
         : '<p class="no-items">No potential matches found.</p>';
+      
+      if (matches.length) {
+        matches.forEach(match => {
+          const actionBtns = matchesGrid.querySelectorAll(`[data-match-id="${match.match_id}"] .action-btn`);
+          actionBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const action = btn.classList.contains('confirm') ? 'confirm' : 'reject';
+              handleMatch(match.match_id, action);
+            });
+          });
+        });
+      }
     } else {
       matchesGrid.innerHTML = matches.length
-        ? matches.map((match) => createUserMatchCard(match)).join("")
+        ? matches.map(match => createUserMatchCard(match)).join("")
         : '<p class="no-items">No potential matches found for your items.</p>';
     }
   } catch (error) {
@@ -672,4 +685,10 @@ document.addEventListener("DOMContentLoaded", function () {
   renderMatches();
   initializeForm();
   initializeNavigation();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && document.querySelector('.tab-button[data-tab="matches"].active')) {
+    renderMatches();
+  }
 });
