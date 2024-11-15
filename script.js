@@ -53,11 +53,11 @@ function initializeTabs() {
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
 
-  if (tabContents.length > 0) {
-    tabContents[0].classList.add("active");
-  }
   if (tabButtons.length > 0) {
     tabButtons[0].classList.add("active");
+    if (tabContents.length > 0) {
+      tabContents[0].classList.add("active");
+    }
   }
 
   tabButtons.forEach((button) => {
@@ -66,19 +66,14 @@ function initializeTabs() {
       tabContents.forEach((content) => content.classList.remove("active"));
 
       button.classList.add("active");
-      const tabId = button.dataset.tab + "ItemsGrid";
+      const baseId = button.dataset.tab;
+      const tabId = window.isRecorder ? baseId + "ItemsGrid" : 
+                    (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
+      
       const content = document.getElementById(tabId);
       if (content) {
         content.classList.add("active");
       }
-
-      // Log for debugging
-      console.log("Tab clicked:", tabId);
-      console.log("Content found:", content);
-      console.log(
-        "Content display:",
-        content ? getComputedStyle(content).display : "null"
-      );
     });
   });
 }
@@ -179,7 +174,10 @@ function createUserMatchCard(match) {
 }
 
 async function renderMatches() {
-  const matchesGrid = document.getElementById("matchesGrid");
+  const matchesGrid = window.isRecorder ? 
+    document.getElementById("matchesGrid") : 
+    document.getElementById("userMatchesGrid");
+    
   if (!matchesGrid) return;
 
   try {
@@ -196,8 +194,7 @@ async function renderMatches() {
     }
   } catch (error) {
     console.error("Error rendering matches:", error);
-    matchesGrid.innerHTML =
-      '<p class="error-message">Failed to load matches.</p>';
+    matchesGrid.innerHTML = '<p class="error-message">Failed to load matches.</p>';
   }
 }
 
@@ -573,10 +570,9 @@ function initializeNavigation() {
   }
 }
 
-// Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM loaded, initializing..."); // Debug log
-  console.log("Is recorder:", window.isRecorder); // Debug lo
+  console.log("DOM loaded, initializing..."); 
+  console.log("Is recorder:", window.isRecorder); 
   renderItems();
   renderMatches();
   initializeForm();
