@@ -1,11 +1,10 @@
 <?php
 session_start();
+require_once 'auth_middleware.php';
 include 'header.php';
+require_once '../db/db_connect.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+requireLogin();
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +21,35 @@ if (!isset($_SESSION['user_id'])) {
         <h1 class="dashboard-heading">Welcome to your Dashboard</h1>
         
         <div class="action-buttons">
-            <a href="item_form_user.php" class="button">Report Lost Item</a>
+            <?php if ($_SESSION['is_recorder']): ?>
+                <a href="item_form_recorder.php" class="button">Add Found Item</a>
+            <?php else: ?>
+                <a href="item_form_user.php" class="button">Report Lost Item</a>
+            <?php endif; ?>
         </div>
 
-        <h2>Your Lost Items</h2>
-        <div class="items-grid" id="itemsGrid">
-            <div class="loading">Loading your items...</div>
+        <?php if ($_SESSION['is_recorder']): ?>
+            <div class="tab-container">
+                <button class="tab-button active" onclick="showTab('lost')">Lost Items</button>
+                <button class="tab-button" onclick="showTab('found')">Found Items</button>
+            </div>
+        <?php endif; ?>
+
+        <div id="lost-items" class="tab-content active">
+            <h2>Lost Items</h2>
+            <div class="items-grid" id="lostItemsGrid">
+                <div class="loading">Loading lost items...</div>
+            </div>
         </div>
+
+        <?php if ($_SESSION['is_recorder']): ?>
+            <div id="found-items" class="tab-content">
+                <h2>Found Items</h2>
+                <div class="items-grid" id="foundItemsGrid">
+                    <div class="loading">Loading found items...</div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
     <script src="../script.js"></script>
 </body>

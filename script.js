@@ -344,4 +344,92 @@ document.addEventListener('DOMContentLoaded', function() {
     renderItems();
     initializeForm();
     initializeNavigation();
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        document.getElementById(tabName + '-items').classList.add('active');
+        document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+    }
+
+    // Enhanced createItemCard function for recorders
+    function createItemCard(item, isRecorder = false) {
+        const cardHtml = `
+            <div class="item-card">
+                <img src="${item.image_url}" alt="${item.item_type}" class="item-image">
+                <div class="item-type">${item.item_type}</div>
+                <div class="item-description">
+                    Brand: ${item.brand}<br>
+                    Color: ${item.color}
+                    ${item.additional_info ? `<br>Additional Info: ${item.additional_info}` : ''}
+                </div>
+                <div class="item-details">
+                    ${item.lost_time ? `${isRecorder ? 'Found' : 'Lost'}: ${new Date(item.lost_time).toLocaleString()}<br>` : ''}
+                    Status: ${item.status}<br>
+                    ${item.locations ? `Locations: ${item.locations}` : ''}
+                    ${isRecorder && item.reporter_email ? `<br>Reported by: ${item.reporter_email}` : ''}
+                    ${isRecorder && item.recorder_email ? `<br>Recorded by: ${item.recorder_email}` : ''}
+                </div>
+                ${isRecorder && item.status === 'pending' ? 
+                    `<button class="match-button" onclick="matchItem(${item.id})">Match Item</button>` 
+                    : ''
+                }
+            </div>
+        `;
+        return cardHtml;
+    }
+
+    async function fetchAllItems() {
+        try {
+            const response = await fetch('getAllItems.php');
+            if (!response.ok) throw new Error('Network response was not ok');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching items:', error);
+            return { lost_items: [], found_items: [] };
+        }
+    }
+
+    async function renderAllItems() {
+        const lostItemsGrid = document.getElementById('lostItemsGrid');
+        const foundItemsGrid = document.getElementById('foundItemsGrid');
+        const isRecorder = document.querySelector('input[name="is_recorder"]:checked') ? true : false;
+
+        try {
+            const data = await fetchAllItems();
+            // Render lost items
+            if (lostItemsGrid) {
+                if (data.lost_items && data.lost_items.length > 0) {
+                    lostItemsGrid.innerHTML = data.lost_items.map(item => createItemCard(item, isRecorder)).join('');
+                } else {
+                    lostItemsGrid.innerHTML = '<p class="no-items">No lost items found.</p>';
+                }
+            }
+
+            // Render found items if user is recorder
+            if (isRecorder && foundItemsGrid) {
+                if (data.found_items && data.found_items.length > 0) {
+                    foundItemsGrid.innerHTML = data.found_items.map(item => createItemCard(item, true)).join('');
+                } else {
+                    foundItemsGrid.innerHTML = '<p class="no-items">No found items recorded yet.</p>';
+                }
+            }
+        } catch (error) {
+            const errorMessage = '<p class="error-message">Failed to load items.</p>';
+            if (lostItemsGrid) lostItemsGrid.innerHTML = errorMessage;
+            if (foundItemsGrid) foundItemsGrid.innerHTML = errorMessage;
+        }
+    }
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        renderAllItems();
+        initializeNavigation();
+    });
 });
+
