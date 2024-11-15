@@ -53,7 +53,8 @@ function sendVerificationEmail($email, $token) {
         $result = $mailer->send($message);
         return true;
     } catch (Exception $e) {
-        error_log("Failed to send verification email: " . $e->getMessage());
+        $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
+        header("Location: user_register.php");
         return false;
     }
 }
@@ -106,6 +107,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$email, $hashed_password, $first_name, $last_name, $verification_token]);
         
         sendVerificationEmail($email, $verification_token);
+
+        //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
+        $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
+        <form method='post' style='display:inline;'>
+            <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
+            <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
+            <input type='hidden' name='resend_verification' value='1'>
+            <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
+                Resend verification email
+            </button>
+        </form>";
         
         header("Location: login.php");
         exit();
