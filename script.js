@@ -1,25 +1,31 @@
-function createItemCard(item) {
+function createItemCard(item, type = 'lost') {
+    const dateField = type === 'lost' ? 'lost_time' : 'found_time';
+    const statusClass = item.status.toLowerCase().replace(' ', '-');
+    
     return `
-        <div class="item-card">
+        <div class="item-card ${statusClass}">
             <img src="${item.image_url || '../default_image.png'}" alt="${item.item_type}" class="item-image">
-            <div class="item-type">${item.item_type}</div>
+            <div class="item-header">
+                <div class="item-type">${item.item_type}</div>
+                <div class="item-status ${statusClass}">${item.status}</div>
+            </div>
             <div class="item-description">
-                Brand: ${item.brand}<br>
-                Color: ${item.color}
-                ${item.additional_info ? `<br>Additional Info: ${item.additional_info}` : ''}
+                <div><strong>Brand:</strong> ${item.brand || 'N/A'}</div>
+                <div><strong>Color:</strong> ${item.color || 'N/A'}</div>
+                ${item.additional_info ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>` : ''}
             </div>
             <div class="item-details">
-                Lost: ${new Date(item.lost_time).toLocaleString()}<br>
-                Status: ${item.status}<br>
-                ${item.locations ? `Locations: ${item.locations}` : ''}
+                <div><strong>${type === 'lost' ? 'Lost' : 'Found'} on:</strong> ${new Date(item[dateField]).toLocaleString()}</div>
+                <div><strong>Reported on:</strong> ${new Date(item.created_at).toLocaleString()}</div>
+                <div><strong>Item ID:</strong> ${item.item_id}</div>
             </div>
         </div>
     `;
 }
 
-async function fetchUserItems() {
+async function fetchItems(endpoint) {
     try {
-        const response = await fetch('getUserItems.php');
+        const response = await fetch(endpoint);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -31,19 +37,92 @@ async function fetchUserItems() {
     }
 }
 
-async function renderItems() {
-    const itemsGrid = document.getElementById('itemsGrid');
-    if (itemsGrid) {
-        try {
-            const items = await fetchUserItems();
-            if (items && items.length > 0) {
-                itemsGrid.innerHTML = items.map(createItemCard).join('');
-            } else {
-                itemsGrid.innerHTML = '<p class="no-items">No items found.</p>';
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    if (tabContents.length > 0) {
+        tabContents[0].classList.add('active');
+    }
+    if (tabButtons.length > 0) {
+        tabButtons[0].classList.add('active');
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            button.classList.add('active');
+            const tabId = button.dataset.tab + 'ItemsGrid';
+            const content = document.getElementById(tabId);
+            if (content) {
+                content.classList.add('active');
             }
+            
+            // Log for debugging
+            console.log('Tab clicked:', tabId);
+            console.log('Content found:', content);
+            console.log('Content display:', content ? getComputedStyle(content).display : 'null');
+        });
+    });
+}
+
+async function renderItems() {
+    if (window.isRecorder) {
+        const lostItemsGrid = document.getElementById('lostItemsGrid');
+        const foundItemsGrid = document.getElementById('foundItemsGrid');
+
+        try {
+            // Fetch lost items
+            const lostItems = await fetchItems('getLostItems.php');
+            if (lostItemsGrid) {
+                console.log('Lost items:', lostItems); // Debug log
+                if (lostItems && lostItems.length > 0) {
+                    lostItemsGrid.innerHTML = lostItems.map(item => createItemCard(item, 'lost')).join('');
+                } else {
+                    lostItemsGrid.innerHTML = '<p class="no-items">No lost items reported.</p>';
+                }
+            }
+
+            // Fetch found items
+            const foundItems = await fetchItems('getFoundItems.php');
+            if (foundItemsGrid) {
+                console.log('Found items:', foundItems); // Debug log
+                if (foundItems && foundItems.length > 0) {
+                    foundItemsGrid.innerHTML = foundItems.map(item => createItemCard(item, 'found')).join('');
+                } else {
+                    foundItemsGrid.innerHTML = '<p class="no-items">No found items reported.</p>';
+                }
+            }
+
+            // Ensure tabs are initialized after content is loaded
+            initializeTabs();
+            
         } catch (error) {
             console.error('Error rendering items:', error);
-            itemsGrid.innerHTML = '<p class="error-message">Failed to load items. Please try again later.</p>';
+            if (lostItemsGrid) {
+                lostItemsGrid.innerHTML = '<p class="error-message">Failed to load lost items.</p>';
+            }
+            if (foundItemsGrid) {
+                foundItemsGrid.innerHTML = '<p class="error-message">Failed to load found items.</p>';
+            }
+        }
+    } else {
+        // Regular user view - fetch and display only their lost items
+        const itemsGrid = document.getElementById('itemsGrid');
+        if (itemsGrid) {
+            try {
+                const items = await fetchItems('getUserItems.php');
+                if (items && items.length > 0) {
+                    itemsGrid.innerHTML = items.map(item => createItemCard(item)).join('');
+                } else {
+                    itemsGrid.innerHTML = '<p class="no-items">No items found.</p>';
+                }
+            } catch (error) {
+                console.error('Error rendering items:', error);
+                itemsGrid.innerHTML = '<p class="error-message">Failed to load items. Please try again later.</p>';
+            }
         }
     }
 }
@@ -341,6 +420,8 @@ function initializeNavigation() {
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing...'); // Debug log
+    console.log('Is recorder:', window.isRecorder); // Debug lo
     renderItems();
     initializeForm();
     initializeNavigation();
