@@ -1,0 +1,6 @@
+What I did: 
+   added .env to our actual server
+   updated DB PASS and such so it works
+   changed the URL for php mailer so that works as well
+   updates the database to include the locations on our actual server
+
