@@ -51,7 +51,7 @@ function sendVerificationEmail($email, $token) {
 
     try {
         $result = $mailer->send($message);
-        $_SESSION['mess']= "Verification Email Sent! Must verify to log in!";
+        $_SESSION['mess']= "Verification Email Sent! Check email and verify to log in!";
         return true;
     } catch (Exception $e) {
         $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
