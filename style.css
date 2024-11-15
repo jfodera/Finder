@@ -624,11 +624,11 @@ h1 {
 
 .closing-message {
     margin-top: 40px;
-    font-size: 20px; /* Slightly smaller font size */
-    color: #555;
+    font-size: 20px;
+    color: white;
     text-align: center;
     font-style: italic;
-    background-color: #e0e0e0; /* Light gray background */
+    background: rgba(255, 255, 255, 0.1);
     padding: 20px;
     max-width: 800px;
     margin-left: auto;
