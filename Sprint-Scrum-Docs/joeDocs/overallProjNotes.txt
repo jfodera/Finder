@@ -23,7 +23,7 @@ Important Notes:
       instructions to bring it to the neareast apo office. Once it gets there, a recorder can add it to the database
 
    PhpMailer: 
-      does not work when you are sending an email to yourself froom XAMPP 
+      does not work when you are sending an email to yourself from XAMPP 
 
 Current State: 
    Vendor is where all of our libraries are stored 
@@ -56,11 +56,13 @@ Midterm Takeaways:
 
 to do: 
    Make Item Form PAge -> front end looking nice, √
-   connect to xampp database and get .env's working 
-   familiar with entire site operations 
-   predefined tags -> put char limits on html's 
-   Understand how to link that to the sql database setup -> use ITWS lab
-      required and non-required fields
+   familiar with entire site operations √
+   predefined tags -> put char limits on html's √
+   Found items form functionality to the DB
+   connect to xampp database and get .env's working
+      Just note:    PhpMailer: 
+      does not work when you are sending an email to yourself from XAMPP  
+ 
 
 Questions: 
    how did you block users from just messing with the title, in order to get to the next page 

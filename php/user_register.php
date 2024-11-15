@@ -1,5 +1,6 @@
 
 <?php 
+//new session when go to this page 
 session_start();
 include 'header.php';
 require_once '../db/db_connect.php';
@@ -21,6 +22,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 function sendVerificationEmail($email, $token) {
+    //last arg is encryption protocol
     $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
         ->setUsername($_ENV['SMTP_USER'])
         ->setPassword($_ENV['SMTP_PASS']); 
