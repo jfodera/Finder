@@ -89,10 +89,6 @@ html {
 
 /* styles for login and register pages */
 .form-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     background: rgba(255, 255, 255, 0.1);
     padding: 40px;
     border-radius: 10px;
@@ -607,11 +603,9 @@ h1 {
     margin: 0 10px;
 }
 
+/* Style for About Page */
+
 .about-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     background: rgba(255, 255, 255, 0.1);
     padding: 40px;
     border-radius: 10px;
@@ -624,45 +618,4 @@ h1 {
     font-size: 28px;
     padding: 40px;
     line-height: 1.5;
-}
-
-.tab-container {
-    margin-bottom: 1rem;
-    text-align: center;
-}
-.tab-button {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
-    border-radius: 30px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-.tab-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-.tab-button.active {
-    background: rgba(1, 245, 115, 0.2);
-    border-color: #01f573;
-}
-.tab-content {
-    display: none;
-}
-.tab-content.active {
-    display: block;
-}
-.match-button {
-    background: #01f573;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-.match-button:hover {
-    background: #00d462;
 }
