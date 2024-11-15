@@ -10,6 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once '../db/db_connect.php';
 
+//main PHP
+
 // Fetch locations from database
 $stmt = $pdo->query("SELECT * FROM locations ORDER BY category, name");
 $locations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -19,6 +21,12 @@ $grouped_locations = [];
 foreach ($locations as $location) {
     $grouped_locations[$location['category']][] = $location;
 }
+
+//put submission in DB 
+
+
+
+
 ?>
 
 <!DOCTYPE html>
