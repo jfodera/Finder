@@ -100,9 +100,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             } else {
                 $error = "Invalid email or password";
+                exit();
             }
         } catch (PDOException $e) {
             $error = "Database error: " . $e->getMessage();
+            exit();
         }
     }
 }
