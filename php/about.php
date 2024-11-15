@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>About Finder</h1>
+        <h2>About Finder</h2>
         <div class="about-container">
             <div class="about-description">
                 Finder is a lost and found platform dedicated to helping the RPI community recover lost items quickly and easily. Our mission is to create an efficient and user-friendly app that connects lost items with their rightful owners through a smart matching system. By streamlining the process and providing immediate feedback, we aim to reduce the frustration and anxiety of losing personal belongings on campus. Finder offers a secure and reliable solution, empowering users with real-time answers and peace of mind.
