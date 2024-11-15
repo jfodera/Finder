@@ -61,7 +61,7 @@ function initializeTabs() {
   }
 
   tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
@@ -72,7 +72,12 @@ function initializeTabs() {
                     (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
       
       const content = document.getElementById(tabId);
-      if (content) content.classList.add("active");
+      if (content) {
+        content.classList.add("active");
+        if (baseId === 'matches') {
+          await renderMatches();
+        }
+      }
     });
   });
 }
