@@ -53,7 +53,8 @@ function sendVerificationEmail($email, $token) {
         $result = $mailer->send($message);
         return true;
     } catch (Exception $e) {
-        error_log("Failed to send verification email: " . $e->getMessage());
+        $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
+        header("Location: user_register.php");
         return false;
     }
 }
