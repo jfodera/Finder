@@ -3,6 +3,49 @@ session_start();
 include 'header.php';
 require_once '../db/db_connect.php';
 
+
+//verification email functionality
+function sendVerificationEmail($email, $token) {
+    //last arg is encryption protocol
+    $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
+        ->setUsername($_ENV['SMTP_USER'])
+        ->setPassword($_ENV['SMTP_PASS']); 
+
+    $mailer = new Swift_Mailer($transport);
+
+    $domain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'yourdomain.com';
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+    
+    // makes the link to send to our emails
+    $verificationLink = $protocol . $domain . "/" . $_ENV['URL'] . "/php/verify_email.php?email=" . urlencode($email) . "&token=" . $token;
+
+    $message = (new Swift_Message('Verify your Finder account'))
+        ->setFrom([$_ENV['SMTP_USER'] => 'Finder'])
+        ->setTo([$email])
+        ->setBody(
+            '<html>' .
+            '<body>' .
+            '<h1>Welcome to Finder!</h1>' .
+            '<p>Please click the link below to verify your account:</p>' .
+            '<p><a href="' . $verificationLink . '">Verify Account</a></p>' .
+            '</body>' .
+            '</html>',
+            'text/html'
+        );
+
+    try {
+        $result = $mailer->send($message);
+        return true;
+    } catch (Exception $e) {
+        $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
+        header("Location: user_register.php");
+        return false;
+    }
+}
+
+
+
+//Form submission for recorder
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -51,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
         
+
         
 
         // Insert new user, making multiple sql statement so put in commit block
@@ -58,13 +102,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
+        $verification_token = bin2hex(random_bytes(32));
         // Split full name into first and last name
         $name_parts = explode(" ", $full_name, 2);
         $first_name = $name_parts[0];
         $last_name = isset($name_parts[1]) ? $name_parts[1] : "";
         
-        $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, is_recorder) VALUES (?, ?, ?, ?, TRUE)");
-        $stmt->execute([$email, $hashed_password, $first_name, $last_name]);
+        $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, verification_token, is_recorder) VALUES (?, ?, ?, ?, ?, TRUE)");
+        $stmt->execute([$email, $hashed_password, $first_name, $last_name, $verification_token]);
         $user_id = $pdo->lastInsertId();
         
         // Update recorder code
@@ -72,6 +117,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$user_id, $code]);
         
         $pdo->commit();
+
+        //send verif email 
+
+        sendVerificationEmail($email, $verification_token);
+
+        //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
+        $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
+        <form method='post' style='display:inline;'>
+            <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
+            <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
+            <input type='hidden' name='resend_verification' value='1'>
+            <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
+                Resend verification email
+            </button>
+        </form>";
         
         header("Location: login.php");
         exit();

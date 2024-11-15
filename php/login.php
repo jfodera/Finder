@@ -56,17 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                // Check if user is recorder (they don't need verification)
-                if ($user['is_recorder']) {
-                    $_SESSION['user_id'] = $user['user_id'];
-                    $_SESSION['email'] = $user['email'];
-                    $_SESSION['is_recorder'] = $user['is_recorder'];
-                    
-                    header("Location: dashboard.php");
-                    exit();
-                }
-                // For regular users, check verification
-                else if ($user['is_verified']) {
+                //is in DB 
+                if ($user['is_verified']) {
                     $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['is_recorder'] = $user['is_recorder'];
