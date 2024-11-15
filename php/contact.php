@@ -59,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Contact</title>
     <link rel="stylesheet" href="../style.css">
-    <link href="../fontawesome-free-6.6.0-web/css/all.css" rel="stylesheet" />
 </head>
 <body>
     <div class="contact">
