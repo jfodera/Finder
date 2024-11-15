@@ -16,7 +16,7 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding-top: 80px;
+  padding-top: 60px;
   align-items: center;
   color: white;
   text-align: center;
@@ -619,7 +619,6 @@ h1 {
 
 .about-description {
   font-size: 28px;
-  padding: 40px;
   line-height: 1.5;
 }
 
