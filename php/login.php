@@ -138,9 +138,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-container">
             <div class="logo">Finder</div>
             <h2>Login</h2>
-            <?php if (isset($error)): ?>
-                <div class="error"><?php echo $error; ?></div>
-            <?php endif; ?>
+            <?php
+                if (isset($_SESSION['error'])) {
+                  echo '<div class="error">' . $_SESSION['error'] . '</div>';
+                  unset($_SESSION['error']);
+               }
+               //so they can see verif message
+               if (isset($_SESSION['mess'])) {
+                echo '<div class="error">' . $_SESSION['mess'] . '</div>';
+                unset($_SESSION['mess']);
+                }
+            ?>
             <form action="login.php" method="post">
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
