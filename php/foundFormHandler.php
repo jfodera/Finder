@@ -261,6 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->commit();
         debug_log("Transaction completed successfully");
         
+        //goes back to dashboard 
         echo json_encode([
             //goes to console -> successfully
             'success' => true,
@@ -271,23 +272,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
 
     } catch (Exception $e) {
+      //loggin php
         debug_log("Error occurred", [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
-        
+        //sql debug
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
         
-        if (isset($image_public_id)) {
-            try {
-                $cloudinary->uploadApi()->destroy($image_public_id);
-            } catch (Exception $cleanupError) {
-                debug_log("Failed to cleanup Cloudinary image", $cleanupError->getMessage());
-            }
-        }
-        
+      //   if (isset($image_public_id)) {
+      //       try {
+      //           $cloudinary->uploadApi()->destroy($image_public_id);
+      //       } catch (Exception $cleanupError) {
+      //           debug_log("Failed to cleanup Cloudinary image", $cleanupError->getMessage());
+      //       }
+      //   }
+        //error message
         http_response_code(500);
         echo json_encode([
             'success' => false,
@@ -301,6 +303,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 } else {
+   //can't request if not post
     http_response_code(405);
     echo json_encode([
         'success' => false,

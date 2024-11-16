@@ -108,7 +108,7 @@ foreach ($locations as $location) {
                 <?php unset($_SESSION['success']); ?>
             <?php endif; ?>
 
-            <form id="infoForm" action="found_item_form.php" method="post" enctype="multipart/form-data">
+            <form id="infoForm" action="foundFormHandler.php" method="post" enctype="multipart/form-data">
                 <div class="page page-1 index active">
                     <h2>What type of item was found?</h2>
                     <div class="form_group">
