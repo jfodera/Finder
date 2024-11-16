@@ -404,8 +404,13 @@ function initializeForm() {
           return false;
         }else if(type.length <= 3){
           alert("Please add better description for 'type' field");
+          return false;
         }else if(brand.length <= 3){
           alert("Please add better description for 'brand' field");
+          return false;
+        }else if(color.length <= 2){
+          alert("Please add better description for 'color' field");
+          return false;
         }
         
         
