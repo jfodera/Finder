@@ -34,9 +34,8 @@ if (session_status() === PHP_SESSION_NONE) {
                     <!-- Links for logged in users -->
                     <?php if ($_SESSION['is_recorder']): ?>
                         <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/item_form_recorder.php' : 'item_form_recorder.php'; ?>">Add Found Item</a></li>
-                    <?php else: ?>
-                        <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/item_form_user.php' : 'item_form_user.php'; ?>">Report Lost Item</a></li>
                     <?php endif; ?>
+                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/item_form_user.php' : 'item_form_user.php'; ?>">Report Lost Item</a></li>
                     <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/dashboard.php' : 'dashboard.php'; ?>">Dashboard</a></li>
                     <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/logout.php' : 'logout.php'; ?>">Logout</a></li>
                 <?php else: ?>

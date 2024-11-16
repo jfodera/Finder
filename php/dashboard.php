@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+//double check 
 $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
 ?>
 
