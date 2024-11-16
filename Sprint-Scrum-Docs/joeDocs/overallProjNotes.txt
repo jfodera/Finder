@@ -58,7 +58,8 @@ to do:
    Make Item Form PAge -> front end looking nice, √
    familiar with entire site operations √
    predefined tags -> put char limits on html's √
-   learn cloudinary √
+   Go through opps for improvement on lab6
+   learn cloudinary 
    Found items form functionality to the DB
    connect to xampp database and get .env's working
       Just note:    PhpMailer: 
