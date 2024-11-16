@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $errors = [];
 
-    // Validate required fields
+    // Validate required fields -
     if (empty($item_type)) $errors[] = "Item type is required";
     if (empty($brand)) $errors[] = "Brand is required";
     if (empty($color)) $errors[] = "Color is required";
@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             $item_id = $pdo->lastInsertId();
             
+            //inserts locs
             if (!empty($locations)) {
                 $stmt = $pdo->prepare("INSERT INTO item_locations (item_id, item_type, location) VALUES (?, 'found', ?)");
                 foreach ($locations as $location) {
@@ -48,14 +49,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
             
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $image = $_FILES['image'];
-                $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
+            // if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            //     $image = $_FILES['image'];
+            //     $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
                 
-                if (in_array($image['type'], $allowed_types)) {
-                    // CLOUDINARY LOGIC SOON
-                }
-            }
+            //     if (in_array($image['type'], $allowed_types)) {
+            //         // CLOUDINARY LOGIC SOON
+            //     }
+            // }
             
             $pdo->commit();
             $_SESSION['success'] = "Item successfully recorded!";
