@@ -505,6 +505,7 @@ function initializeForm() {
   // Single form submission handler
   if (infoForm) {
     infoForm.addEventListener("submit", async function (e) {
+      //on submit do this: 
       e.preventDefault();
       console.log("Form submission started");
 

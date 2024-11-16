@@ -73,7 +73,7 @@ Citations:
 
 Current:
    Going through and appending form pages , on where did you loose item_type √
-   update item_form_recorder accordingly √
+   update found_item_form accordingly √
 
 
 Helpful Code Chunks: 

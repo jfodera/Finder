@@ -1,11 +1,15 @@
 <?php
 
+//gives control of when to send echo back, not immediatley when called
 ob_start();
 
 session_start();
 
+//displays error in browser
 ini_set('display_errors', 1);
+//including startup
 ini_set('display_startup_errors', 1);
+//all errors reported
 error_reporting(E_ALL);
 
 require_once '../db/db_connect.php';
@@ -16,6 +20,7 @@ $dotenv->load();
 
 // Debug log function
 function debug_log($message, $data = null) {
+   //ereturns string 
     error_log(print_r([
         'message' => $message,
         'data' => $data,
@@ -29,50 +34,51 @@ debug_log("Handler started", [
     'SESSION' => $_SESSION
 ]);
 
-// Configure Cloudinary
-use Cloudinary\Configuration\Configuration;
-use Cloudinary\Api\Upload\UploadApi;
+// // Configure Cloudinary
+// use Cloudinary\Configuration\Configuration;
+// use Cloudinary\Api\Upload\UploadApi;
 
-try {
-    Configuration::instance([
-        'cloud' => [
-            'cloud_name' => $_ENV['CLOUDINARY_CLOUD_NAME'],
-            'api_key' => $_ENV['CLOUDINARY_API_KEY'],
-            'api_secret' => $_ENV['CLOUDINARY_SECRET']
-        ],
-        'url' => [
-            'secure' => true
-        ]
-    ]);
+// try {
+//     Configuration::instance([
+//         'cloud' => [
+//             'cloud_name' => $_ENV['CLOUDINARY_CLOUD_NAME'],
+//             'api_key' => $_ENV['CLOUDINARY_API_KEY'],
+//             'api_secret' => $_ENV['CLOUDINARY_SECRET']
+//         ],
+//         'url' => [
+//             'secure' => true
+//         ]
+//     ]);
 
-    debug_log("Cloudinary configured successfully");
-} catch (Exception $e) {
-    debug_log("Cloudinary configuration error", $e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => "Failed to configure image upload service",
-        'error' => $e->getMessage()
-    ]);
-    exit();
-}
+//     debug_log("Cloudinary configured successfully");
+// } catch (Exception $e) {
+//     debug_log("Cloudinary configuration error", $e->getMessage());
+//     http_response_code(500);
+//     echo json_encode([
+//         'success' => false,
+//         'message' => "Failed to configure image upload service",
+//         'error' => $e->getMessage()
+//     ]);
+//     exit();
+// }
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false,
-        'message' => "Please log in to continue",
-        'redirect' => 'login.php'
-    ]);
-    exit();
-}
+// // Check if user is logged in
+// if (!isset($_SESSION['user_id'])) {
+//     http_response_code(401);
+//     echo json_encode([
+//         'success' => false,
+//         'message' => "Please log in to continue",
+//         'redirect' => 'login.php'
+//     ]);
+//     exit();
+// }
 
+//removes things do not want in input
 function sanitize_input($input) {
     return htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
 }
 
-
+//Userid given in the session and when the functio is called, returns true if cooldown not in place
 function checkSubmissionCooldown($pdo, $user_id) {
     try {
         $stmt = $pdo->prepare("SELECT last_submission FROM submission_cooldowns WHERE user_id = ?");
@@ -149,7 +155,7 @@ function handleCloudinaryUpload($image) {
         //UploadAPI instance from the library on our server. 
         $upload = new UploadApi();
         $result = $upload->upload($image['tmp_name'], [
-            'folder' => 'lost_items',
+            'folder' => 'found_items',
             'transformation' => [
                 'quality' => 'auto',
                 'fetch_format' => 'auto'
@@ -164,7 +170,7 @@ function handleCloudinaryUpload($image) {
     }
 }
 
-//when recieves
+//when recieved from JS
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Check cooldown
@@ -177,19 +183,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $brand = sanitize_input($_POST['brand']);
         $color = sanitize_input($_POST['color']);
         $additional_info = sanitize_input($_POST['addInfo']);
-        $lost_time = $_POST['date'];
+        $found_time = $_POST['date'];
         $locations = $_POST['locations'] ?? [];
 
+
+      //stores in log for error review later
         debug_log("Received form data", [
             'item_type' => $item_type,
             'brand' => $brand,
             'color' => $color,
-            'lost_time' => $lost_time,
+            'found_time' => $found_time,
             'locations' => $locations
         ]);
 
         // Validation
-        if (empty($item_type) || empty($brand) || empty($color) || empty($lost_time)) {
+        if (empty($item_type) || empty($brand) || empty($color) || empty($found_time)) {
             throw new Exception("All required fields must be filled out.");
         }
 
@@ -213,19 +221,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        // Insert lost item
-        
-        $stmt = $pdo->prepare("INSERT INTO lost_items (
-            item_type, brand, color, additional_info, lost_time, 
-            user_id, image_url, image_public_id
+        // Insert found item
+        $stmt = $pdo->prepare("INSERT INTO found_items (
+            item_type, brand, color, additional_info, found_time, 
+            recorder_id, image_url, image_public_id
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
         $stmt->execute([
-            $item_type, $brand, $color, $additional_info, $lost_time,
+            $item_type, $brand, $color, $additional_info, $found_time,
             $_SESSION['user_id'], $image_url, $image_public_id
         ]);
 
         $item_id = $pdo->lastInsertId();
+        //updating php log
         debug_log("Item inserted", ["item_id" => $item_id]);
 
         // Insert locations

@@ -25,7 +25,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
         
         <?php if ($is_recorder): ?>
             <div class="action-buttons">
-                <a href="item_form_recorder.php" class="button">Add Found Item</a>
+                <a href="found_item_form.php" class="button">Add Found Item</a>
                 <div class="dashboard-tabs">
                     <button class="tab-button active" data-tab="matches">Matches Overview</button>
                     <button class="tab-button" data-tab="lost">Lost Items</button>
