@@ -88,6 +88,15 @@ html {
 }
 
 /* styles for login and register pages */
+
+#infoForm p{
+
+  margin: 0 0 0 0; 
+  padding: 10px 0 0 0; 
+  
+  
+}
+
 .form-container {
   background: rgba(255, 255, 255, 0.1);
   padding: 40px;
@@ -1270,4 +1279,19 @@ textarea:-webkit-autofill:focus {
   .connection {
     min-width: 200px;
   }
+}
+
+
+/* Errors  */
+.error {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  color: white;
+}
+.error a, .error button {
+  color: white;
+  text-decoration: underline;
 }

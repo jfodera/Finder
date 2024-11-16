@@ -1,4 +1,5 @@
 <?php 
+//add found item
 session_start();
 include 'header.php';
 
@@ -21,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $errors = [];
 
-    // Validate required fields
+    // Validate required fields -
     if (empty($item_type)) $errors[] = "Item type is required";
     if (empty($brand)) $errors[] = "Brand is required";
     if (empty($color)) $errors[] = "Color is required";
@@ -40,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             $item_id = $pdo->lastInsertId();
             
+            //inserts locs
             if (!empty($locations)) {
                 $stmt = $pdo->prepare("INSERT INTO item_locations (item_id, item_type, location) VALUES (?, 'found', ?)");
                 foreach ($locations as $location) {
@@ -206,10 +208,12 @@ foreach ($locations as $location) {
                 <button type="button" class="prev-btn">Go Back</button>
                 <button type="submit" class="submit-btn" disabled>Submit</button>
             </div>
+                <p>Page <span id="pgnum">1</span> of 4 </p>
             </form>
         </div>
     </div>
 
     <script src="../script.js"></script>
+    <script src="../jquery-3.6.1.min.js"></script>
 </body>
 </html>

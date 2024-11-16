@@ -164,7 +164,7 @@ function handleCloudinaryUpload($image) {
     }
 }
 
-
+//when recieves
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Check cooldown
@@ -253,6 +253,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         debug_log("Transaction completed successfully");
         
         echo json_encode([
+            //goes to console -> successfully
             'success' => true,
             'message' => "Item successfully reported as lost!",
             'redirect' => 'dashboard.php',
