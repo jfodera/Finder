@@ -19,7 +19,7 @@
         </section>
         <div class="buttons">
             <a href="./item_form_user.php" class="button">Find an Item</a>
-            <a href="./item_form_recorder.php" class="button">Record an Item</a>
+            <a href="./found_item_form.php" class="button">Record an Item</a>
         </div>
     </div>
     <script src="../script.js"></script>

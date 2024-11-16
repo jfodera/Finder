@@ -394,6 +394,7 @@ function initializeForm() {
 
     switch (pageIndex) {
       case 0: // First page - basic info
+      //called when set and go to next page
         const type = page.querySelector('input[name="type"]').value.trim();
         const brand = page.querySelector('input[name="brand"]').value.trim();
         const color = page.querySelector('input[name="color"]').value.trim();
@@ -401,7 +402,18 @@ function initializeForm() {
         if (!type || !brand || !color) {
           alert("Please fill in all required fields");
           return false;
+        }else if(type.length <= 3){
+          alert("Please add better description for 'type' field");
+          return false;
+        }else if(brand.length <= 3){
+          alert("Please add better description for 'brand' field");
+          return false;
+        }else if(color.length <= 2){
+          alert("Please add better description for 'color' field");
+          return false;
         }
+        
+        
         return true;
 
       case 1: // Second page - date
@@ -505,6 +517,7 @@ function initializeForm() {
   // Single form submission handler
   if (infoForm) {
     infoForm.addEventListener("submit", async function (e) {
+      //on submit do this: 
       e.preventDefault();
       console.log("Form submission started");
 
