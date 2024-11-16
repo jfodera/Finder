@@ -161,7 +161,7 @@ foreach ($locations as $location) {
                         <span class="loading-indicator">⭕</span>
                     </button>
                 </div>
-                <p>Page <span id="pgnum">0</span> of 4 <p/>
+                <p>Page <span id="pgnum">1</span> of 4 </p>
             </form>
         </div>
     </div>

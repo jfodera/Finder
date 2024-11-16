@@ -88,6 +88,15 @@ html {
 }
 
 /* styles for login and register pages */
+
+#infoForm p{
+
+  margin: 0 0 0 0; 
+  padding: 10px 0 0 0; 
+  
+  
+}
+
 .form-container {
   background: rgba(255, 255, 255, 0.1);
   padding: 40px;

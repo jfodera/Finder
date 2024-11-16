@@ -49,14 +49,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
             
-            // if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            //     $image = $_FILES['image'];
-            //     $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $image = $_FILES['image'];
+                $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
                 
-            //     if (in_array($image['type'], $allowed_types)) {
-            //         // CLOUDINARY LOGIC SOON
-            //     }
-            // }
+                if (in_array($image['type'], $allowed_types)) {
+                    // CLOUDINARY LOGIC SOON
+                }
+            }
             
             $pdo->commit();
             $_SESSION['success'] = "Item successfully recorded!";
@@ -208,10 +208,12 @@ foreach ($locations as $location) {
                 <button type="button" class="prev-btn">Go Back</button>
                 <button type="submit" class="submit-btn" disabled>Submit</button>
             </div>
+                <p>Page <span id="pgnum">1</span> of 4 </p>
             </form>
         </div>
     </div>
 
     <script src="../script.js"></script>
+    <script src="../jquery-3.6.1.min.js"></script>
 </body>
 </html>

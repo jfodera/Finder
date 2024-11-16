@@ -443,7 +443,7 @@ function initializeForm() {
       //set the active one to the one passed as param
       page.classList.toggle("active", index === pageIndex);
     });
-    $("#pgnum").html(pageIndex); 
+    $("#pgnum").html(pageIndex+1); 
   }
 
   nextBtns.forEach((btn, index) => {
