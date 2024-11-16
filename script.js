@@ -394,6 +394,7 @@ function initializeForm() {
 
     switch (pageIndex) {
       case 0: // First page - basic info
+      //called when set and go to next page
         const type = page.querySelector('input[name="type"]').value.trim();
         const brand = page.querySelector('input[name="brand"]').value.trim();
         const color = page.querySelector('input[name="color"]').value.trim();
@@ -401,7 +402,13 @@ function initializeForm() {
         if (!type || !brand || !color) {
           alert("Please fill in all required fields");
           return false;
+        }else if(type.length <= 3){
+          alert("Please add better description for 'type' field");
+        }else if(brand.length <= 3){
+          alert("Please add better description for 'brand' field");
         }
+        
+        
         return true;
 
       case 1: // Second page - date
