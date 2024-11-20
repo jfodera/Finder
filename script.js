@@ -61,21 +61,70 @@ function initializeTabs() {
   }
 
   tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
       button.classList.add("active");
       const baseId = button.dataset.tab;
-      const tabId = window.isRecorder ? baseId + "ItemsGrid" : 
+      const tabId = window.isRecorder ? 
+                    baseId + "ItemsGrid" : 
                     (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
       
       const content = document.getElementById(tabId);
       if (content) {
         content.classList.add("active");
+        if (baseId === 'matches') {
+          await renderMatches();
+        }
       }
     });
   });
+}
+
+
+async function renderItems() {
+  if (window.isRecorder) {
+    const lostItemsGrid = document.getElementById("lostItemsGrid");
+    const foundItemsGrid = document.getElementById("foundItemsGrid");
+
+    try {
+      const [lostItems, foundItems] = await Promise.all([
+        fetchItems("getLostItems.php"),
+        fetchItems("getFoundItems.php")
+      ]);
+
+      if (lostItemsGrid) {
+        lostItemsGrid.innerHTML = lostItems.length > 0
+          ? lostItems.map(item => createItemCard(item, "lost")).join("")
+          : '<p class="no-items">No lost items reported.</p>';
+      }
+
+      if (foundItemsGrid) {
+        foundItemsGrid.innerHTML = foundItems.length > 0
+          ? foundItems.map(item => createItemCard(item, "found")).join("")
+          : '<p class="no-items">No found items reported.</p>';
+      }
+    } catch (error) {
+      console.error("Error rendering items:", error);
+      const errorMessage = '<p class="error-message">Failed to load items.</p>';
+      if (lostItemsGrid) lostItemsGrid.innerHTML = errorMessage;
+      if (foundItemsGrid) foundItemsGrid.innerHTML = errorMessage;
+    }
+  } else {
+    const itemsGrid = document.getElementById("itemsGrid");
+    if (!itemsGrid) return;
+
+    try {
+      const items = await fetchItems("getUserItems.php");
+      itemsGrid.innerHTML = items.length > 0
+        ? items.map(item => createItemCard(item)).join("")
+        : '<p class="no-items">No items found.</p>';
+    } catch (error) {
+      console.error("Error rendering items:", error);
+      itemsGrid.innerHTML = '<p class="error-message">Failed to load items.</p>';
+    }
+  }
 }
 
 function createMatchFlow(matches) {
@@ -173,23 +222,82 @@ function createUserMatchCard(match) {
     `;
 }
 
+async function handleMatch(matchId, action) {
+  try {
+    const response = await fetch('handleMatch.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ match_id: matchId, action: action })
+    });
+    
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const result = await response.json();
+    if (result.success) {
+      // Refresh both matches and items views after action
+      await Promise.all([renderMatches(), renderItems()]);
+    } else {
+      alert(result.message || 'Failed to process match');
+    }
+  } catch (error) {
+    console.error('Error handling match:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
+
+async function handleUserMatch(matchId, action) {
+  try {
+    const response = await fetch('handleUserMatch.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ match_id: matchId, action: action })
+    });
+    
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const result = await response.json();
+    if (result.success) {
+      // Refresh both matches and items views after action
+      await Promise.all([renderMatches(), renderItems()]);
+    } else {
+      alert(result.message || 'Failed to process match');
+    }
+  } catch (error) {
+    console.error('Error handling user match:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
 async function renderMatches() {
+  // Clear current content first
   const matchesGrid = window.isRecorder ? 
     document.getElementById("matchesGrid") : 
     document.getElementById("userMatchesGrid");
     
   if (!matchesGrid) return;
+  matchesGrid.innerHTML = '<div class="loading">Loading matches...</div>';
 
   try {
     const matches = await fetchItems("getMatches.php");
 
     if (window.isRecorder) {
-      matchesGrid.innerHTML = matches.length
+      matchesGrid.innerHTML = matches.length 
         ? createMatchFlow(matches)
         : '<p class="no-items">No potential matches found.</p>';
+      
+      if (matches.length) {
+        matches.forEach(match => {
+          const actionBtns = matchesGrid.querySelectorAll(`[data-match-id="${match.match_id}"] .action-btn`);
+          actionBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const action = btn.classList.contains('confirm') ? 'confirm' : 'reject';
+              handleMatch(match.match_id, action);
+            });
+          });
+        });
+      }
     } else {
       matchesGrid.innerHTML = matches.length
-        ? matches.map((match) => createUserMatchCard(match)).join("")
+        ? matches.map(match => createUserMatchCard(match)).join("")
         : '<p class="no-items">No potential matches found for your items.</p>';
     }
   } catch (error) {
@@ -286,6 +394,7 @@ function initializeForm() {
 
     switch (pageIndex) {
       case 0: // First page - basic info
+      //called when set and go to next page
         const type = page.querySelector('input[name="type"]').value.trim();
         const brand = page.querySelector('input[name="brand"]').value.trim();
         const color = page.querySelector('input[name="color"]').value.trim();
@@ -293,7 +402,18 @@ function initializeForm() {
         if (!type || !brand || !color) {
           alert("Please fill in all required fields");
           return false;
+        }else if(type.length <= 3){
+          alert("Please add better description for 'type' field");
+          return false;
+        }else if(brand.length <= 3){
+          alert("Please add better description for 'brand' field");
+          return false;
+        }else if(color.length <= 2){
+          alert("Please add better description for 'color' field");
+          return false;
         }
+        
+        
         return true;
 
       case 1: // Second page - date
@@ -332,8 +452,10 @@ function initializeForm() {
   // Navigation between pages
   function showPage(pageIndex) {
     pages.forEach((page, index) => {
+      //set the active one to the one passed as param
       page.classList.toggle("active", index === pageIndex);
     });
+    $("#pgnum").html(pageIndex+1); 
   }
 
   nextBtns.forEach((btn, index) => {
@@ -395,6 +517,7 @@ function initializeForm() {
   // Single form submission handler
   if (infoForm) {
     infoForm.addEventListener("submit", async function (e) {
+      //on submit do this: 
       e.preventDefault();
       console.log("Form submission started");
 
@@ -577,4 +700,10 @@ document.addEventListener("DOMContentLoaded", function () {
   renderMatches();
   initializeForm();
   initializeNavigation();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && document.querySelector('.tab-button[data-tab="matches"].active')) {
+    renderMatches();
+  }
 });

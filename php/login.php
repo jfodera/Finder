@@ -56,17 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                // Check if user is recorder (they don't need verification)
-                if ($user['is_recorder']) {
-                    $_SESSION['user_id'] = $user['user_id'];
-                    $_SESSION['email'] = $user['email'];
-                    $_SESSION['is_recorder'] = $user['is_recorder'];
-                    
-                    header("Location: dashboard.php");
-                    exit();
-                }
-                // For regular users, check verification
-                else if ($user['is_verified']) {
+                //is in DB 
+                if ($user['is_verified']) {
                     $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['is_recorder'] = $user['is_recorder'];
@@ -84,10 +75,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $update_stmt = $pdo->prepare("UPDATE users SET verification_token = ? WHERE email = ?");
                         $update_stmt->execute([$new_verification_token, $email]);
                         
-                        sendVerificationEmail($email, $verification_token);
+                        sendVerificationEmail($email, $new_verification_token);
+                        
+                        $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
+                        <form method='post' style='display:inline;'>
+                            <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
+                            <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
+                            <input type='hidden' name='resend_verification' value='1'>
+                            <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
+                                Resend verification email
+                            </button>
+                        </form>";
+
                     } else {
                         
-                        $error = "Please verify your email before logging in. 
+                        $_SESSION['error'] = "Please verify your email before logging in. 
                                 <form method='post' style='display:inline;'>
                                     <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
                                     <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
@@ -99,11 +101,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }
             } else {
-                $error = "Invalid email or password";
+                $_SESSION['error'] = "Invalid email or password";
                 exit();
             }
         } catch (PDOException $e) {
-            $error = "Database error: " . $e->getMessage();
+            $_SESSION['error'] = "Database error: " . $e->getMessage();
             exit();
         }
     }
@@ -118,29 +120,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Login</title>
     <link rel="stylesheet" href="../style.css">
-    <style>
-        .error {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            color: white;
-        }
-        .error a, .error button {
-            color: white;
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <div class="form-container">
             <div class="logo">Finder</div>
             <h2>Login</h2>
-            <?php if (isset($error)): ?>
-                <div class="error"><?php echo $error; ?></div>
-            <?php endif; ?>
+            <?php
+                if (isset($_SESSION['error'])) {
+                  echo '<div class="error">' . $_SESSION['error'] . '</div>';
+                  unset($_SESSION['error']);
+               }
+               //so they can see verif message
+               if (isset($_SESSION['mess'])) {
+                echo '<div class="error">' . $_SESSION['mess'] . '</div>';
+                unset($_SESSION['mess']);
+                }
+            ?>
             <form action="login.php" method="post">
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>

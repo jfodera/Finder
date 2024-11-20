@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once '../db/db_connect.php';
+//calls lost form handler
 
 // Fetch locations from database
 $stmt = $pdo->query("SELECT * FROM locations ORDER BY category, name");
@@ -19,6 +20,11 @@ $grouped_locations = [];
 foreach ($locations as $location) {
     $grouped_locations[$location['category']][] = $location;
 }
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -155,9 +161,11 @@ foreach ($locations as $location) {
                         <span class="loading-indicator">⭕</span>
                     </button>
                 </div>
+                <p>Page <span id="pgnum">1</span> of 4 </p>
             </form>
         </div>
     </div>
     <script src="../script.js"></script>
+    <script src="../jquery-3.6.1.min.js"></script>
 </body>
 </html>
