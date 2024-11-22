@@ -709,79 +709,75 @@ document.addEventListener('visibilitychange', () => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Create and insert progress bar HTML
   const progressHTML = `
       <div class="progress-container">
-          <div class="progress-bar">
-              <div class="progress-fill"></div>
-          </div>
-          <div class="step-indicators">
-              <div class="step active" data-step="1">1</div>
-              <div class="step" data-step="2">2</div>
-              <div class="step" data-step="3">3</div>
-              <div class="step" data-step="4">4</div>
-          </div>
-          <div class="step-labels">
-              <div class="step-label active">Item Details</div>
-              <div class="step-label">Date</div>
-              <div class="step-label">Image</div>
-              <div class="step-label">Location</div>
+          <div class="progress-track">
+              <div class="progress-bar"></div>
+              <div class="steps">
+                  <div class="step complete" data-step="1">
+                      1
+                      <span class="step-label">Details</span>
+                  </div>
+                  <div class="step" data-step="2">
+                      2
+                      <span class="step-label">Date</span>
+                  </div>
+                  <div class="step" data-step="3">
+                      3
+                      <span class="step-label">Image</span>
+                  </div>
+                  <div class="step" data-step="4">
+                      4
+                      <span class="step-label">Location</span>
+                  </div>
+              </div>
           </div>
       </div>
   `;
-  
-  // Insert progress bar before the form
+
   const form = document.getElementById('infoForm');
   form.insertAdjacentHTML('beforebegin', progressHTML);
 
-  // Get progress elements
-  const progressFill = document.querySelector('.progress-fill');
+  const progressBar = document.querySelector('.progress-bar');
   const steps = document.querySelectorAll('.step');
-  const stepLabels = document.querySelectorAll('.step-label');
+  let currentStep = 1;
 
-  // Update progress when next/prev buttons are clicked
-  const nextButtons = document.querySelectorAll('.next-btn');
-  const prevButtons = document.querySelectorAll('.prev-btn');
-  
-  function updateProgress(currentPage) {
-      // Update progress bar fill
-      const progress = ((currentPage - 1) / 3) * 100;
-      progressFill.style.width = `${progress}%`;
+  function updateProgress(step) {
+      currentStep = step;
+      
+      const progress = ((step - 1) / 3) * 100;
+      progressBar.style.width = `${progress}%`;
 
-      // Update step indicators
-      steps.forEach((step, index) => {
-          if (index + 1 < currentPage) {
-              step.classList.add('completed');
-              step.classList.remove('active');
-          } else if (index + 1 === currentPage) {
-              step.classList.add('active');
-              step.classList.remove('completed');
+      // Update step states
+      steps.forEach((stepEl, idx) => {
+          if (idx + 1 < step) {
+              stepEl.className = 'step complete';
+          } else if (idx + 1 === step) {
+              stepEl.className = 'step active';
           } else {
-              step.classList.remove('active', 'completed');
+              stepEl.className = 'step';
           }
       });
-
-      // Update step labels
-      stepLabels.forEach((label, index) => {
-          label.classList.toggle('active', index + 1 === currentPage);
-      });
   }
-
-  // Add click handlers to next buttons
-  nextButtons.forEach(button => {
-      button.addEventListener('click', () => {
+  document.querySelectorAll('.next-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
           const currentPage = document.querySelector('.page.active');
-          const pageNum = parseInt(currentPage.classList[1].split('-')[1]);
-          updateProgress(pageNum + 1);
+          if (currentPage) {
+              const nextStep = parseInt(currentPage.classList[1].split('-')[1]) + 1;
+              updateProgress(nextStep);
+          }
       });
   });
 
-  // Add click handlers to prev buttons
-  prevButtons.forEach(button => {
-      button.addEventListener('click', () => {
+  document.querySelectorAll('.prev-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
           const currentPage = document.querySelector('.page.active');
-          const pageNum = parseInt(currentPage.classList[1].split('-')[1]);
-          updateProgress(pageNum - 1);
+          if (currentPage) {
+              const prevStep = parseInt(currentPage.classList[1].split('-')[1]) - 1;
+              updateProgress(prevStep);
+          }
       });
   });
+  
+  updateProgress(1);
 });
