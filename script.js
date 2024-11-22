@@ -711,26 +711,26 @@ document.addEventListener('visibilitychange', () => {
 document.addEventListener('DOMContentLoaded', function() {
   const progressHTML = `
       <div class="progress-container">
-          <div class="progress-track">
-              <div class="progress-bar"></div>
-              <div class="steps">
-                  <div class="step complete" data-step="1">
-                      1
-                      <span class="step-label">Details</span>
-                  </div>
-                  <div class="step" data-step="2">
-                      2
-                      <span class="step-label">Date</span>
-                  </div>
-                  <div class="step" data-step="3">
-                      3
-                      <span class="step-label">Image</span>
-                  </div>
-                  <div class="step" data-step="4">
-                      4
-                      <span class="step-label">Location</span>
-                  </div>
+          <div class="steps">
+              <div class="step-item active">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Details</div>
               </div>
+              <div class="step-item">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Date</div>
+              </div>
+              <div class="step-item">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Image</div>
+              </div>
+              <div class="step-item">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Location</div>
+              </div>
+          </div>
+          <div class="progress-track">
+              <div class="progress-fill"></div>
           </div>
       </div>
   `;
@@ -738,33 +738,61 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('infoForm');
   form.insertAdjacentHTML('beforebegin', progressHTML);
 
-  const progressBar = document.querySelector('.progress-bar');
-  const steps = document.querySelectorAll('.step');
+  const progressFill = document.querySelector('.progress-fill');
+  const stepItems = document.querySelectorAll('.step-item');
   let currentStep = 1;
 
-  function updateProgress(step) {
-      currentStep = step;
-      
-      const progress = ((step - 1) / 3) * 100;
-      progressBar.style.width = `${progress}%`;
+  function validateCurrentPage(page) {
+      const inputs = page.querySelectorAll('input[required]');
+      for (let input of inputs) {
+          if (!input.value) {
+              return false;
+          }
+      }
+      if (page.classList.contains('page-4')) {
+          const checkedLocations = page.querySelectorAll('input[type="checkbox"]:checked');
+          if (checkedLocations.length === 0) {
+              return false;
+          }
+      }
+      return true;
+  }
 
-      // Update step states
-      steps.forEach((stepEl, idx) => {
+  function updateProgress(step, validateFirst = true) {
+      const currentPage = document.querySelector('.page.active');
+      
+      if (validateFirst && step > currentStep) {
+          if (!validateCurrentPage(currentPage)) {
+              return false;
+          }
+      }
+
+      currentStep = step;
+      const progress = ((step - 1) / 3) * 100;
+      progressFill.style.width = `${progress}%`;
+
+      stepItems.forEach((item, idx) => {
           if (idx + 1 < step) {
-              stepEl.className = 'step complete';
+              item.className = 'step-item complete';
           } else if (idx + 1 === step) {
-              stepEl.className = 'step active';
+              item.className = 'step-item active';
           } else {
-              stepEl.className = 'step';
+              item.className = 'step-item';
           }
       });
+
+      return true;
   }
+
   document.querySelectorAll('.next-btn').forEach(btn => {
       btn.addEventListener('click', function() {
           const currentPage = document.querySelector('.page.active');
           if (currentPage) {
               const nextStep = parseInt(currentPage.classList[1].split('-')[1]) + 1;
-              updateProgress(nextStep);
+              if (updateProgress(nextStep)) {
+                  currentPage.classList.remove('active');
+                  document.querySelector(`.page-${nextStep}`).classList.add('active');
+              }
           }
       });
   });
@@ -774,10 +802,12 @@ document.addEventListener('DOMContentLoaded', function() {
           const currentPage = document.querySelector('.page.active');
           if (currentPage) {
               const prevStep = parseInt(currentPage.classList[1].split('-')[1]) - 1;
-              updateProgress(prevStep);
+              updateProgress(prevStep, false);
+              currentPage.classList.remove('active');
+              document.querySelector(`.page-${prevStep}`).classList.add('active');
           }
       });
   });
-  
-  updateProgress(1);
+
+  updateProgress(1, false);
 });
