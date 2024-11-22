@@ -56,25 +56,25 @@ try {
                         $weights['location'] * $locationScore +
                         $weights['date'] * $dateScore;
     
-                    // Match threshold
-                   
+                
+                
                         // Check if the match already exists
-                        $checkStmt = $pdo->prepare("
-                            SELECT * FROM matches
-                            WHERE lost_item_id = ? AND found_item_id = ?
+                    $checkStmt = $pdo->prepare("
+                        SELECT * FROM matches
+                        WHERE lost_item_id = ? AND found_item_id = ?
+                    ");
+                    $checkStmt->execute([$lostItemId, $foundItemId]);
+
+                    if (!$checkStmt->fetch()) {
+                        // Create a new match
+                        $insertStmt = $pdo->prepare("
+                            INSERT INTO matches (lost_item_id, found_item_id, similarity_score, status)
+                            VALUES (?, ?, ?, 'pending')
                         ");
-                        $checkStmt->execute([$lostItemId, $foundItemId]);
-    
-                        if (!$checkStmt->fetch()) {
-                            // Create a new match
-                            $insertStmt = $pdo->prepare("
-                                INSERT INTO matches (lost_item_id, found_item_id, similarity_score, status)
-                                VALUES (?, ?, ?, 'pending')
-                            ");
-                            $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
-    
-                            echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
-                        }
+                        $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
+
+                        echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
+                    }
                     
                 }
             }
