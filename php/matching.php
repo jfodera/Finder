@@ -15,7 +15,7 @@ try {
 
             foreach ($lostItems as $lostItem) {
                 $lostItemId = $lostItem['item_id'];
-                $lostCategory = $lostItem['category'];
+                $losttype = $lostItem['type'];
                 $lostLocation = $lostItem['location'];
                 $lostDate = $lostItem['lost_date'];
 
@@ -23,11 +23,11 @@ try {
                 $stmt = $pdo->prepare("
                     SELECT * FROM found_items
                     WHERE status = 'found'
-                      AND category = ?
+                      AND type = ?
                       AND location = ?
                       AND ABS(DATEDIFF(found_date, ?)) <= 7
                 ");
-                $stmt->execute([$lostCategory, $lostLocation, $lostDate]);
+                $stmt->execute([$losttype, $lostLocation, $lostDate]);
                 $foundItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($foundItems as $foundItem) {
