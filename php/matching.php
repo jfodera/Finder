@@ -15,9 +15,9 @@ try {
 
     // function areWordsSimilar($word1, $word2, $levenshteinWeight = 0.4, $soundexWeight = 0.3, $similarTextWeight = 0.3) {
     //     // Calculate Levenshtein distance (normalized to a score)
-    //     $levenshteinDistance = levenshtein($word1, $word2);
-    //     $maxLen = max(strlen($word1), strlen($word2));
-    //     $levenshteinScore = $maxLen > 0 ? (1 - ($levenshteinDistance / $maxLen)) : 0; // Normalize to a score between 0 and 1
+        // $levenshteinDistance = levenshtein($word1, $word2);
+        // $maxLen = max(strlen($word1), strlen($word2));
+        // $levenshteinScore = $maxLen > 0 ? (1 - ($levenshteinDistance / $maxLen)) : 0; // Normalize to a score between 0 and 1
         
  
     //     $soundexScore = (soundex($word1) === soundex($word2)) ? 1 : 0; // 1 if they sound the same, otherwise 0
@@ -41,7 +41,7 @@ try {
             return 1; // Words are identical
         }
     
-        $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1);
+        $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1); //API for synonyms
         $response = file_get_contents($apiUrl);
     
         if ($response === false) {
@@ -65,14 +65,9 @@ try {
         try {
             // Attribute weights
             $weights = [
-                // 'type' => 0.5,
-                // 'color' => 0.1,
-                // // 'location' => 0.3,
-                // 'date' => 0.1
                 'type' => 0.5,
                 'color' => 0.2,
                 'brand' => 0.2,
-                // 'location' => 0.3,
                 'date' => 0.1
             ];
     
@@ -116,8 +111,16 @@ try {
                     $colorScore = areWordsSimilar(strtolower($lostColor),strtolower($foundColor));
                     // $locationScore = ($lostLocation === $foundLocation) ? 1 : 0;
     
-                    $dateDiff = abs((strtotime($foundDate) - strtotime($lostDate)) / (60 * 60 * 24));
-                    $dateScore = ($dateDiff <= 7) ? 1 - ($dateDiff / 7) : 0;
+                    // $dateDiff = abs((strtotime($foundDate) - strtotime($lostDate)) / (60 * 60 * 24));
+                    // $dateScore = ($dateDiff <= 7) ? 1 - ($dateDiff / 7) : 0;
+
+                    if (strtotime($lostDate) >= strtotime($foundDate)) {
+                       
+                        $dateScore = 0; // Set score to 0 or handle as needed
+                    } else {
+                        $dateScore = 1; 
+                    }
+                    
     
                     // Weighted similarity
                     $similarityScore = 
@@ -145,9 +148,9 @@ try {
                             ");
                             $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
 
-                            echo "Type Score: $typeScore and Color Score: $colorScore \n";
+                            // echo "Type Score: $typeScore and Color Score: $colorScore \n";
 
-                            echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
+                            // echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
                         }
                 }
                     
