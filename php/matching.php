@@ -43,13 +43,13 @@ try {
                     $foundItemId = $foundItem['item_id'];
                     $foundType = $foundItem['type'];
                     $foundColor = $foundItem['color'];
-                    $foundLocation = $foundItem['location'];
+                    // $foundLocation = $foundItem['location'];
                     $foundDate = $foundItem['found_date'];
     
                     // Calculate similarity scores
                     $typeScore = ($lostType === $foundType) ? 1 : 0;
                     $colorScore = ($lostColor === $foundColor) ? 1 : 0;
-                    $locationScore = ($lostLocation === $foundLocation) ? 1 : 0;
+                    // $locationScore = ($lostLocation === $foundLocation) ? 1 : 0;
     
                     $dateDiff = abs((strtotime($foundDate) - strtotime($lostDate)) / (60 * 60 * 24));
                     $dateScore = ($dateDiff <= 7) ? 1 - ($dateDiff / 7) : 0;
