@@ -225,6 +225,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'], $image_url, $image_public_id
         ]);
 
+        //last insert from that specific connection, therefore, no need for constraints 
         $item_id = $pdo->lastInsertId();
         debug_log("Item inserted", ["item_id" => $item_id]);
 

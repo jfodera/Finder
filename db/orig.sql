@@ -94,12 +94,6 @@ CREATE TABLE item_locations (
     item_type ENUM('lost', 'found') NOT NULL,
     location VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_lost_item FOREIGN KEY (item_id) 
-        REFERENCES lost_items(item_id) 
-        ON DELETE CASCADE,
-    CONSTRAINT fk_found_item FOREIGN KEY (item_id) 
-        REFERENCES found_items(item_id) 
-        ON DELETE CASCADE,
     INDEX idx_item_type (item_type),
     INDEX idx_location (location)
 );
