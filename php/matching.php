@@ -98,7 +98,7 @@ try {
                     $foundTime = $foundItem['found_time'];
     
                     $typeScore = areWordsSimilar(strtolower($lostType),strtolower($foundType));
-                    $brandScore = (strcasecmp($lostBrand, $foundBrand) === 0) ? 1 : 0;
+                    $brandScore = (strcasecmp(trim(strtolower($lostBrand)), trim(strtolower($foundBrand))) === 0) ? 1 : 0;
                     $colorScore = areWordsSimilar(strtolower($lostColor),strtolower($foundColor));
     
                     if (strtotime($lostTime) >= strtotime($foundTime)) {
