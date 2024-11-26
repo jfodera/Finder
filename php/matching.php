@@ -12,11 +12,9 @@ try {
         if (preg_match('/(s|x|z|sh|ch)$/', $word)) {
             return $word . 'es';
         }
-        
         if (preg_match('/[aeiou]y$/', $word) === 0 && substr($word, -1) === 'y') {
             return substr($word, 0, -1) . 'ies';
         }
-        
         if (substr($word, -1) === 'y' && preg_match('/[aeiou]y$/', $word)) {
             return $word . 's';
         }
@@ -27,7 +25,6 @@ try {
             }
             return substr($word, 0, -1) . 'ves';
         }
-        
         // For regular nouns, just add -s
         return $word . 's';
     }
@@ -83,10 +80,11 @@ try {
     
             foreach ($lostItems as $lostItem) {
                 $lostItemId = $lostItem['item_id'];
-                $lostType = $lostItem['type'];
+                $lostType = $lostItem['item_type'];
                 $lostColor = $lostItem['color'];
                 $lostBrand = $lostItem['brand'];
-                $lostDate = $lostItem['lost_date'];
+                $lostTime = $lostItem['lost_time'];
+                $user_id= $lostItem['user_id'];
                 $foundItems = $pdo->query("
                     SELECT * FROM found_items
                     WHERE status = 'found'
@@ -94,16 +92,16 @@ try {
     
                 foreach ($foundItems as $foundItem) {
                     $foundItemId = $foundItem['item_id'];
-                    $foundType = $foundItem['type'];
+                    $foundType = $foundItem['item_type'];
                     $foundColor = $foundItem['color'];
                     $foundBrand = $foundItem['brand'];
-                    $foundDate = $foundItem['found_date'];
+                    $foundTime = $foundItem['found_time'];
     
                     $typeScore = areWordsSimilar(strtolower($lostType),strtolower($foundType));
                     $brandScore = (strcasecmp($lostBrand, $foundBrand) === 0) ? 1 : 0;
                     $colorScore = areWordsSimilar(strtolower($lostColor),strtolower($foundColor));
     
-                    if (strtotime($lostDate) >= strtotime($foundDate)) {
+                    if (strtotime($lostTime) >= strtotime($foundTime)) {
                        
                         $dateScore = 0; // Set score to 0 or handle as needed
                     } else {
@@ -132,10 +130,13 @@ try {
                         if (!$checkStmt->fetch()) {
                             // Create a new match
                             $insertStmt = $pdo->prepare("
-                                INSERT INTO matches (lost_item_id, found_item_id, similarity_score, status)
-                                VALUES (?, ?, ?, 'pending')
+                               
+                                INSERT INTO matches (lost_item_id, found_item_id, user_id, match_time,status)
+                                VALUES (?, ?, ?, ?, 'pending')
                             ");
-                            $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
+                            $match_time = date('Y-m-d H:i:s');
+                            $insertStmt->execute([$lostItemId, $foundItemId, $user_id, $match_time]);
+                           
 
                             // echo "Type Score: $typeScore and Color Score: $colorScore \n";
 
