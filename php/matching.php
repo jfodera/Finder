@@ -54,7 +54,7 @@ try {
         if (is_array($data)) {
             foreach ($data as $item) {
                 if (isset($item['word']) && strtolower($item['word']) === strtolower($word2)) {
-                    return 0.9; // Found a match
+                    return 0.8; // Found a match
                 }
             }
         }
