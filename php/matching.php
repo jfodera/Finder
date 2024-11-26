@@ -71,8 +71,9 @@ try {
                 // 'date' => 0.1
                 'type' => 0.5,
                 'color' => 0.2,
+                'brand' => 0.2,
                 // 'location' => 0.3,
-                'date' => 0.2
+                'date' => 0.1
             ];
     
             // Fetch all unmatched lost items
@@ -85,6 +86,7 @@ try {
                 $lostItemId = $lostItem['item_id'];
                 $lostType = $lostItem['type'];
                 $lostColor = $lostItem['color'];
+                $lostBrand = $lostItem['brand'];
 
                 // $All_locations = $pdo->query("
                 //     SELECT * FROM item_locations
@@ -103,13 +105,15 @@ try {
                     $foundItemId = $foundItem['item_id'];
                     $foundType = $foundItem['type'];
                     $foundColor = $foundItem['color'];
+                    $foundBrand = $foundItem['brand'];
                     // $foundLocation = $foundItem['location'];
                     $foundDate = $foundItem['found_date'];
     
                     // Calculate similarity scores
                     // $typeScore = (strcasecmp($lostType, $foundType) === 0) ? 1 : 0;
                     $typeScore = areWordsSimilar(strtolower($lostType),strtolower($foundType));
-                    $colorScore = (strcasecmp($lostColor, $foundColor) === 0) ? 1 : 0;
+                    $brandScore = (strcasecmp($lostBrand, $foundBrand) === 0) ? 1 : 0;
+                    $colorScore = areWordsSimilar(strtolower($lostColor),strtolower($foundColor));
                     // $locationScore = ($lostLocation === $foundLocation) ? 1 : 0;
     
                     $dateDiff = abs((strtotime($foundDate) - strtotime($lostDate)) / (60 * 60 * 24));
@@ -119,7 +123,7 @@ try {
                     $similarityScore = 
                         $weights['type'] * $typeScore +
                         $weights['color'] * $colorScore +
-                        // $weights['location'] * $locationScore +
+                        $weights['brand'] * $brandScore +
                         $weights['date'] * $dateScore;
     
                 
@@ -130,7 +134,7 @@ try {
                         WHERE lost_item_id = ? AND found_item_id = ?
                     ");
                     $checkStmt->execute([$lostItemId, $foundItemId]);
-
+                     
                     if ($similarityScore >= 0.7) {
 
                         if (!$checkStmt->fetch()) {
@@ -141,9 +145,12 @@ try {
                             ");
                             $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
 
+                            echo "Type Score: $typeScore and Color Score: $colorScore \n";
+
                             echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
                         }
-                    }
+                }
+                    
                 }
             }
     
