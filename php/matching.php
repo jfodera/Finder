@@ -25,6 +25,11 @@ try {
                 $lostItemId = $lostItem['item_id'];
                 $lostType = $lostItem['type'];
                 $lostColor = $lostItem['color'];
+
+                $All_locations = $pdo->query("
+                    SELECT * FROM item_locations
+                ")->fetchAll(PDO::FETCH_ASSOC);
+
                 $lostLocation = $lostItem['location'];
                 $lostDate = $lostItem['lost_date'];
     
