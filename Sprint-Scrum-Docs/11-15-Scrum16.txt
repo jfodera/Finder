@@ -1,0 +1,36 @@
+Meet and discussed where we were at in the project and re-evaluated importance of tasks as some 
+new ones were introduced. Evaluated our current state through our 3 lenses and spent the entire meeting coming up with optimizations of the UX based on our lenses. Our curated list is below: 
+
+Opportunities for Imporovement: 
+   Actually make the goal functionality work (match users to their lost items)
+   make found item submission go to the database 
+   Improve dashboard layout for recorders-> make it more even and seperate lost and found
+   fix login not found user feedback 
+   Better user feedback within the login system
+   Highlight everything the user hovers over
+   Notify user when found item form and lost item form is succesfully submitted
+   send email when Items are matched 
+   make the about page a bit nicer
+   colors on safari 
+   When token is expired on link (because they alread sent one), tell them
+   remove cooldown for found item logging 
+   Progress bar as moving through item submission form
+   decrease verification email sending time 
+   Mobile support 
+   CSS compressor
+   cant go to login if already logged in
+   For the forms, you can pretty much input anything, not a lot of input control
+   Can make reporting Lost item button on dashboard a bit larger 
+   have actual image submitted show in your dashboard
+   Prevent against cross site scripting 
+   Implement other forms of MFA
+   Create and Improve message for when we have found their item 
+   a way to delete your account 
+   fixsubmission cooldown 
+   Could change the color of found and lost tabs in recorder view tobe the same 
+   What if recorders loose something, add found item tab for them
+   Make logo in topleft actually say finder so it is more noticably as a back button
+   Have verification email send for MFA recorders 
+   Doesn't email you if item is found, it should 
+   could make navbar highlight a bit better when your hovering over something (showing you what you selected) 
+   remove recorder ID from lost items

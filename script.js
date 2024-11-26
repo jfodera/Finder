@@ -707,3 +707,107 @@ document.addEventListener('visibilitychange', () => {
     renderMatches();
   }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const progressHTML = `
+      <div class="progress-container">
+          <div class="steps">
+              <div class="step-item active">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Details</div>
+              </div>
+              <div class="step-item">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Date</div>
+              </div>
+              <div class="step-item">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Image</div>
+              </div>
+              <div class="step-item">
+                  <div class="step-circle"></div>
+                  <div class="step-text">Location</div>
+              </div>
+          </div>
+          <div class="progress-track">
+              <div class="progress-fill"></div>
+          </div>
+      </div>
+  `;
+
+  const form = document.getElementById('infoForm');
+  form.insertAdjacentHTML('beforebegin', progressHTML);
+
+  const progressFill = document.querySelector('.progress-fill');
+  const stepItems = document.querySelectorAll('.step-item');
+  let currentStep = 1;
+
+  function validateCurrentPage(page) {
+      const inputs = page.querySelectorAll('input[required]');
+      for (let input of inputs) {
+          if (!input.value) {
+              return false;
+          }
+      }
+      if (page.classList.contains('page-4')) {
+          const checkedLocations = page.querySelectorAll('input[type="checkbox"]:checked');
+          if (checkedLocations.length === 0) {
+              return false;
+          }
+      }
+      return true;
+  }
+
+  function updateProgress(step, validateFirst = true) {
+      const currentPage = document.querySelector('.page.active');
+      
+      if (validateFirst && step > currentStep) {
+          if (!validateCurrentPage(currentPage)) {
+              return false;
+          }
+      }
+
+      currentStep = step;
+      const progress = ((step - 1) / 3) * 100;
+      progressFill.style.width = `${progress}%`;
+
+      stepItems.forEach((item, idx) => {
+          if (idx + 1 < step) {
+              item.className = 'step-item complete';
+          } else if (idx + 1 === step) {
+              item.className = 'step-item active';
+          } else {
+              item.className = 'step-item';
+          }
+      });
+
+      return true;
+  }
+
+  document.querySelectorAll('.next-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+          const currentPage = document.querySelector('.page.active');
+          if (currentPage) {
+              const nextStep = parseInt(currentPage.classList[1].split('-')[1]) + 1;
+              if (updateProgress(nextStep)) {
+                  currentPage.classList.remove('active');
+                  document.querySelector(`.page-${nextStep}`).classList.add('active');
+              }
+          }
+      });
+  });
+
+  document.querySelectorAll('.prev-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+          const currentPage = document.querySelector('.page.active');
+          if (currentPage) {
+              const prevStep = parseInt(currentPage.classList[1].split('-')[1]) - 1;
+              updateProgress(prevStep, false);
+              currentPage.classList.remove('active');
+              document.querySelector(`.page-${prevStep}`).classList.add('active');
+          }
+      });
+  });
+
+  updateProgress(1, false);
+});
