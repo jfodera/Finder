@@ -13,27 +13,52 @@ try {
 
 
 
-    function areWordsSimilar($word1, $word2, $levenshteinWeight = 0.4, $soundexWeight = 0.3, $similarTextWeight = 0.3) {
-        // Calculate Levenshtein distance (normalized to a score)
-        $levenshteinDistance = levenshtein($word1, $word2);
-        $maxLen = max(strlen($word1), strlen($word2));
-        $levenshteinScore = $maxLen > 0 ? (1 - ($levenshteinDistance / $maxLen)) : 0; // Normalize to a score between 0 and 1
+    // function areWordsSimilar($word1, $word2, $levenshteinWeight = 0.4, $soundexWeight = 0.3, $similarTextWeight = 0.3) {
+    //     // Calculate Levenshtein distance (normalized to a score)
+    //     $levenshteinDistance = levenshtein($word1, $word2);
+    //     $maxLen = max(strlen($word1), strlen($word2));
+    //     $levenshteinScore = $maxLen > 0 ? (1 - ($levenshteinDistance / $maxLen)) : 0; // Normalize to a score between 0 and 1
         
-        // Check phonetic similarity using Soundex
-        $soundexScore = (soundex($word1) === soundex($word2)) ? 1 : 0; // 1 if they sound the same, otherwise 0
+ 
+    //     $soundexScore = (soundex($word1) === soundex($word2)) ? 1 : 0; // 1 if they sound the same, otherwise 0
         
-        // Calculate string similarity percentage
-        similar_text($word1, $word2, $percentage);
-        $similarTextScore = $percentage / 100; // Normalize to a score between 0 and 1
+    //     // Calculate string similarity percentage
+    //     similar_text($word1, $word2, $percentage);
+    //     $similarTextScore = $percentage / 100; // Normalize to a score between 0 and 1
     
-        // Calculate the weighted similarity score
-        $similarity = 
-            ($levenshteinWeight * $levenshteinScore) +
-            ($soundexWeight * $soundexScore) +
-            ($similarTextWeight * $similarTextScore);
+    //     // Calculate the weighted similarity score
+    //     $similarity = 
+    //         ($levenshteinWeight * $levenshteinScore) +
+    //         ($soundexWeight * $soundexScore) +
+    //         ($similarTextWeight * $similarTextScore);
     
-        // Return the overall similarity score
-        return $similarity;
+    //     // Return the overall similarity score
+    //     return $similarity;
+    // }
+
+    function areWordsSimilar($word1, $word2) {
+        if ($word1 === $word2) {
+            return 1; // Words are identical
+        }
+    
+        $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1);
+        $response = file_get_contents($apiUrl);
+    
+        if ($response === false) {
+            return 0; // API call failed
+        }
+    
+        $data = json_decode($response, true);
+    
+        if (is_array($data)) {
+            foreach ($data as $item) {
+                if (isset($item['word']) && strtolower($item['word']) === strtolower($word2)) {
+                    return 0.9; // Found a match
+                }
+            }
+        }
+    
+        return 0; // No match found
     }
     
     function findMatchesForLostItems($pdo) {
@@ -106,17 +131,19 @@ try {
                     ");
                     $checkStmt->execute([$lostItemId, $foundItemId]);
 
-                    if (!$checkStmt->fetch()) {
-                        // Create a new match
-                        $insertStmt = $pdo->prepare("
-                            INSERT INTO matches (lost_item_id, found_item_id, similarity_score, status)
-                            VALUES (?, ?, ?, 'pending')
-                        ");
-                        $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
+                    if ($similarityScore >= 0.7) {
 
-                        echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
+                        if (!$checkStmt->fetch()) {
+                            // Create a new match
+                            $insertStmt = $pdo->prepare("
+                                INSERT INTO matches (lost_item_id, found_item_id, similarity_score, status)
+                                VALUES (?, ?, ?, 'pending')
+                            ");
+                            $insertStmt->execute([$lostItemId, $foundItemId, $similarityScore]);
+
+                            echo "Match created for Lost Item #$lostItemId and Found Item #$foundItemId with similarity score: $similarityScore\n";
+                        }
                     }
-                    
                 }
             }
     
