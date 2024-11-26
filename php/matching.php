@@ -2,17 +2,52 @@
 
 require_once '../db/db_connect.php';
 
+
+
+
+
+
+
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+
+    function areWordsSimilar($word1, $word2, $levenshteinWeight = 0.4, $soundexWeight = 0.3, $similarTextWeight = 0.3) {
+        // Calculate Levenshtein distance (normalized to a score)
+        $levenshteinDistance = levenshtein($word1, $word2);
+        $maxLen = max(strlen($word1), strlen($word2));
+        $levenshteinScore = $maxLen > 0 ? (1 - ($levenshteinDistance / $maxLen)) : 0; // Normalize to a score between 0 and 1
+        
+        // Check phonetic similarity using Soundex
+        $soundexScore = (soundex($word1) === soundex($word2)) ? 1 : 0; // 1 if they sound the same, otherwise 0
+        
+        // Calculate string similarity percentage
+        similar_text($word1, $word2, $percentage);
+        $similarTextScore = $percentage / 100; // Normalize to a score between 0 and 1
+    
+        // Calculate the weighted similarity score
+        $similarity = 
+            ($levenshteinWeight * $levenshteinScore) +
+            ($soundexWeight * $soundexScore) +
+            ($similarTextWeight * $similarTextScore);
+    
+        // Return the overall similarity score
+        return $similarity;
+    }
     
     function findMatchesForLostItems($pdo) {
         try {
             // Attribute weights
             $weights = [
+                // 'type' => 0.5,
+                // 'color' => 0.1,
+                // // 'location' => 0.3,
+                // 'date' => 0.1
                 'type' => 0.5,
-                'color' => 0.1,
-                'location' => 0.3,
-                'date' => 0.1
+                'color' => 0.2,
+                // 'location' => 0.3,
+                'date' => 0.2
             ];
     
             // Fetch all unmatched lost items
@@ -26,11 +61,11 @@ try {
                 $lostType = $lostItem['type'];
                 $lostColor = $lostItem['color'];
 
-                $All_locations = $pdo->query("
-                    SELECT * FROM item_locations
-                ")->fetchAll(PDO::FETCH_ASSOC);
+                // $All_locations = $pdo->query("
+                //     SELECT * FROM item_locations
+                // ")->fetchAll(PDO::FETCH_ASSOC);
 
-                $lostLocation = $lostItem['location'];
+                // $lostLocation = $lostItem['location'];
                 $lostDate = $lostItem['lost_date'];
     
                 // Fetch potential matches in found items
@@ -47,8 +82,9 @@ try {
                     $foundDate = $foundItem['found_date'];
     
                     // Calculate similarity scores
-                    $typeScore = ($lostType === $foundType) ? 1 : 0;
-                    $colorScore = ($lostColor === $foundColor) ? 1 : 0;
+                    // $typeScore = (strcasecmp($lostType, $foundType) === 0) ? 1 : 0;
+                    $typeScore = areWordsSimilar(strtolower($lostType),strtolower($foundType));
+                    $colorScore = (strcasecmp($lostColor, $foundColor) === 0) ? 1 : 0;
                     // $locationScore = ($lostLocation === $foundLocation) ? 1 : 0;
     
                     $dateDiff = abs((strtotime($foundDate) - strtotime($lostDate)) / (60 * 60 * 24));
@@ -58,7 +94,7 @@ try {
                     $similarityScore = 
                         $weights['type'] * $typeScore +
                         $weights['color'] * $colorScore +
-                        $weights['location'] * $locationScore +
+                        // $weights['location'] * $locationScore +
                         $weights['date'] * $dateScore;
     
                 
