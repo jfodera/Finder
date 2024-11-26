@@ -67,4 +67,19 @@ to do:
  
 
 Questions: 
-   how did you block users from just messing with the title, in order to get to the next page 
+   how did you block users from just messing with the title, in order to get to the next page
+
+
+Quiz 2 notes: 
+   Security things we added: 
+
+      To stop people that are not logged in to getting to pages they are not supposed to, 
+      we stored the user_id and related information in session variables, along with wether 
+      they are a recorder or a user. 
+      if (!isset($_SESSION['user_id'])) {
+         header("Location: login.php");
+         exit();
+      }
+
+Optimizations: 
+   Put Javascript file at the bottom of the HTML to help the page run faster
