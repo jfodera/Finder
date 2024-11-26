@@ -1,40 +1,10 @@
 <?php
-
+session_start();
 require_once '../db/db_connect.php';
-
-
-
-
-
-
 
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-
-
-    // function areWordsSimilar($word1, $word2, $levenshteinWeight = 0.4, $soundexWeight = 0.3, $similarTextWeight = 0.3) {
-    //     // Calculate Levenshtein distance (normalized to a score)
-        // $levenshteinDistance = levenshtein($word1, $word2);
-        // $maxLen = max(strlen($word1), strlen($word2));
-        // $levenshteinScore = $maxLen > 0 ? (1 - ($levenshteinDistance / $maxLen)) : 0; // Normalize to a score between 0 and 1
-        
- 
-    //     $soundexScore = (soundex($word1) === soundex($word2)) ? 1 : 0; // 1 if they sound the same, otherwise 0
-        
-    //     // Calculate string similarity percentage
-    //     similar_text($word1, $word2, $percentage);
-    //     $similarTextScore = $percentage / 100; // Normalize to a score between 0 and 1
-    
-    //     // Calculate the weighted similarity score
-    //     $similarity = 
-    //         ($levenshteinWeight * $levenshteinScore) +
-    //         ($soundexWeight * $soundexScore) +
-    //         ($similarTextWeight * $similarTextScore);
-    
-    //     // Return the overall similarity score
-    //     return $similarity;
-    // }
 
     function convertToPlural($word){
         //convert to plural words using grammar rules
@@ -116,15 +86,7 @@ try {
                 $lostType = $lostItem['type'];
                 $lostColor = $lostItem['color'];
                 $lostBrand = $lostItem['brand'];
-
-                // $All_locations = $pdo->query("
-                //     SELECT * FROM item_locations
-                // ")->fetchAll(PDO::FETCH_ASSOC);
-
-                // $lostLocation = $lostItem['location'];
                 $lostDate = $lostItem['lost_date'];
-    
-                // Fetch potential matches in found items
                 $foundItems = $pdo->query("
                     SELECT * FROM found_items
                     WHERE status = 'found'
@@ -135,19 +97,12 @@ try {
                     $foundType = $foundItem['type'];
                     $foundColor = $foundItem['color'];
                     $foundBrand = $foundItem['brand'];
-                    // $foundLocation = $foundItem['location'];
                     $foundDate = $foundItem['found_date'];
     
-                    // Calculate similarity scores
-                    // $typeScore = (strcasecmp($lostType, $foundType) === 0) ? 1 : 0;
                     $typeScore = areWordsSimilar(strtolower($lostType),strtolower($foundType));
                     $brandScore = (strcasecmp($lostBrand, $foundBrand) === 0) ? 1 : 0;
                     $colorScore = areWordsSimilar(strtolower($lostColor),strtolower($foundColor));
-                    // $locationScore = ($lostLocation === $foundLocation) ? 1 : 0;
     
-                    // $dateDiff = abs((strtotime($foundDate) - strtotime($lostDate)) / (60 * 60 * 24));
-                    // $dateScore = ($dateDiff <= 7) ? 1 - ($dateDiff / 7) : 0;
-
                     if (strtotime($lostDate) >= strtotime($foundDate)) {
                        
                         $dateScore = 0; // Set score to 0 or handle as needed
