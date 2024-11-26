@@ -36,10 +36,44 @@ try {
     //     return $similarity;
     // }
 
+    function convertToPlural($word){
+        //convert to plural words using grammar rules
+
+        if (preg_match('/(s|x|z|sh|ch)$/', $word)) {
+            return $word . 'es';
+        }
+        
+        if (preg_match('/[aeiou]y$/', $word) === 0 && substr($word, -1) === 'y') {
+            return substr($word, 0, -1) . 'ies';
+        }
+        
+        if (substr($word, -1) === 'y' && preg_match('/[aeiou]y$/', $word)) {
+            return $word . 's';
+        }
+    
+        if (substr($word, -1) === 'f') {
+            if (substr($word, -2) === 'fe') {
+                return substr($word, 0, -2) . 'ves';
+            }
+            return substr($word, 0, -1) . 'ves';
+        }
+        
+        // For regular nouns, just add -s
+        return $word . 's';
+    }
+
     function areWordsSimilar($word1, $word2) {
         if ($word1 === $word2) {
             return 1; // Words are identical
         }
+
+        if (convertToPlural($word1) === $word2) {
+            return 1; 
+        }else if($word1 === convertToPlural($word2)){
+            return 1;
+        }
+        
+
     
         $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1); //API for synonyms
         $response = file_get_contents($apiUrl);
