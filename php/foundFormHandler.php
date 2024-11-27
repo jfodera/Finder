@@ -262,14 +262,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->commit();
         debug_log("Transaction completed successfully");
         
-        //goes back to dashboard 
-        echo json_encode([
-            //goes to console -> successfully
-            'success' => true,
-            'message' => "Item successfully reported as lost!",
-            'redirect' => 'dashboard.php',
-            'item_id' => $item_id
-        ]);
+        // Run matching algorithm
+        require_once 'matching.php';
+        try {
+            debug_log("Starting matching algorithm for new found item");
+            // For found items, we run the matching algorithm against all lost items
+            $newMatches = findMatchesForLostItems($pdo);
+            
+            if (!empty($newMatches)) {
+                $_SESSION['new_matches'] = count($newMatches);
+                debug_log("Matches found", [
+                    "count" => count($newMatches),
+                    "matches" => $newMatches
+                ]);
+                
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Item successfully recorded! " . count($newMatches) . " potential matches found!",
+                    'redirect' => 'dashboard.php?matches=new',
+                    'item_id' => $item_id
+                ]);
+            } else {
+                debug_log("No matches found for new found item");
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Item successfully recorded!",
+                    'redirect' => 'dashboard.php',
+                    'item_id' => $item_id
+                ]);
+            }
+        } catch (Exception $matchingError) {
+            debug_log("Matching algorithm error", [
+                'error' => $matchingError->getMessage(),
+                'item_id' => $item_id
+            ]);
+            // Still return success since the item was saved
+            echo json_encode([
+                'success' => true,
+                'message' => "Item successfully recorded!",
+                'redirect' => 'dashboard.php',
+                'item_id' => $item_id
+            ]);
+        }
         exit();
 
     } catch (Exception $e) {
