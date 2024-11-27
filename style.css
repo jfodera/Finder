@@ -1403,3 +1403,35 @@ textarea:-webkit-autofill:focus {
   width: 100%;
   height: 100%;
 }
+
+.location-tooltip {
+  opacity: 0;
+  animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.clickable-area {
+  position: absolute;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-area:hover {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.clickable-area.selected {
+  border-color: #01f573;
+  background: rgba(1, 245, 115, 0.3);
+}
+
+.map-scale {
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
