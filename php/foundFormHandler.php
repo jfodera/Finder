@@ -35,43 +35,44 @@ debug_log("Handler started", [
 ]);
 
 // // Configure Cloudinary
-// use Cloudinary\Configuration\Configuration;
-// use Cloudinary\Api\Upload\UploadApi;
+use Cloudinary\Configuration\Configuration;
+use Cloudinary\Api\Upload\UploadApi;
 
-// try {
-//     Configuration::instance([
-//         'cloud' => [
-//             'cloud_name' => $_ENV['CLOUDINARY_CLOUD_NAME'],
-//             'api_key' => $_ENV['CLOUDINARY_API_KEY'],
-//             'api_secret' => $_ENV['CLOUDINARY_SECRET']
-//         ],
-//         'url' => [
-//             'secure' => true
-//         ]
-//     ]);
+try {
+    Configuration::instance([
+        'cloud' => [
+            'cloud_name' => $_ENV['CLOUDINARY_CLOUD_NAME'],
+            'api_key' => $_ENV['CLOUDINARY_API_KEY'],
+            'api_secret' => $_ENV['CLOUDINARY_SECRET']
+        ],
+        'url' => [
+            'secure' => true
+        ]
+    ]);
 
-//     debug_log("Cloudinary configured successfully");
-// } catch (Exception $e) {
-//     debug_log("Cloudinary configuration error", $e->getMessage());
-//     http_response_code(500);
-//     echo json_encode([
-//         'success' => false,
-//         'message' => "Failed to configure image upload service",
-//         'error' => $e->getMessage()
-//     ]);
-//     exit();
-// }
+    debug_log("Cloudinary configured successfully");
+} catch (Exception $e) {
+    debug_log("Cloudinary configuration error", $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => "Failed to configure image upload service",
+        'error' => $e->getMessage()
+    ]);
+    exit();
+}
 
-// // Check if user is logged in
-// if (!isset($_SESSION['user_id'])) {
-//     http_response_code(401);
-//     echo json_encode([
-//         'success' => false,
-//         'message' => "Please log in to continue",
-//         'redirect' => 'login.php'
-//     ]);
-//     exit();
-// }
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'message' => "Please log in to continue",
+        'redirect' => 'login.php'
+    ]);
+    exit();
+}
+
 
 //removes things do not want in input
 function sanitize_input($input) {
