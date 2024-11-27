@@ -268,18 +268,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             debug_log("Starting matching algorithm");
             $runMatching = true; 
             $newMatches = findMatchesForLostItems($pdo);
-
-            echo json_encode([
-                'success' => true,
-                'message' => "Item successfully reported!",
-                'redirect' => 'dashboard.php',
-                'item_id' => $item_id,
-                'debug_info' => [
-                    'matches_found' => count($newMatches),
-                    'matching_details' => $newMatches,
-                    'timestamp' => date('Y-m-d H:i:s')
-                ]
-            ]);
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
@@ -288,19 +276,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     "matches" => $newMatches
                 ]);
                 
+                // Send single response with match information
                 echo json_encode([
                     'success' => true,
-                    'message' => "Item successfully recorded! " . count($newMatches) . " potential matches found!",
+                    'message' => "Item successfully " . 
+                                ($item_type === 'found' ? "recorded" : "reported as lost") . 
+                                "! " . count($newMatches) . " potential matches found!",
                     'redirect' => 'dashboard.php?matches=new',
-                    'item_id' => $item_id
+                    'item_id' => $item_id,
+                    'debug_info' => [
+                        'matches_found' => count($newMatches),
+                        'matching_details' => $newMatches,
+                        'timestamp' => date('Y-m-d H:i:s')
+                    ]
                 ]);
             } else {
-                debug_log("No matches found for new found item");
+                debug_log("No matches found");
                 echo json_encode([
                     'success' => true,
-                    'message' => "Item successfully recorded!",
+                    'message' => "Item successfully " . 
+                                ($item_type === 'found' ? "recorded" : "reported as lost") . "!",
                     'redirect' => 'dashboard.php',
-                    'item_id' => $item_id
+                    'item_id' => $item_id,
+                    'debug_info' => [
+                        'matches_found' => 0,
+                        'matching_details' => [],
+                        'timestamp' => date('Y-m-d H:i:s')
+                    ]
                 ]);
             }
         } catch (Exception $matchingError) {
@@ -311,9 +313,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Still return success since the item was saved
             echo json_encode([
                 'success' => true,
-                'message' => "Item successfully recorded!",
+                'message' => "Item successfully " . 
+                            ($item_type === 'found' ? "recorded" : "reported as lost") . "!",
                 'redirect' => 'dashboard.php',
-                'item_id' => $item_id
+                'item_id' => $item_id,
+                'debug_info' => [
+                    'error' => $matchingError->getMessage(),
+                    'timestamp' => date('Y-m-d H:i:s')
+                ]
             ]);
         }
         exit();
