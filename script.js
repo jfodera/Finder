@@ -549,17 +549,33 @@ function initializeForm() {
 
       try {
         const response = await fetch(this.action, {
-          method: "POST",
-          body: formData,
+            method: "POST",
+            body: formData,
         });
-
+    
         console.log("Raw response:", response);
-
-        
-        window.location.href = jsonResponse.redirect;
-      
-      } catch (error) {
-        console.error("Submission error:", error);
+    
+        let jsonResponse;
+        try {
+            const responseText = await response.text();
+            console.log("Raw response text:", responseText);
+            console.log("Response Headers:", response.headers);
+            
+            jsonResponse = JSON.parse(responseText);
+            console.log("Parsed response:", jsonResponse);
+            
+            if (jsonResponse.debug_info) {
+                console.log("Matching Debug Info:", {
+                    matchesFound: jsonResponse.debug_info.matches_found,
+                    matchingDetails: jsonResponse.debug_info.matching_details,
+                    timestamp: jsonResponse.debug_info.timestamp
+                });
+            }
+        } catch (parseError) {
+            console.error("Failed to parse response:", parseError);
+            console.error("Response text was:", responseText);
+            throw new Error("Invalid response format");
+        }
       } finally {
         // Reset submission lock and button state
         isSubmitting = false;
