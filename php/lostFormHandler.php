@@ -259,7 +259,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             debug_log("Starting matching algorithm");
             $runMatching = true; 
-            $newMatches = findMatchesForLostItems($pdo);
+            $newMatches = findMatchesForLostItems($pdo, $item_id);
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
@@ -291,7 +291,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php',
                     'item_id' => $item_id,
                     'debug_info' => [
-                        'matches_found' => 9999999,
+                        'matches_found' => 0,
                         'matching_details' => [],
                         'timestamp' => date('Y-m-d H:i:s')
                     ]
