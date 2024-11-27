@@ -283,15 +283,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'item_id' => $item_id
             ]);
         }
-        
-        echo json_encode([
-            //goes to console -> successfully
-            'success' => true,
-            'message' => "Item successfully reported as lost!",
-            'redirect' => 'dashboard.php',
-            'item_id' => $item_id
-        ]);
-        exit();
 
     } catch (Exception $e) {
         debug_log("Error occurred", [
