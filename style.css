@@ -1296,18 +1296,6 @@ textarea:-webkit-autofill:focus {
   text-decoration: underline;
 }
 
-.map-container {
-  position: relative;
-  margin-bottom: 20px;
-  max-width: 800px;
-  border: 1px solid #ccc;
-}
-
-.map-container img {
-  width: 100%;
-  height: auto;
-}
-
 #mapOverlay {
   position: absolute;
   top: 0;
@@ -1316,67 +1304,9 @@ textarea:-webkit-autofill:focus {
   height: 100%;
 }
 
-.clickable-area {
-  position: absolute;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.clickable-area:hover {
-  border-color: rgba(0, 120, 255, 0.5);
-  background: rgba(0, 120, 255, 0.1);
-}
-
-.clickable-area.selected {
-  border-color: rgba(0, 120, 255, 0.8);
-  background: rgba(0, 120, 255, 0.2);
-}
-
 .view-switcher {
   width: 100%;
   margin-bottom: 20px;
-}
-
-.toggle-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin: 20px 0;
-}
-
-.view-button {
-  padding: 12px 30px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 25px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.view-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.view-button.active {
-  background: rgba(1, 245, 115, 0.2);
-  border-color: #01f573;
-}
-
-.views-container {
-  width: 100%;
-}
-
-.view-content {
-  display: none;
-  width: 100%;
-}
-
-.view-content.active {
-  display: block;
 }
 
 .map-view {
@@ -1434,4 +1364,78 @@ textarea:-webkit-autofill:focus {
 .map-scale {
   backdrop-filter: blur(4px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.location-section {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.view-button {
+  padding: 0.75rem 2rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.view-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.view-button.active {
+  background: rgba(1, 245, 115, 0.2);
+  border-color: #01f573;
+}
+
+.views-container {
+  width: 100%;
+  position: relative;
+}
+
+.view-content {
+  width: 100%;
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.clickable-area {
+  position: absolute;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clickable-area:hover {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.clickable-area.selected {
+  border-color: #01f573;
+  background: rgba(1, 245, 115, 0.3);
+}
+
+.locations-selected {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
 }
