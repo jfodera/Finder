@@ -1295,3 +1295,40 @@ textarea:-webkit-autofill:focus {
   color: white;
   text-decoration: underline;
 }
+
+.map-container {
+  position: relative;
+  margin-bottom: 20px;
+  max-width: 800px;
+  border: 1px solid #ccc;
+}
+
+.map-container img {
+  width: 100%;
+  height: auto;
+}
+
+#mapOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.clickable-area {
+  position: absolute;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clickable-area:hover {
+  border-color: rgba(0, 120, 255, 0.5);
+  background: rgba(0, 120, 255, 0.1);
+}
+
+.clickable-area.selected {
+  border-color: rgba(0, 120, 255, 0.8);
+  background: rgba(0, 120, 255, 0.2);
+}
