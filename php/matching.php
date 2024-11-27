@@ -229,13 +229,12 @@ try {
     }
 
     // Run the matching algorithm if called directly or if runMatching is true
-    if (!isset($includeOnly) || (isset($runMatching) && $runMatching === true)) {
-        debug_log("Running matching algorithm directly");
+  
         $matches = findMatchesForLostItems($pdo);
         if (!isset($includeOnly)) {
             echo json_encode(['success' => true, 'matches' => $matches]);
         }
-    }
+    
     
 } catch (PDOException $e) {
     debug_log("Connection failed: " . $e->getMessage());

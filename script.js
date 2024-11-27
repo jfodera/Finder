@@ -549,33 +549,43 @@ function initializeForm() {
 
       try {
         const response = await fetch(this.action, {
-            method: "POST",
-            body: formData,
+          method: "POST",
+          body: formData,
         });
-    
+
         console.log("Raw response:", response);
-    
+
+        // Try to parse the response as JSON
         let jsonResponse;
         try {
-            const responseText = await response.text();
-            console.log("Raw response text:", responseText);
-            console.log("Response Headers:", response.headers);
-            
-            jsonResponse = JSON.parse(responseText);
-            console.log("Parsed response:", jsonResponse);
-            
-            if (jsonResponse.debug_info) {
-                console.log("Matching Debug Info:", {
-                    matchesFound: jsonResponse.debug_info.matches_found,
-                    matchingDetails: jsonResponse.debug_info.matching_details,
-                    timestamp: jsonResponse.debug_info.timestamp
-                });
-            }
+          const responseText = await response.text();
+          console.log("Raw response text:", responseText);
+          jsonResponse = JSON.parse(responseText);
         } catch (parseError) {
-            console.error("Failed to parse response:", parseError);
-            console.error("Response text was:", responseText);
-            throw new Error("Invalid response format");
+          console.error("Failed to parse response:", parseError);
+          throw new Error("Invalid response format");
         }
+
+        console.log("Parsed response:", jsonResponse);
+
+        if (jsonResponse.success) {
+          console.log("Success! Redirecting to:", jsonResponse.redirect);
+          window.location.href = jsonResponse.redirect;
+        } else {
+          console.error("Server reported error:", jsonResponse.message);
+          if (jsonResponse.error_details) {
+            console.error("Error details:", jsonResponse.error_details);
+          }
+          alert(
+            jsonResponse.message ||
+              "An error occurred while submitting the form."
+          );
+        }
+      } catch (error) {
+        console.error("Submission error:", error);
+        alert(
+          "An error occurred while submitting the form. Please check the console for details."
+        );
       } finally {
         // Reset submission lock and button state
         isSubmitting = false;
