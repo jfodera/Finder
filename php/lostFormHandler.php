@@ -253,7 +253,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $pdo->commit();
         debug_log("Transaction completed successfully");
-        
+
         // Run matching algorithm
         require_once 'matching.php';
         try {
@@ -261,61 +261,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $runMatching = true; 
             $newMatches = findMatchesForLostItems($pdo);
             
-            if (!empty($newMatches)) {
-                $_SESSION['new_matches'] = count($newMatches);
-                debug_log("Matches found", [
-                    "count" => count($newMatches),
-                    "matches" => $newMatches
-                ]);
-                
-                // Send single response with match information
-                echo json_encode([
-                    'success' => true,
-                    'message' => "Item successfully " . 
-                                ($item_type === 'found' ? "recorded" : "reported as lost") . 
-                                "! " . count($newMatches) . " potential matches found!",
-                    'redirect' => 'dashboard.php?matches=new',
-                    'item_id' => $item_id,
-                    'debug_info' => [
-                        'matches_found' => count($newMatches),
-                        'matching_details' => $newMatches,
-                        'timestamp' => date('Y-m-d H:i:s')
-                    ]
-                ]);
-            } else {
-                debug_log("No matches found");
-                echo json_encode([
-                    'success' => true,
-                    'message' => "Item successfully " . 
-                                ($item_type === 'found' ? "recorded" : "reported as lost") . "!",
-                    'redirect' => 'dashboard.php',
-                    'item_id' => $item_id,
-                    'debug_info' => [
-                        'matches_found' => 0,
-                        'matching_details' => [],
-                        'timestamp' => date('Y-m-d H:i:s')
-                    ]
-                ]);
-            }
-        } catch (Exception $matchingError) {
-            debug_log("Matching algorithm error", [
-                'error' => $matchingError->getMessage(),
-                'item_id' => $item_id
-            ]);
-            // Still return success since the item was saved
-            echo json_encode([
+            // Prepare the response
+            $response = [
                 'success' => true,
                 'message' => "Item successfully " . 
-                            ($item_type === 'found' ? "recorded" : "reported as lost") . "!",
-                'redirect' => 'dashboard.php',
+                            ($item_type === 'found' ? "recorded" : "reported as lost") . 
+                            "! " . count($newMatches) . " potential matches found!",
+                'redirect' => 'dashboard.php?matches=new',
                 'item_id' => $item_id,
                 'debug_info' => [
-                    'error' => $matchingError->getMessage(),
+                    'matches_found' => count($newMatches),
+                    'matching_details' => $newMatches,
                     'timestamp' => date('Y-m-d H:i:s')
                 ]
+            ];
+
+            // If no matches found, adjust the response
+            if (empty($newMatches)) {
+                debug_log("No matches found");
+                $response['message'] = "Item successfully " . 
+                                    ($item_type === 'found' ? "recorded" : "reported as lost") . 
+                                    "! No potential matches found.";
+                $response['debug_info']['matches_found'] = 0;
+                $response['debug_info']['matching_details'] = [];
+            }
+
+            // Return the response as JSON
+            echo json_encode($response);
+            exit();
+
+        } catch (Exception $e) {
+            debug_log("Error occurred", [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
+            
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'An error occurred while processing your request.',
+                'error_details' => [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]
+            ]);
+            exit();
         }
-        exit();
 
     } catch (Exception $e) {
         debug_log("Error occurred", [
