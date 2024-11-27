@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../db/db_connect.php';
 
 // Disable error display in output
