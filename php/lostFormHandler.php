@@ -291,7 +291,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php',
                     'item_id' => $item_id,
                     'debug_info' => [
-                        'matches_found' => 0,
+                        'matches_found' => 9999999,
                         'matching_details' => [],
                         'timestamp' => date('Y-m-d H:i:s')
                     ]
