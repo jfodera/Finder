@@ -255,48 +255,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         debug_log("Transaction completed successfully");
         
         // Run matching algorithm
-        require_once 'php/matching.php';
-        try {
-            debug_log("Starting matching algorithm");
-            $runMatching = true; 
-            $newMatches = findMatchesForLostItems($pdo);
+        require_once 'matching.php';
+        
+        debug_log("Starting matching algorithm");
+        $runMatching = true; 
+        $newMatches = findMatchesForLostItems($pdo);
+        
+        if (!empty($newMatches)) {
+            $_SESSION['new_matches'] = count($newMatches);
+            debug_log("Matches found", [
+                "count" => count($newMatches),
+                "matches" => $newMatches
+            ]);
             
-            if (!empty($newMatches)) {
-                $_SESSION['new_matches'] = count($newMatches);
-                debug_log("Matches found", [
-                    "count" => count($newMatches),
-                    "matches" => $newMatches
-                ]);
-                
-                // Send single response with match information
-                echo json_encode([
-                    'success' => true,
-                    'message' => "Item successfully " . 
-                                ($item_type === 'found' ? "recorded" : "reported as lost") . 
-                                "! " . count($newMatches) . " potential matches found!",
-                    'redirect' => 'dashboard.php?matches=new',
-                    'item_id' => $item_id,
-                    'debug_info' => [
-                        'matches_found' => count($newMatches),
-                        'matching_details' => $newMatches,
-                        'timestamp' => date('Y-m-d H:i:s')
-                    ]
-                ]);
-            } else {
-                debug_log("No matches found");
-                echo json_encode([
-                    'success' => true,
-                    'message' => "Item successfully " . 
-                                ($item_type === 'found' ? "recorded" : "reported as lost") . "!",
-                    'redirect' => 'dashboard.php',
-                    'item_id' => $item_id,
-                    'debug_info' => [
-                        'matches_found' => 0,
-                        'matching_details' => [],
-                        'timestamp' => date('Y-m-d H:i:s')
-                    ]
-                ]);
-            }
+            // Send single response with match information
+            echo json_encode([
+                'success' => true,
+                'message' => "Item successfully " . 
+                            ($item_type === 'found' ? "recorded" : "reported as lost") . 
+                            "! " . count($newMatches) . " potential matches found!",
+                'redirect' => 'dashboard.php?matches=new',
+                'item_id' => $item_id,
+                'debug_info' => [
+                    'matches_found' => count($newMatches),
+                    'matching_details' => $newMatches,
+                    'timestamp' => date('Y-m-d H:i:s')
+                ]
+            ]);
+        
         } catch (Exception $matchingError) {
             debug_log("Matching algorithm error", [
                 'error' => $matchingError->getMessage(),
