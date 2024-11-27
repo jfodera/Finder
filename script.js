@@ -721,8 +721,10 @@ function initializeLocationViews() {
   const viewSwitcher = document.createElement('div');
   viewSwitcher.className = 'view-switcher';
   viewSwitcher.innerHTML = `
-    <button type="button" class="view-button active" data-view="list">List View</button>
-    <button type="button" class="view-button" data-view="map">Map View</button>
+    <div class="toggle-buttons">
+      <button type="button" class="view-button active" data-view="list">List View</button>
+      <button type="button" class="view-button" data-view="map">Map View</button>
+    </div>
   `;
 
   const viewsContainer = document.createElement('div');
@@ -732,24 +734,21 @@ function initializeLocationViews() {
   listView.className = 'view-content list-view active';
   listView.innerHTML = locationSection.innerHTML;
 
-  // Create map view
   const mapView = document.createElement('div');
   mapView.className = 'view-content map-view';
   mapView.innerHTML = `
-    <div class="map-container">
+    <div class="map-wrapper">
       <img src="../assets/campus-map.jpg" alt="Campus Map" id="campusMap">
       <div id="mapOverlay"></div>
     </div>
   `;
 
-  // Clear and restructure location section
   locationSection.innerHTML = '';
+  locationSection.appendChild(viewSwitcher);
   viewsContainer.appendChild(listView);
   viewsContainer.appendChild(mapView);
-  locationSection.prepend(viewSwitcher);
   locationSection.appendChild(viewsContainer);
 
-  // Initialize map functionality
   initializeMapSelector();
 
   // Handle view switching
@@ -762,7 +761,6 @@ function initializeLocationViews() {
       viewButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
       
-      // Show selected view
       document.querySelector('.list-view').classList.remove('active');
       document.querySelector('.map-view').classList.remove('active');
       document.querySelector(`.${view}-view`).classList.add('active');
