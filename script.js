@@ -512,8 +512,11 @@ function initializeForm() {
   }
 
   // Location search and selection
-  initializeLocationHandling();
-
+  if (document.querySelector('.location-section')) {
+    initializeLocationViews();
+    initializeLocationHandling();
+  }
+  initializeMapSelector();
   // Single form submission handler
   if (infoForm) {
     infoForm.addEventListener("submit", async function (e) {
@@ -700,6 +703,9 @@ document.addEventListener("DOMContentLoaded", function () {
   renderMatches();
   initializeForm();
   initializeNavigation();
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = mapStyles;
+  document.head.appendChild(styleSheet);
 });
 
 document.addEventListener('visibilitychange', () => {
@@ -707,3 +713,156 @@ document.addEventListener('visibilitychange', () => {
     renderMatches();
   }
 });
+
+function initializeLocationViews() {
+  const locationSection = document.querySelector('.location-section');
+  if (!locationSection) return;
+
+  const viewSwitcher = document.createElement('div');
+  viewSwitcher.className = 'view-switcher';
+  viewSwitcher.innerHTML = `
+    <div class="toggle-buttons">
+      <button type="button" class="view-button active" data-view="list">List View</button>
+      <button type="button" class="view-button" data-view="map">Map View</button>
+    </div>
+  `;
+
+  const viewsContainer = document.createElement('div');
+  viewsContainer.className = 'views-container';
+
+  const listView = document.createElement('div');
+  listView.className = 'view-content list-view active';
+  listView.innerHTML = locationSection.innerHTML;
+
+  const mapView = document.createElement('div');
+  mapView.className = 'view-content map-view';
+  mapView.innerHTML = `
+    <div class="map-wrapper">
+      <img src="../assets/campus-map.jpg" alt="Campus Map" id="campusMap">
+      <div id="mapOverlay"></div>
+    </div>
+  `;
+
+  locationSection.innerHTML = '';
+  locationSection.appendChild(viewSwitcher);
+  viewsContainer.appendChild(listView);
+  viewsContainer.appendChild(mapView);
+  locationSection.appendChild(viewsContainer);
+
+  initializeMapSelector();
+
+  // Handle view switching
+  const viewButtons = viewSwitcher.querySelectorAll('.view-button');
+  viewButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const view = button.dataset.view;
+      
+      // Toggle active states
+      viewButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      document.querySelector('.list-view').classList.remove('active');
+      document.querySelector('.map-view').classList.remove('active');
+      document.querySelector(`.${view}-view`).classList.add('active');
+    });
+  });
+}
+
+
+function initializeMapSelector() {
+  // Create map container and insert it before the location-section
+  const mapContainer = document.createElement('div');
+  mapContainer.className = 'map-selector';
+  mapContainer.innerHTML = `
+    <div class="map-container">
+      <img src="../assets/campus-map.png" alt="Campus Map" id="campusMap">
+      <div id="mapOverlay"></div>
+    </div>
+  `;
+
+  const locationSection = document.querySelector('.location-section');
+  if (locationSection) {
+    locationSection.insertBefore(mapContainer, locationSection.firstChild);
+  }
+
+  // Map of building codes to coordinates based on the provided map
+  const buildingCoordinates = {
+    // Academic & Research
+    'Amos Eaton Hall': { x: 220, y: 240, width: 30, height: 20 },
+    'Carnegie Building': { x: 235, y: 260, width: 25, height: 20 },
+    'Center for Biotechnology and Interdisciplinary Studies (CBIS)': { x: 280, y: 280, width: 40, height: 35 },
+    'Cogswell Laboratory': { x: 270, y: 260, width: 25, height: 20 },
+    'Darrin Communications Center': { x: 260, y: 280, width: 30, height: 25 },
+    'Empire State Hall': { x: 280, y: 270, width: 25, height: 20 },
+    'Experimental Media & Performing Arts Center (EMPAC)': { x: 290, y: 180, width: 60, height: 40 },
+    'Folsom Library': { x: 250, y: 250, width: 30, height: 25 },
+    'Greene Building': { x: 240, y: 230, width: 30, height: 25 },
+    'Jonsson Engineering Center (JEC)': { x: 230, y: 220, width: 35, height: 30 },
+    'Jonsson-Rowland Science Center': { x: 245, y: 235, width: 30, height: 25 },
+    'Lally Hall': { x: 225, y: 245, width: 25, height: 20 },
+    'Low Center for Industrial Innovation (CII)': { x: 210, y: 210, width: 35, height: 30 },
+    'Materials Research Center (MRC)': { x: 255, y: 255, width: 30, height: 25 },
+    'Pittsburgh Building': { x: 235, y: 235, width: 25, height: 20 },
+    'Russell Sage Laboratory': { x: 220, y: 240, width: 30, height: 25 },
+    
+    // Student Life
+    '87 Gymnasium': { x: 200, y: 220, width: 30, height: 25 },
+    'Academy Hall': { x: 260, y: 270, width: 30, height: 25 },
+    'Alumni Sports & Recreation Center': { x: 280, y: 290, width: 35, height: 30 },
+    'Chapel + Cultural Center': { x: 190, y: 210, width: 25, height: 20 },
+    'Commons Dining Hall': { x: 270, y: 280, width: 30, height: 25 },
+    'East Campus Athletic Village Arena (ECAV)': { x: 450, y: 150, width: 40, height: 35 },
+    'East Campus Athletic Village Stadium': { x: 470, y: 170, width: 40, height: 35 },
+    'Houston Field House': { x: 430, y: 130, width: 35, height: 30 },
+    'Mueller Center': { x: 240, y: 250, width: 30, height: 25 },
+    'Rensselaer Union': { x: 180, y: 200, width: 35, height: 30 },
+    
+    // Student Housing
+    'Barton Hall': { x: 160, y: 180, width: 25, height: 20 },
+    'Blitman Commons': { x: 150, y: 170, width: 30, height: 25 },
+    'Bray Hall': { x: 170, y: 190, width: 25, height: 20 },
+    'Burdett Avenue Residence Hall': { x: 300, y: 200, width: 35, height: 30 },
+    'Quadrangle Complex': { x: 210, y: 230, width: 40, height: 35 },
+    
+    // Operations & Administration
+    'Public Safety': { x: 190, y: 210, width: 25, height: 20 },
+    'Troy Building': { x: 230, y: 240, width: 30, height: 25 },
+    'Voorhees Computing Center (VCC)': { x: 240, y: 250, width: 30, height: 25 }
+  };
+
+  // Create clickable areas
+  const locationCheckboxes = document.querySelectorAll('.location-checkbox input');
+  const overlay = document.getElementById('mapOverlay');
+  
+  locationCheckboxes.forEach(checkbox => {
+    const locationName = checkbox.value;
+    const coords = buildingCoordinates[locationName];
+    
+    if (coords) {
+      const area = document.createElement('div');
+      area.className = 'clickable-area';
+      area.style.left = `${coords.x}px`;
+      area.style.top = `${coords.y}px`;
+      area.style.width = `${coords.width}px`;
+      area.style.height = `${coords.height}px`;
+      
+      // Add tooltip
+      area.title = locationName;
+      
+      // Toggle checkbox on click
+      area.addEventListener('click', () => {
+        checkbox.checked = !checkbox.checked;
+        checkbox.dispatchEvent(new Event('change'));
+        area.classList.toggle('selected', checkbox.checked);
+        updateSelectedLocations(); // Update the selected locations list
+      });
+      
+      // Update area when checkbox changes
+      checkbox.addEventListener('change', () => {
+        area.classList.toggle('selected', checkbox.checked);
+      });
+      
+      overlay.appendChild(area);
+    }
+  });
+}
