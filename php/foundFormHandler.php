@@ -232,12 +232,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'], $image_url, $image_public_id
         ]);
 
+        //last insert from that specific connection, therefore, no need for constraints 
         $item_id = $pdo->lastInsertId();
         //updating php log
         debug_log("Item inserted", ["item_id" => $item_id]);
 
         // Insert locations
-        $stmt = $pdo->prepare("INSERT INTO item_locations (item_id, item_type, location) VALUES (?, 'lost', ?)");
+        $stmt = $pdo->prepare("INSERT INTO item_locations (item_id, item_type, location) VALUES (?, 'found', ?)");
         try {
             foreach ($valid_locations as $location) {
                 $stmt->execute([$item_id, $location]);

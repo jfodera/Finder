@@ -1,32 +1,32 @@
-/*
-
-Users and Recorder Codes:
-
-- A user signs up for an account but isn't automatically a recorder. The users only become 
-recorders if they have a valid recorder code which is inputted when signing up to be a recorder.
 
 
-1) When a new recorder signs up, they'll provide a recorder code.
-2) The code will check the recorder_codes table to validate the code.
-3) If valid, a new user is created in the users table with is_recorder set to TRUE.
-4) The recorder_codes table is updated to mark the code as used and link it to the new user.
+-- Users and Recorder Codes:
 
-Users and Lost Items:
-1) When a user reports a lost item, a new entry is created in the lost_items table.
-2) The user_id in lost_items links back to the users table, identifying who reported the item.
+-- - A user signs up for an account but isn't automatically a recorder. The users only become 
+-- recorders if they have a valid recorder code which is inputted when signing up to be a recorder.
 
-Users and Found Items:
-1) Only recorders (users with is_recorder set to TRUE) can add found items.
-2) When a recorder adds a found item, a new entry is created in the found_items table.
-3) The recorder_id in found_items links back to the users table, identifying which recorder added the item.
 
-Lost Items, Found Items, and Matches:
+-- 1) When a new recorder signs up, they'll provide a recorder code.
+-- 2) The code will check the recorder_codes table to validate the code.
+-- 3) If valid, a new user is created in the users table with is_recorder set to TRUE.
+-- 4) The recorder_codes table is updated to mark the code as used and link it to the new user.
 
-1) When the system attempts to match lost and found items, it creates entries in the matches table.
-2) Each match links a lost item (lost_item_id) with a potential found item (found_item_id).
-3) The user_id in the matches table refers to the user who reported the lost item.
+-- Users and Lost Items:
+-- 1) When a user reports a lost item, a new entry is created in the lost_items table.
+-- 2) The user_id in lost_items links back to the users table, identifying who reported the item.
 
-*/
+-- Users and Found Items:
+-- 1) Only recorders (users with is_recorder set to TRUE) can add found items.
+-- 2) When a recorder adds a found item, a new entry is created in the found_items table.
+-- 3) The recorder_id in found_items links back to the users table, identifying which recorder added the item.
+
+-- Lost Items, Found Items, and Matches:
+
+-- 1) When the system attempts to match lost and found items, it creates entries in the matches table.
+-- 2) Each match links a lost item (lost_item_id) with a potential found item (found_item_id).
+-- 3) The user_id in the matches table refers to the user who reported the lost item.
+
+
 
 
 
@@ -94,15 +94,10 @@ CREATE TABLE item_locations (
     item_type ENUM('lost', 'found') NOT NULL,
     location VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_lost_item FOREIGN KEY (item_id) 
-        REFERENCES lost_items(item_id) 
-        ON DELETE CASCADE,
-    CONSTRAINT fk_found_item FOREIGN KEY (item_id) 
-        REFERENCES found_items(item_id) 
-        ON DELETE CASCADE,
     INDEX idx_item_type (item_type),
     INDEX idx_location (location)
 );
+
 
 -- Matches Table
 CREATE TABLE matches (
@@ -220,17 +215,3 @@ INSERT INTO locations (name, category) VALUES
 ('Troy Building', 'Operations & Administration'),
 ('Voorhees Computing Center (VCC)', 'Operations & Administration');
 
-DROP TABLE IF EXISTS item_locations;
-
-CREATE TABLE item_locations (
-    location_id INT AUTO_INCREMENT PRIMARY KEY,
-    item_id INT NOT NULL,
-    item_type ENUM('lost', 'found') NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_lost_item_loc FOREIGN KEY (item_id)
-        REFERENCES lost_items(item_id)
-        ON DELETE CASCADE,
-    INDEX idx_item_type (item_type),
-    INDEX idx_location (location)
-);
