@@ -2,6 +2,9 @@
 session_start();
 require_once '../db/db_connect.php';
 
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -35,21 +38,28 @@ try {
             return 1;
         }
 
-        $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1);
-        $response = file_get_contents($apiUrl);
-    
-        if ($response === false) {
-            return 0;
-        }
-    
-        $data = json_decode($response, true);
-    
-        if (is_array($data)) {
-            foreach ($data as $item) {
-                if (isset($item['word']) && strtolower($item['word']) === strtolower($word2)) {
-                    return 0.8;
+        try {
+            $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1);
+            $context = stream_context_create(['http' => ['timeout' => 2]]); // 2 second timeout
+            $response = @file_get_contents($apiUrl, false, $context);
+            
+            if ($response === false) {
+                error_log("API call failed for word comparison");
+                return 0;
+            }
+            
+            $data = json_decode($response, true);
+            
+            if (is_array($data)) {
+                foreach ($data as $item) {
+                    if (isset($item['word']) && strtolower($item['word']) === strtolower($word2)) {
+                        return 0.8;
+                    }
                 }
             }
+        } catch (Exception $e) {
+            error_log("Word comparison error: " . $e->getMessage());
+            return 0;
         }
     
         return 0;
@@ -64,7 +74,7 @@ try {
                 'date' => 0.1
             ];
             
-            $newMatches = []; // Array to track new matches
+            $newMatches = [];
     
             // Modify query based on whether we're checking a specific item
             if ($specificItemId) {
@@ -77,6 +87,9 @@ try {
             }
             
             $lostItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($lostItems)) {
+                return [];
+            }
     
             foreach ($lostItems as $lostItem) {
                 $lostItemId = $lostItem['item_id'];
@@ -86,69 +99,82 @@ try {
                 $lostTime = $lostItem['lost_time'];
                 $user_id = $lostItem['user_id'];
 
-                $foundItems = $pdo->query("
+                $foundStmt = $pdo->query("
                     SELECT * FROM found_items
                     WHERE status = 'found'
-                ")->fetchAll(PDO::FETCH_ASSOC);
+                ");
+                
+                if (!$foundStmt) {
+                    error_log("Failed to query found items");
+                    continue;
+                }
+
+                $foundItems = $foundStmt->fetchAll(PDO::FETCH_ASSOC);
     
                 foreach ($foundItems as $foundItem) {
                     $foundItemId = $foundItem['item_id'];
-                    $foundType = $foundItem['item_type'];
-                    $foundColor = $foundItem['color'];
-                    $foundBrand = $foundItem['brand'];
-                    $foundTime = $foundItem['found_time'];
-    
-                    $typeScore = areWordsSimilar(strtolower($lostType), strtolower($foundType));
-                    $brandScore = (strcasecmp(trim(strtolower($lostBrand)), trim(strtolower($foundBrand))) === 0) ? 1 : 0;
-                    $colorScore = areWordsSimilar(strtolower($lostColor), strtolower($foundColor));
-                    $dateScore = (strtotime($lostTime) >= strtotime($foundTime)) ? 0 : 1;
-    
-                    $similarityScore = 
-                        $weights['type'] * $typeScore +
-                        $weights['color'] * $colorScore +
-                        $weights['brand'] * $brandScore +
-                        $weights['date'] * $dateScore;
-    
+                    
+                    // Check if match already exists
                     $checkStmt = $pdo->prepare("
                         SELECT * FROM matches
                         WHERE lost_item_id = ? AND found_item_id = ?
                     ");
                     $checkStmt->execute([$lostItemId, $foundItemId]);
-                     
-                    if ($similarityScore >= 0.7 && !$checkStmt->fetch()) {
-                        $insertStmt = $pdo->prepare("
-                            INSERT INTO matches (lost_item_id, found_item_id, user_id, match_time, status, similarity_score)
-                            VALUES (?, ?, ?, ?, 'pending', ?)
-                        ");
-                        $match_time = date('Y-m-d H:i:s');
-                        $insertStmt->execute([$lostItemId, $foundItemId, $user_id, $match_time, $similarityScore]);
-                        
-                        // Add to new matches array
-                        $newMatches[] = [
-                            'match_id' => $pdo->lastInsertId(),
-                            'lost_item_id' => $lostItemId,
-                            'found_item_id' => $foundItemId,
-                            'similarity_score' => $similarityScore
-                        ];
+                    
+                    if (!$checkStmt->fetch()) {
+                        $typeScore = areWordsSimilar(strtolower($lostType), strtolower($foundItem['item_type']));
+                        $brandScore = (strcasecmp(trim(strtolower($lostBrand)), trim(strtolower($foundItem['brand']))) === 0) ? 1 : 0;
+                        $colorScore = areWordsSimilar(strtolower($lostColor), strtolower($foundItem['color']));
+                        $dateScore = (strtotime($lostTime) >= strtotime($foundItem['found_time'])) ? 0 : 1;
+        
+                        $similarityScore = 
+                            $weights['type'] * $typeScore +
+                            $weights['color'] * $colorScore +
+                            $weights['brand'] * $brandScore +
+                            $weights['date'] * $dateScore;
+        
+                        if ($similarityScore >= 0.7) {
+                            try {
+                                $insertStmt = $pdo->prepare("
+                                    INSERT INTO matches (lost_item_id, found_item_id, user_id, match_time, status)
+                                    VALUES (?, ?, ?, ?, 'pending')
+                                ");
+                                $match_time = date('Y-m-d H:i:s');
+                                $insertStmt->execute([$lostItemId, $foundItemId, $user_id, $match_time]);
+                                
+                                $newMatches[] = [
+                                    'match_id' => $pdo->lastInsertId(),
+                                    'lost_item_id' => $lostItemId,
+                                    'found_item_id' => $foundItemId,
+                                    'similarity_score' => $similarityScore
+                                ];
+                            } catch (PDOException $e) {
+                                error_log("Failed to insert match: " . $e->getMessage());
+                                continue;
+                            }
+                        }
                     }
                 }
             }
             
-            return $newMatches; // Return array of new matches
+            return $newMatches;
     
         } catch (PDOException $e) {
             error_log("Error in findMatchesForLostItems: " . $e->getMessage());
-            throw $e;
+            return [];
         }
     }
 
-    // Only run the matching algorithm if called directly (not through inclusion)
-    if (!isset($includeOnly)) {
-        findMatchesForLostItems($pdo);
+    // Only run the matching algorithm if called directly
+    if (isset($runMatching) && $runMatching === true) {
+        $matches = findMatchesForLostItems($pdo);
+        echo json_encode(['success' => true, 'matches' => $matches]);
     }
     
 } catch (PDOException $e) {
     error_log("Connection failed: " . $e->getMessage());
-    throw $e;
+    if (isset($runMatching) && $runMatching === true) {
+        echo json_encode(['success' => false, 'error' => 'Database connection failed']);
+    }
 }
 ?>
