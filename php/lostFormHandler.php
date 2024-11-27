@@ -1,6 +1,9 @@
 <?php
+
 ob_start();
+
 session_start();
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -11,6 +14,7 @@ require_once '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
+// Debug log function
 function debug_log($message, $data = null) {
     error_log(print_r([
         'message' => $message,
@@ -25,6 +29,7 @@ debug_log("Handler started", [
     'SESSION' => $_SESSION
 ]);
 
+// Configure Cloudinary
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
 
@@ -39,6 +44,7 @@ try {
             'secure' => true
         ]
     ]);
+
     debug_log("Cloudinary configured successfully");
 } catch (Exception $e) {
     debug_log("Cloudinary configuration error", $e->getMessage());
@@ -51,6 +57,7 @@ try {
     exit();
 }
 
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode([
@@ -64,6 +71,7 @@ if (!isset($_SESSION['user_id'])) {
 function sanitize_input($input) {
     return htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
 }
+
 
 function checkSubmissionCooldown($pdo, $user_id) {
     try {
@@ -87,6 +95,7 @@ function checkSubmissionCooldown($pdo, $user_id) {
     }
 }
 
+// Update cooldown timestamp
 function updateCooldown($pdo, $user_id) {
     try {
         $stmt = $pdo->prepare("INSERT INTO submission_cooldowns (user_id, last_submission) 
@@ -99,6 +108,7 @@ function updateCooldown($pdo, $user_id) {
     }
 }
 
+// Validate and sanitize locations
 function validateLocations($locations, $pdo) {
     if (empty($locations)) return false;
     
@@ -120,12 +130,15 @@ function validateLocations($locations, $pdo) {
     }
 }
 
+// Handle image upload to Cloudinary
 function handleCloudinaryUpload($image) {
+    //checks if can support image
     if ($image['error'] !== UPLOAD_ERR_OK) {
         debug_log("Image upload error", $image['error']);
         return [null, null];
     }
 
+    //checks if actual image (png, jpeg, jpg extension)
     $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
     if (!in_array($image['type'], $allowed_types)) {
         debug_log("Invalid image type", $image['type']);
@@ -133,6 +146,7 @@ function handleCloudinaryUpload($image) {
     }
 
     try {
+        //UploadAPI instance from the library on our server. 
         $upload = new UploadApi();
         $result = $upload->upload($image['tmp_name'], [
             'folder' => 'lost_items',
@@ -150,12 +164,15 @@ function handleCloudinaryUpload($image) {
     }
 }
 
+//when recieves
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
+        // Check cooldown
         if (!checkSubmissionCooldown($pdo, $_SESSION['user_id'])) {
             throw new Exception("Please wait 5 minutes between submissions.");
         }
 
+        // Validate and sanitize input
         $item_type = sanitize_input($_POST['type']);
         $brand = sanitize_input($_POST['brand']);
         $color = sanitize_input($_POST['color']);
@@ -171,10 +188,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'locations' => $locations
         ]);
 
+        // Validation
         if (empty($item_type) || empty($brand) || empty($color) || empty($lost_time)) {
             throw new Exception("All required fields must be filled out.");
         }
 
+        // Validate locations
         $valid_locations = validateLocations($locations, $pdo);
         if (!$valid_locations) {
             throw new Exception("Please select valid locations.");
@@ -183,6 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->beginTransaction();
         debug_log("Transaction started");
 
+        // Handle image upload if present
         $image_url = null;
         $image_public_id = null;
         if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -193,6 +213,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
+        // Insert lost item
+        
         $stmt = $pdo->prepare("INSERT INTO lost_items (
             item_type, brand, color, additional_info, lost_time, 
             user_id, image_url, image_public_id
@@ -203,37 +225,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'], $image_url, $image_public_id
         ]);
 
+        //last insert from that specific connection, therefore, no need for constraints 
         $item_id = $pdo->lastInsertId();
         debug_log("Item inserted", ["item_id" => $item_id]);
 
+        // Insert locations
         $stmt = $pdo->prepare("INSERT INTO item_locations (item_id, item_type, location) VALUES (?, 'lost', ?)");
-        foreach ($valid_locations as $location) {
-            $stmt->execute([$item_id, $location]);
-            debug_log("Location inserted", [
+        try {
+            foreach ($valid_locations as $location) {
+                $stmt->execute([$item_id, $location]);
+                debug_log("Location inserted", [
+                    'item_id' => $item_id,
+                    'location' => $location
+                ]);
+            }
+        } catch (PDOException $e) {
+            debug_log("Location insertion error", [
+                'error' => $e->getMessage(),
                 'item_id' => $item_id,
-                'location' => $location
+                'locations' => $valid_locations
             ]);
+            throw $e;
         }
 
+        // Update cooldown
         updateCooldown($pdo, $_SESSION['user_id']);
+
         $pdo->commit();
         debug_log("Transaction completed successfully");
 
         try {
+            ob_end_clean();
             require_once 'matching.php';
-            debug_log("Starting matching algorithm");
             $newMatches = findMatchesForLostItems($pdo, $item_id);
             
-            ob_end_clean(); // Clear any buffered output
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
                 echo json_encode([
                     'success' => true,
-                    'message' => "Item successfully reported as lost! " . count($newMatches) . " potential matches found!",
+                    'message' => "Item reported as lost! " . count($newMatches) . " potential matches found!",
                     'redirect' => 'dashboard.php?matches=new',
                     'item_id' => $item_id
                 ]);
-                exit(); // Stop execution here
             } else {
                 echo json_encode([
                     'success' => true,
@@ -241,10 +274,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php',
                     'item_id' => $item_id
                 ]);
-                exit(); // Stop execution here
             }
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => true,
+                'message' => "Item successfully reported as lost!",
+                'redirect' => 'dashboard.php',
+                'item_id' => $item_id
+            ]);
         }
         
+        echo json_encode([
+            //goes to console -> successfully
+            'success' => true,
+            'message' => "Item successfully reported as lost!",
+            'redirect' => 'dashboard.php',
+            'item_id' => $item_id
+        ]);
+        exit();
+
     } catch (Exception $e) {
         debug_log("Error occurred", [
             'message' => $e->getMessage(),
@@ -273,6 +321,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'line' => $e->getLine()
             ]
         ]);
+        exit();
     }
 } else {
     http_response_code(405);
@@ -280,4 +329,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'success' => false,
         'message' => "Invalid request method"
     ]);
+    exit();
 }
