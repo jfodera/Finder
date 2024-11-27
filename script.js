@@ -735,7 +735,7 @@ function initializeLocationViews() {
       </div>
       <div class="view-content map-view">
         <div class="map-wrapper rounded-lg overflow-hidden">
-          <img src="../assets/campus-map.jpg" alt="Campus Map" class="w-full h-auto">
+          <img src="../assets/campus-map.png" alt="Campus Map" class="w-full h-auto">
           <div id="mapOverlay"></div>
         </div>
       </div>
