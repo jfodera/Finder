@@ -255,11 +255,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         debug_log("Transaction completed successfully");
         
         // Run matching algorithm
-        require_once 'matching.php';
+        require_once 'php/matching.php';
         try {
             debug_log("Starting matching algorithm");
             $runMatching = true; 
-            $newMatches = findMatchesForLostItems($pdo, $item_id);
+            $newMatches = findMatchesForLostItems($pdo);
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
