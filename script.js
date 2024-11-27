@@ -513,7 +513,7 @@ function initializeForm() {
 
   // Location search and selection
   initializeLocationHandling();
-
+  initializeMapSelector();
   // Single form submission handler
   if (infoForm) {
     infoForm.addEventListener("submit", async function (e) {
@@ -703,9 +703,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const styleSheet = document.createElement('style');
   styleSheet.textContent = mapStyles;
   document.head.appendChild(styleSheet);
-  if (document.querySelector('.location-section')) {
-    initializeMapSelector();
-  }
 });
 
 document.addEventListener('visibilitychange', () => {
