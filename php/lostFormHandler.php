@@ -257,8 +257,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Run matching algorithm
         require_once 'matching.php';
         try {
-            debug_log("Starting matching algorithm for new lost item", ["item_id" => $item_id]);
-            $newMatches = findMatchesForLostItems($pdo, $item_id);
+            debug_log("Starting matching algorithm");
+            $runMatching = true; 
+            $newMatches = findMatchesForLostItems($pdo);
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
