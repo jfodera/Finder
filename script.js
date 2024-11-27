@@ -1,7 +1,6 @@
 function createItemCard(item, type = "lost") {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
-
   return `
         <div class="item-card ${statusClass}">
             <img src="${item.image_url || "../default_image.png"}" alt="${
@@ -19,6 +18,9 @@ function createItemCard(item, type = "lost") {
                     ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>`
                     : ""
                 }
+                <div><strong>Location:</strong> ${item.locations || "N/A"}</div>
+                <div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>
+                <div><strong>Found by:</strong> ${item.finder_name || "N/A"}</div>
             </div>
             <div class="item-details">
                 <div><strong>${
