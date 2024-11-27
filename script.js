@@ -275,7 +275,7 @@ async function renderMatches() {
     
   if (!matchesGrid) return;
   matchesGrid.innerHTML = '<div class="loading">Loading matches...</div>';
-
+  updateMatchHighlighting();
   try {
     const matches = await fetchItems("getMatches.php");
 
@@ -512,10 +512,7 @@ function initializeForm() {
   }
 
   // Location search and selection
-  if (document.querySelector('.location-section')) {
-    initializeLocationViews();
-    initializeLocationHandling();
-  }
+  initializeLocationHandling();
 
   // Single form submission handler
   if (infoForm) {
@@ -696,20 +693,79 @@ function initializeNavigation() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM loaded, initializing..."); 
-  console.log("Is recorder:", window.isRecorder); 
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM loaded, initializing...");
+  console.log("Is recorder:", window.isRecorder);
+  
+  if (typeof newMatchesCount !== 'undefined' && newMatchNotification) {
+      showMatchNotification(newMatchesCount);
+      const matchesTab = document.querySelector('.tab-button[data-tab="matches"]');
+      if (matchesTab) {
+          matchesTab.click();
+      }
+  }
+  
   renderItems();
   renderMatches();
   initializeForm();
   initializeNavigation();
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = mapStyles;
+  
+  const newStyles = `
+      .match-notification {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #4CAF50;
+          color: white;
+          padding: 15px 25px;
+          border-radius: 8px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          transition: opacity 0.3s ease;
+          z-index: 1000;
+          opacity: 1;
+      }
+
+      .notification-content {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+
+      .notification-icon {
+          font-size: 20px;
+      }
+
+      .notification-close {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          font-size: 20px;
+          padding: 0 5px;
+          margin-left: 10px;
+      }
+
+      .notification-close:hover {
+          transform: scale(1.1);
+      }
+
+      .new-match {
+          animation: highlightMatch 5s ease-out;
+      }
+
+      @keyframes highlightMatch {
+          0%, 100% {
+              background-color: transparent;
+          }
+          50% {
+              background-color: rgba(76, 175, 80, 0.1);
+          }
+      }
+  `;
+  
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = newStyles;
   document.head.appendChild(styleSheet);
-  if (document.querySelector('.location-section')) {
-    initializeLocationViews();
-    initializeLocationHandling();
-  }
 });
 
 document.addEventListener('visibilitychange', () => {
@@ -718,251 +774,42 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-function initializeLocationViews() {
-  const locationSection = document.querySelector('.location-section');
-  if (!locationSection) return;
-
-  // Save the original content before modifying
-  const originalContent = locationSection.querySelector('.locations-container').outerHTML;
-  const searchBox = locationSection.querySelector('.location-search').outerHTML;
-  const selectedLocations = locationSection.querySelector('.locations-selected').outerHTML;
-
-  // Create the new structure
-  locationSection.innerHTML = `
-    <div class="toggle-buttons">
-      <button type="button" class="view-button active" data-view="list">List View</button>
-      <button type="button" class="view-button" data-view="map">Map View</button>
-    </div>
-    <div class="views-container">
-      <div class="view-content list-view active">
-        ${searchBox}
-        ${originalContent}
-        ${selectedLocations}
+function showMatchNotification(count) {
+  const notification = document.createElement('div');
+  notification.className = 'match-notification';
+  notification.innerHTML = `
+      <div class="notification-content">
+          <span class="notification-icon">🔍</span>
+          <span class="notification-text">
+              ${count} new potential match${count > 1 ? 'es' : ''} found!
+          </span>
+          <button class="notification-close">×</button>
       </div>
-      <div class="view-content map-view">
-        <div class="map-container full-width">
-          <img src="../assets/campus-map.jpg" alt="Campus Map" id="campusMap" class="full-width-map">
-          <div id="mapOverlay"></div>
-        </div>
-        ${selectedLocations}
-      </div>
-    </div>
   `;
-
-  // Add these styles dynamically
-  const mapStyles = `
-    .full-width {
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      max-width: none;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .full-width-map {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .map-view {
-      margin-bottom: 2rem;
-    }
-
-    .view-content {
-      display: none;
-    }
-
-    .view-content.active {
-      display: block;
-    }
-
-    #mapOverlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-  `;
-
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = mapStyles;
-  document.head.appendChild(styleSheet);
-
-  // Handle view switching
-  const viewButtons = locationSection.querySelectorAll('.view-button');
-  const listView = locationSection.querySelector('.list-view');
-  const mapView = locationSection.querySelector('.map-view');
-
-  viewButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const view = button.dataset.view;
-      
-      // Toggle active states
-      viewButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-      
-      // Toggle views
-      listView.style.display = view === 'list' ? 'block' : 'none';
-      mapView.style.display = view === 'map' ? 'block' : 'none';
-      
-      // Initialize map if switching to map view
-      if (view === 'map') {
-        initializeMapOverlay();
-      }
-    });
+  
+  document.body.appendChild(notification);
+  
+  // Add close button functionality
+  notification.querySelector('.notification-close').addEventListener('click', () => {
+      notification.style.opacity = '0';
+      setTimeout(() => notification.remove(), 500);
   });
-
-  // Initialize location handling
-  initializeLocationHandling();
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => notification.remove(), 500);
+  }, 5000);
 }
 
-function initializeMapOverlay() {
-  const overlay = document.getElementById('mapOverlay');
-  const locationCheckboxes = document.querySelectorAll('.location-checkbox input');
-  
-  // Clear existing overlay content
-  overlay.innerHTML = '';
-  
-  // Complete building coordinates map
-  const buildingCoordinates = {
-    // Academic & Research
-    'Amos Eaton Hall': { x: 220, y: 240, width: 30, height: 20 },
-    'Carnegie Building': { x: 235, y: 260, width: 25, height: 20 },
-    'Center for Biotechnology and Interdisciplinary Studies (CBIS)': { x: 280, y: 280, width: 40, height: 35 },
-    'Cogswell Laboratory': { x: 270, y: 260, width: 25, height: 20 },
-    'Darrin Communications Center': { x: 260, y: 280, width: 30, height: 25 },
-    'Empire State Hall': { x: 280, y: 270, width: 25, height: 20 },
-    'Experimental Media & Performing Arts Center (EMPAC)': { x: 290, y: 180, width: 60, height: 40 },
-    'Folsom Library': { x: 250, y: 250, width: 30, height: 25 },
-    'Greene Building': { x: 240, y: 230, width: 30, height: 25 },
-    'Jonsson Engineering Center (JEC)': { x: 230, y: 220, width: 35, height: 30 },
-    'Jonsson-Rowland Science Center': { x: 245, y: 235, width: 30, height: 25 },
-    'Lally Hall': { x: 225, y: 245, width: 25, height: 20 },
-    'Low Center for Industrial Innovation (CII)': { x: 210, y: 210, width: 35, height: 30 },
-    'Materials Research Center (MRC)': { x: 255, y: 255, width: 30, height: 25 },
-    'Pittsburgh Building': { x: 235, y: 235, width: 25, height: 20 },
-    'Russell Sage Laboratory': { x: 220, y: 240, width: 30, height: 25 },
-    
-    // Student Life
-    '87 Gymnasium': { x: 200, y: 220, width: 30, height: 25 },
-    'Academy Hall': { x: 260, y: 270, width: 30, height: 25 },
-    'Alumni Sports & Recreation Center': { x: 280, y: 290, width: 35, height: 30 },
-    'Chapel + Cultural Center': { x: 190, y: 210, width: 25, height: 20 },
-    'Commons Dining Hall': { x: 270, y: 280, width: 30, height: 25 },
-    'East Campus Athletic Village Arena (ECAV)': { x: 450, y: 150, width: 40, height: 35 },
-    'East Campus Athletic Village Stadium': { x: 470, y: 170, width: 40, height: 35 },
-    'Houston Field House': { x: 430, y: 130, width: 35, height: 30 },
-    'Mueller Center': { x: 240, y: 250, width: 30, height: 25 },
-    'Rensselaer Union': { x: 180, y: 200, width: 35, height: 30 },
-    
-    // Student Housing
-    'Barton Hall': { x: 160, y: 180, width: 25, height: 20 },
-    'Blitman Commons': { x: 150, y: 170, width: 30, height: 25 },
-    'Bray Hall': { x: 170, y: 190, width: 25, height: 20 },
-    'Burdett Avenue Residence Hall': { x: 300, y: 200, width: 35, height: 30 },
-    'Quadrangle Complex': { x: 210, y: 230, width: 40, height: 35 },
-    
-    // Operations & Administration
-    'Public Safety': { x: 190, y: 210, width: 25, height: 20 },
-    'Troy Building': { x: 230, y: 240, width: 30, height: 25 },
-    'Voorhees Computing Center (VCC)': { x: 240, y: 250, width: 30, height: 25 }
-  };
-
-  locationCheckboxes.forEach(checkbox => {
-    const locationName = checkbox.value;
-    const coords = buildingCoordinates[locationName];
-    
-    if (coords) {
-      const area = document.createElement('div');
-      area.className = 'clickable-area';
-      
-      // Set position and size
-      area.style.cssText = `
-        position: absolute;
-        left: ${coords.x}px;
-        top: ${coords.y}px;
-        width: ${coords.width}px;
-        height: ${coords.height}px;
-        z-index: 10;
-      `;
-      
-      // Add tooltip
-      area.title = locationName;
-      
-      // Set initial selected state if checkbox is checked
-      if (checkbox.checked) {
-        area.classList.add('selected');
-      }
-      
-      // Add hover effect
-      const createTooltip = () => {
-        const tooltip = document.createElement('div');
-        tooltip.className = 'location-tooltip';
-        tooltip.textContent = locationName;
-        tooltip.style.cssText = `
-          position: absolute;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 4px;
-          font-size: 12px;
-          white-space: nowrap;
-          pointer-events: none;
-          z-index: 100;
-          top: ${coords.y - 25}px;
-          left: ${coords.x}px;
-        `;
-        overlay.appendChild(tooltip);
-        return tooltip;
-      };
-      
-      let tooltip = null;
-      area.addEventListener('mouseenter', () => {
-        tooltip = createTooltip();
+function updateMatchHighlighting() {
+  if (typeof newMatchNotification !== 'undefined' && newMatchNotification) {
+      const matchCards = document.querySelectorAll('.match-card, .flow-card, .user-match-card');
+      matchCards.forEach(card => {
+          card.classList.add('new-match');
+          setTimeout(() => {
+              card.classList.remove('new-match');
+          }, 5000);
       });
-      
-      area.addEventListener('mouseleave', () => {
-        if (tooltip) {
-          tooltip.remove();
-          tooltip = null;
-        }
-      });
-      
-      // Toggle checkbox on click
-      area.addEventListener('click', () => {
-        checkbox.checked = !checkbox.checked;
-        checkbox.dispatchEvent(new Event('change'));
-        area.classList.toggle('selected', checkbox.checked);
-        updateSelectedLocations();
-      });
-      
-      // Update area when checkbox changes
-      checkbox.addEventListener('change', () => {
-        area.classList.toggle('selected', checkbox.checked);
-      });
-      
-      overlay.appendChild(area);
-    }
-  });
-
-  const scaleIndicator = document.createElement('div');
-  scaleIndicator.className = 'map-scale';
-  scaleIndicator.style.cssText = `
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    z-index: 20;
-  `;
-  scaleIndicator.textContent = 'Click on buildings to select locations';
-  overlay.appendChild(scaleIndicator);
+  }
 }

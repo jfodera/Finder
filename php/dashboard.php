@@ -7,7 +7,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-//double check 
 $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
 ?>
 
@@ -63,6 +62,14 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
             </div>
         <?php endif; ?>
     </div>
+    
+    <?php if (isset($_SESSION['new_matches'])): ?>
+    <script>
+        const newMatchesCount = <?php echo $_SESSION['new_matches']; ?>;
+        const newMatchNotification = true;
+        <?php unset($_SESSION['new_matches']); ?>
+    </script>
+    <?php endif; ?>
     
     <script>
         window.isRecorder = <?php echo $is_recorder ? 'true' : 'false'; ?>;
