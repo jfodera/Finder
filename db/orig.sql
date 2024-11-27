@@ -105,6 +105,7 @@ CREATE TABLE matches (
     lost_item_id INT,
     found_item_id INT,
     user_id INT,
+    similarity_score DECIMAL(4,3);
     match_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'confirmed', 'rejected') DEFAULT 'pending',
     FOREIGN KEY (lost_item_id) REFERENCES lost_items(item_id),
@@ -214,6 +215,3 @@ INSERT INTO locations (name, category) VALUES
 ('Service Building', 'Operations & Administration'),
 ('Troy Building', 'Operations & Administration'),
 ('Voorhees Computing Center (VCC)', 'Operations & Administration');
-
-ALTER TABLE matches
-ADD COLUMN similarity_score DECIMAL(4,3);
