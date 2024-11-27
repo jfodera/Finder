@@ -254,13 +254,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->commit();
         debug_log("Transaction completed successfully");
         
-        echo json_encode([
-            //goes to console -> successfully
-            'success' => true,
-            'message' => "Item successfully reported as lost!",
-            'redirect' => 'dashboard.php',
-            'item_id' => $item_id
-        ]);
+        // Run matching algorithm
+        require_once 'matching.php';
+        try {
+            debug_log("Starting matching algorithm for new lost item", ["item_id" => $item_id]);
+            $newMatches = findMatchesForLostItems($pdo, $item_id);
+            
+            if (!empty($newMatches)) {
+                $_SESSION['new_matches'] = count($newMatches);
+                debug_log("Matches found", [
+                    "count" => count($newMatches),
+                    "matches" => $newMatches
+                ]);
+                
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Item successfully reported as lost! " . count($newMatches) . " potential matches found!",
+                    'redirect' => 'dashboard.php?matches=new',
+                    'item_id' => $item_id
+                ]);
+            } else {
+                debug_log("No matches found for new lost item");
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Item successfully reported as lost!",
+                    'redirect' => 'dashboard.php',
+                    'item_id' => $item_id
+                ]);
+            }
+        } catch (Exception $matchingError) {
+            debug_log("Matching algorithm error", [
+                'error' => $matchingError->getMessage(),
+                'item_id' => $item_id
+            ]);
+            // Still return success since the item was saved
+            echo json_encode([
+                'success' => true,
+                'message' => "Item successfully reported as lost!",
+                'redirect' => 'dashboard.php',
+                'item_id' => $item_id
+            ]);
+        }
         exit();
 
     } catch (Exception $e) {

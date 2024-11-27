@@ -275,7 +275,7 @@ async function renderMatches() {
     
   if (!matchesGrid) return;
   matchesGrid.innerHTML = '<div class="loading">Loading matches...</div>';
-
+  updateMatchHighlighting();
   try {
     const matches = await fetchItems("getMatches.php");
 
@@ -693,13 +693,79 @@ function initializeNavigation() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM loaded, initializing..."); 
-  console.log("Is recorder:", window.isRecorder); 
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM loaded, initializing...");
+  console.log("Is recorder:", window.isRecorder);
+  
+  if (typeof newMatchesCount !== 'undefined' && newMatchNotification) {
+      showMatchNotification(newMatchesCount);
+      const matchesTab = document.querySelector('.tab-button[data-tab="matches"]');
+      if (matchesTab) {
+          matchesTab.click();
+      }
+  }
+  
   renderItems();
   renderMatches();
   initializeForm();
   initializeNavigation();
+  
+  const newStyles = `
+      .match-notification {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #4CAF50;
+          color: white;
+          padding: 15px 25px;
+          border-radius: 8px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          transition: opacity 0.3s ease;
+          z-index: 1000;
+          opacity: 1;
+      }
+
+      .notification-content {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+
+      .notification-icon {
+          font-size: 20px;
+      }
+
+      .notification-close {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          font-size: 20px;
+          padding: 0 5px;
+          margin-left: 10px;
+      }
+
+      .notification-close:hover {
+          transform: scale(1.1);
+      }
+
+      .new-match {
+          animation: highlightMatch 5s ease-out;
+      }
+
+      @keyframes highlightMatch {
+          0%, 100% {
+              background-color: transparent;
+          }
+          50% {
+              background-color: rgba(76, 175, 80, 0.1);
+          }
+      }
+  `;
+  
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = newStyles;
+  document.head.appendChild(styleSheet);
 });
 
 document.addEventListener('visibilitychange', () => {
@@ -707,3 +773,43 @@ document.addEventListener('visibilitychange', () => {
     renderMatches();
   }
 });
+
+function showMatchNotification(count) {
+  const notification = document.createElement('div');
+  notification.className = 'match-notification';
+  notification.innerHTML = `
+      <div class="notification-content">
+          <span class="notification-icon">🔍</span>
+          <span class="notification-text">
+              ${count} new potential match${count > 1 ? 'es' : ''} found!
+          </span>
+          <button class="notification-close">×</button>
+      </div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Add close button functionality
+  notification.querySelector('.notification-close').addEventListener('click', () => {
+      notification.style.opacity = '0';
+      setTimeout(() => notification.remove(), 500);
+  });
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => notification.remove(), 500);
+  }, 5000);
+}
+
+function updateMatchHighlighting() {
+  if (typeof newMatchNotification !== 'undefined' && newMatchNotification) {
+      const matchCards = document.querySelectorAll('.match-card, .flow-card, .user-match-card');
+      matchCards.forEach(card => {
+          card.classList.add('new-match');
+          setTimeout(() => {
+              card.classList.remove('new-match');
+          }, 5000);
+      });
+  }
+}
