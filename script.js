@@ -72,12 +72,14 @@ function initializeTabs() {
       const tabId = window.isRecorder ? 
                     baseId + "ItemsGrid" : 
                     (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
-      
+
       const content = document.getElementById(tabId);
       if (content) {
         content.classList.add("active");
         if (baseId === 'matches') {
-          await renderMatches();
+          await renderMatches(); // Call renderMatches for both recorders and non-recorders
+        } else if (baseId === 'lost') {
+          await renderItems(); // Ensure lost items are rendered if needed
         }
       }
     });
