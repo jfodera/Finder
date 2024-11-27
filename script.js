@@ -722,26 +722,78 @@ function initializeLocationViews() {
   const locationSection = document.querySelector('.location-section');
   if (!locationSection) return;
 
-  const originalContent = locationSection.innerHTML;
+  // Save the original content before modifying
+  const originalContent = locationSection.querySelector('.locations-container').outerHTML;
+  const searchBox = locationSection.querySelector('.location-search').outerHTML;
+  const selectedLocations = locationSection.querySelector('.locations-selected').outerHTML;
 
+  // Create the new structure
   locationSection.innerHTML = `
-    <div class="toggle-buttons mb-6">
+    <div class="toggle-buttons">
       <button type="button" class="view-button active" data-view="list">List View</button>
       <button type="button" class="view-button" data-view="map">Map View</button>
     </div>
     <div class="views-container">
       <div class="view-content list-view active">
+        ${searchBox}
         ${originalContent}
+        ${selectedLocations}
       </div>
       <div class="view-content map-view">
-        <div class="map-wrapper rounded-lg overflow-hidden">
-          <img src="../assets/campus-map.png" alt="Campus Map" class="w-full h-auto">
+        <div class="map-container full-width">
+          <img src="../assets/campus-map.jpg" alt="Campus Map" id="campusMap" class="full-width-map">
           <div id="mapOverlay"></div>
         </div>
+        ${selectedLocations}
       </div>
     </div>
   `;
 
+  // Add these styles dynamically
+  const mapStyles = `
+    .full-width {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      max-width: none;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .full-width-map {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .map-view {
+      margin-bottom: 2rem;
+    }
+
+    .view-content {
+      display: none;
+    }
+
+    .view-content.active {
+      display: block;
+    }
+
+    #mapOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  `;
+
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = mapStyles;
+  document.head.appendChild(styleSheet);
+
+  // Handle view switching
   const viewButtons = locationSection.querySelectorAll('.view-button');
   const listView = locationSection.querySelector('.list-view');
   const mapView = locationSection.querySelector('.map-view');
@@ -750,17 +802,23 @@ function initializeLocationViews() {
     button.addEventListener('click', () => {
       const view = button.dataset.view;
       
+      // Toggle active states
       viewButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
       
-      listView.classList.toggle('active', view === 'list');
-      mapView.classList.toggle('active', view === 'map');
+      // Toggle views
+      listView.style.display = view === 'list' ? 'block' : 'none';
+      mapView.style.display = view === 'map' ? 'block' : 'none';
       
+      // Initialize map if switching to map view
       if (view === 'map') {
         initializeMapOverlay();
       }
     });
   });
+
+  // Initialize location handling
+  initializeLocationHandling();
 }
 
 function initializeMapOverlay() {
