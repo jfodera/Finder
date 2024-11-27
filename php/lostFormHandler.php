@@ -224,6 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             debug_log("Starting matching algorithm");
             $newMatches = findMatchesForLostItems($pdo, $item_id);
             
+            ob_end_clean(); // Clear any buffered output
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
                 echo json_encode([
@@ -232,6 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php?matches=new',
                     'item_id' => $item_id
                 ]);
+                exit(); // Stop execution here
             } else {
                 echo json_encode([
                     'success' => true,
@@ -239,18 +241,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php',
                     'item_id' => $item_id
                 ]);
+                exit(); // Stop execution here
             }
-        } catch (Exception $matchingError) {
-            debug_log("Matching algorithm error", [
-                'error' => $matchingError->getMessage(),
-                'item_id' => $item_id
-            ]);
-            echo json_encode([
-                'success' => true,
-                'message' => "Item successfully reported as lost!",
-                'redirect' => 'dashboard.php',
-                'item_id' => $item_id
-            ]);
         }
         
     } catch (Exception $e) {
