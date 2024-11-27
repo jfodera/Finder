@@ -265,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             require_once 'matching.php';
-            $newMatches = findMatchesForLostItems($pdo);
+            $newMatches = findMatchesForLostItems($pdo, $item_id);
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
@@ -275,6 +275,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php?matches=new',
                     'item_id' => $item_id
                 ]);
+                exit();
             } else {
                 echo json_encode([
                     'success' => true,
@@ -282,6 +283,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'redirect' => 'dashboard.php',
                     'item_id' => $item_id
                 ]);
+                exit();
             }
         } catch (Exception $e) {
             echo json_encode([
