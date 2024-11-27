@@ -170,7 +170,7 @@ try {
                             'date_score' => $dateScore
                         ]);
         
-                        if ($similarityScore >= 0.7) {
+                       
                             debug_log("Creating new match", [
                                 'lost_id' => $lostItemId,
                                 'found_id' => $foundItemId,
@@ -212,7 +212,7 @@ try {
                                 ]);
                                 continue;
                             }
-                        }
+                        
                     }
                 }
             }
