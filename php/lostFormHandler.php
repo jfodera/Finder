@@ -261,6 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
+                ob_end_clean(); 
                 echo json_encode([
                     'success' => true,
                     'message' => "Item reported as lost! " . count($newMatches) . " potential matches found!",
@@ -269,6 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ]);
                 exit();
             } else {
+                ob_end_clean(); 
                 echo json_encode([
                     'success' => true,
                     'message' => "Item successfully reported as lost!",

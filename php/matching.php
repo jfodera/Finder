@@ -137,38 +137,39 @@ try {
                             'found_id' => $foundItem['item_id'],
                             'score' => $similarityScore
                         ]);
-
-                        try {
-                            $insertStmt = $pdo->prepare("
-                            INSERT INTO matches (
-                                lost_item_id,
-                                found_item_id, 
-                                user_id,
-                                similarity_score,
-                                match_time,
-                                status
-                            ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'pending')
-                            ");
-                            
-                            $insertStmt->execute([
-                                $lostItem['item_id'],
-                                $foundItem['item_id'],
-                                $lostItem['user_id'],
-                                $similarityScore
-                            ]);
-                            
-                            $newMatchId = $pdo->lastInsertId();
-                            debug_log("Match created successfully", ['match_id' => $newMatchId]);
-                            
-                            $newMatches[] = [
-                                'match_id' => $newMatchId,
-                                'lost_item_id' => $lostItem['item_id'],
-                                'found_item_id' => $foundItem['item_id'],
-                                'similarity_score' => $similarityScore
-                            ];
-                        } catch (PDOException $e) {
-                            debug_log("Failed to insert match", ['error' => $e->getMessage()]);
-                            continue;
+                        if ($similarityScore >= 0.5) {
+                            try {
+                                $insertStmt = $pdo->prepare("
+                                INSERT INTO matches (
+                                    lost_item_id,
+                                    found_item_id, 
+                                    user_id,
+                                    similarity_score,
+                                    match_time,
+                                    status
+                                ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'pending')
+                                ");
+                                
+                                $insertStmt->execute([
+                                    $lostItem['item_id'],
+                                    $foundItem['item_id'],
+                                    $lostItem['user_id'],
+                                    $similarityScore
+                                ]);
+                                
+                                $newMatchId = $pdo->lastInsertId();
+                                debug_log("Match created successfully", ['match_id' => $newMatchId]);
+                                
+                                $newMatches[] = [
+                                    'match_id' => $newMatchId,
+                                    'lost_item_id' => $lostItem['item_id'],
+                                    'found_item_id' => $foundItem['item_id'],
+                                    'similarity_score' => $similarityScore
+                                ];
+                            } catch (PDOException $e) {
+                                debug_log("Failed to insert match", ['error' => $e->getMessage()]);
+                                continue;
+                            }
                         }
                     }
                 }
