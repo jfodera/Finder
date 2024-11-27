@@ -717,7 +717,7 @@ function initializeMapSelector() {
   mapContainer.className = 'map-selector';
   mapContainer.innerHTML = `
     <div class="map-container">
-      <img src="assets/campus-map.png" alt="Campus Map" id="campusMap">
+      <img src="../assets/campus-map.png" alt="Campus Map" id="campusMap">
       <div id="mapOverlay"></div>
     </div>
   `;
