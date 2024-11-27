@@ -1,0 +1,7 @@
+This page contain the sources that we use for finder 
+
+
+Matching algoritm
+-Datamuse API: https://www.datamuse.com/api/ (Use for finding synonym for item type that are the same/similar but worded differently)
+
+
