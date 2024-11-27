@@ -140,14 +140,14 @@ try {
 
                         try {
                             $insertStmt = $pdo->prepare("
-                                INSERT INTO matches (
-                                    lost_item_id, 
-                                    found_item_id, 
-                                    user_id, 
-                                    match_time, 
-                                    status,
-                                    similarity_score
-                                ) VALUES (?, ?, ?, CURRENT_TIMESTAMP, 'pending', ?)
+                            INSERT INTO matches (
+                                lost_item_id,
+                                found_item_id, 
+                                user_id,
+                                similarity_score,
+                                match_time,
+                                status
+                            ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'pending')
                             ");
                             
                             $insertStmt->execute([
