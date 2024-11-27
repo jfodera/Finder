@@ -117,11 +117,11 @@ try {
                      
                     if ($similarityScore >= 0.7 && !$checkStmt->fetch()) {
                         $insertStmt = $pdo->prepare("
-                            INSERT INTO matches (lost_item_id, found_item_id, user_id, match_time, status)
-                            VALUES (?, ?, ?, ?, 'pending')
+                            INSERT INTO matches (lost_item_id, found_item_id, user_id, match_time, status, similarity_score)
+                            VALUES (?, ?, ?, ?, 'pending', ?)
                         ");
                         $match_time = date('Y-m-d H:i:s');
-                        $insertStmt->execute([$lostItemId, $foundItemId, $user_id, $match_time]);
+                        $insertStmt->execute([$lostItemId, $foundItemId, $user_id, $match_time, $similarityScore]);
                         
                         // Add to new matches array
                         $newMatches[] = [

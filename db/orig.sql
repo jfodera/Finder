@@ -215,3 +215,5 @@ INSERT INTO locations (name, category) VALUES
 ('Troy Building', 'Operations & Administration'),
 ('Voorhees Computing Center (VCC)', 'Operations & Administration');
 
+ALTER TABLE matches
+ADD COLUMN similarity_score DECIMAL(4,3);
