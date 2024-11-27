@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
           matchesTab.click();
       }
   }
-  
+  initializeTabs();
   renderItems();
   renderMatches();
   initializeForm();
