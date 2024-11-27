@@ -260,6 +260,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             debug_log("Starting matching algorithm");
             $runMatching = true; 
             $newMatches = findMatchesForLostItems($pdo);
+
+            echo json_encode([
+                'success' => true,
+                'message' => "Item successfully reported!",
+                'redirect' => 'dashboard.php',
+                'item_id' => $item_id,
+                'debug_info' => [
+                    'matches_found' => count($newMatches),
+                    'matching_details' => $newMatches,
+                    'timestamp' => date('Y-m-d H:i:s')
+                ]
+            ]);
             
             if (!empty($newMatches)) {
                 $_SESSION['new_matches'] = count($newMatches);
