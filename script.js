@@ -583,9 +583,6 @@ function initializeForm() {
         }
       } catch (error) {
         console.error("Submission error:", error);
-        alert(
-          "An error occurred while submitting the form. Please check the console for details."
-        );
       } finally {
         // Reset submission lock and button state
         isSubmitting = false;

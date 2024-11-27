@@ -2,8 +2,19 @@
 session_start();
 require_once '../db/db_connect.php';
 
+// Disable error display in output
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
+
+if (!function_exists('debug_log')) {
+    function debug_log($message, $data = null) {
+        error_log(print_r([
+            'message' => $message,
+            'data' => $data,
+            'time' => date('Y-m-d H:i:s')
+        ], true));
+    }
+}
 
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -44,7 +55,7 @@ try {
             $response = @file_get_contents($apiUrl, false, $context);
             
             if ($response === false) {
-                error_log("API call failed for word comparison");
+                debug_log("API call failed for word comparison");
                 return 0;
             }
             
@@ -58,7 +69,7 @@ try {
                 }
             }
         } catch (Exception $e) {
-            error_log("Word comparison error: " . $e->getMessage());
+            debug_log("Word comparison error: " . $e->getMessage());
             return 0;
         }
     
@@ -66,6 +77,10 @@ try {
     }
     
     function findMatchesForLostItems($pdo, $specificItemId = null) {
+        debug_log("Starting findMatchesForLostItems", [
+            'specificItemId' => $specificItemId
+        ]);
+        
         try {
             $weights = [
                 'type' => 0.5,
@@ -81,13 +96,18 @@ try {
                 $query = "SELECT * FROM lost_items WHERE status = 'lost' AND item_id = ?";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute([$specificItemId]);
+                debug_log("Querying specific lost item", ['item_id' => $specificItemId]);
             } else {
                 $query = "SELECT * FROM lost_items WHERE status = 'lost'";
                 $stmt = $pdo->query($query);
+                debug_log("Querying all lost items");
             }
             
             $lostItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            debug_log("Found lost items", ['count' => count($lostItems)]);
+            
             if (empty($lostItems)) {
+                debug_log("No lost items found to match");
                 return [];
             }
     
@@ -99,29 +119,37 @@ try {
                 $lostTime = $lostItem['lost_time'];
                 $user_id = $lostItem['user_id'];
 
+                debug_log("Processing lost item", [
+                    'item_id' => $lostItemId,
+                    'type' => $lostType
+                ]);
+
+                // Get found items
                 $foundStmt = $pdo->query("
-                    SELECT * FROM found_items
+                    SELECT * FROM found_items 
                     WHERE status = 'found'
                 ");
                 
                 if (!$foundStmt) {
-                    error_log("Failed to query found items");
+                    debug_log("Failed to query found items");
                     continue;
                 }
 
                 $foundItems = $foundStmt->fetchAll(PDO::FETCH_ASSOC);
+                debug_log("Found items to compare", ['count' => count($foundItems)]);
     
                 foreach ($foundItems as $foundItem) {
                     $foundItemId = $foundItem['item_id'];
                     
                     // Check if match already exists
                     $checkStmt = $pdo->prepare("
-                        SELECT * FROM matches
+                        SELECT * FROM matches 
                         WHERE lost_item_id = ? AND found_item_id = ?
                     ");
                     $checkStmt->execute([$lostItemId, $foundItemId]);
                     
                     if (!$checkStmt->fetch()) {
+                        // Calculate scores
                         $typeScore = areWordsSimilar(strtolower($lostType), strtolower($foundItem['item_type']));
                         $brandScore = (strcasecmp(trim(strtolower($lostBrand)), trim(strtolower($foundItem['brand']))) === 0) ? 1 : 0;
                         $colorScore = areWordsSimilar(strtolower($lostColor), strtolower($foundItem['color']));
@@ -132,24 +160,57 @@ try {
                             $weights['color'] * $colorScore +
                             $weights['brand'] * $brandScore +
                             $weights['date'] * $dateScore;
+                        
+                        debug_log("Calculated similarity", [
+                            'lost_id' => $lostItemId,
+                            'found_id' => $foundItemId,
+                            'score' => $similarityScore,
+                            'type_score' => $typeScore,
+                            'color_score' => $colorScore,
+                            'brand_score' => $brandScore,
+                            'date_score' => $dateScore
+                        ]);
         
                         if ($similarityScore >= 0.7) {
+                            debug_log("Creating new match", [
+                                'lost_id' => $lostItemId,
+                                'found_id' => $foundItemId,
+                                'score' => $similarityScore
+                            ]);
+                            
                             try {
                                 $insertStmt = $pdo->prepare("
-                                    INSERT INTO matches (lost_item_id, found_item_id, user_id, match_time, status)
-                                    VALUES (?, ?, ?, ?, 'pending')
+                                    INSERT INTO matches (
+                                        lost_item_id, 
+                                        found_item_id, 
+                                        user_id, 
+                                        match_time, 
+                                        status,
+                                        similarity_score
+                                    ) VALUES (?, ?, ?, ?, 'pending', ?)
                                 ");
                                 $match_time = date('Y-m-d H:i:s');
-                                $insertStmt->execute([$lostItemId, $foundItemId, $user_id, $match_time]);
+                                $insertStmt->execute([
+                                    $lostItemId, 
+                                    $foundItemId, 
+                                    $user_id, 
+                                    $match_time,
+                                    $similarityScore
+                                ]);
+                                
+                                $newMatchId = $pdo->lastInsertId();
+                                debug_log("Match created successfully", ['match_id' => $newMatchId]);
                                 
                                 $newMatches[] = [
-                                    'match_id' => $pdo->lastInsertId(),
+                                    'match_id' => $newMatchId,
                                     'lost_item_id' => $lostItemId,
                                     'found_item_id' => $foundItemId,
                                     'similarity_score' => $similarityScore
                                 ];
                             } catch (PDOException $e) {
-                                error_log("Failed to insert match: " . $e->getMessage());
+                                debug_log("Failed to insert match", [
+                                    'error' => $e->getMessage()
+                                ]);
                                 continue;
                             }
                         }
@@ -157,24 +218,31 @@ try {
                 }
             }
             
+            debug_log("Matching complete", [
+                'new_matches_count' => count($newMatches)
+            ]);
             return $newMatches;
     
         } catch (PDOException $e) {
-            error_log("Error in findMatchesForLostItems: " . $e->getMessage());
-            return [];
+            debug_log("Error in findMatchesForLostItems: " . $e->getMessage());
+            throw $e;
         }
     }
 
-    // Only run the matching algorithm if called directly
-    if (isset($runMatching) && $runMatching === true) {
+    // Run the matching algorithm if called directly or if runMatching is true
+    if (!isset($includeOnly) || (isset($runMatching) && $runMatching === true)) {
+        debug_log("Running matching algorithm directly");
         $matches = findMatchesForLostItems($pdo);
-        echo json_encode(['success' => true, 'matches' => $matches]);
+        if (!isset($includeOnly)) {
+            echo json_encode(['success' => true, 'matches' => $matches]);
+        }
     }
     
 } catch (PDOException $e) {
-    error_log("Connection failed: " . $e->getMessage());
-    if (isset($runMatching) && $runMatching === true) {
+    debug_log("Connection failed: " . $e->getMessage());
+    if (!isset($includeOnly)) {
         echo json_encode(['success' => false, 'error' => 'Database connection failed']);
     }
+    throw $e;
 }
 ?>
