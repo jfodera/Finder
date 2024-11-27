@@ -555,32 +555,9 @@ function initializeForm() {
 
         console.log("Raw response:", response);
 
-        // Try to parse the response as JSON
-        let jsonResponse;
-        try {
-          const responseText = await response.text();
-          console.log("Raw response text:", responseText);
-          jsonResponse = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("Failed to parse response:", parseError);
-          throw new Error("Invalid response format");
-        }
-
-        console.log("Parsed response:", jsonResponse);
-
-        if (jsonResponse.success) {
-          console.log("Success! Redirecting to:", jsonResponse.redirect);
-          window.location.href = jsonResponse.redirect;
-        } else {
-          console.error("Server reported error:", jsonResponse.message);
-          if (jsonResponse.error_details) {
-            console.error("Error details:", jsonResponse.error_details);
-          }
-          alert(
-            jsonResponse.message ||
-              "An error occurred while submitting the form."
-          );
-        }
+        
+        window.location.href = jsonResponse.redirect;
+      
       } catch (error) {
         console.error("Submission error:", error);
       } finally {
