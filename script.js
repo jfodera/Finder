@@ -516,7 +516,7 @@ function initializeForm() {
     initializeLocationViews();
     initializeLocationHandling();
   }
-  initializeMapSelector();
+
   // Single form submission handler
   if (infoForm) {
     infoForm.addEventListener("submit", async function (e) {
@@ -706,6 +706,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const styleSheet = document.createElement('style');
   styleSheet.textContent = mapStyles;
   document.head.appendChild(styleSheet);
+  if (document.querySelector('.location-section')) {
+    initializeLocationViews();
+    initializeLocationHandling();
+  }
 });
 
 document.addEventListener('visibilitychange', () => {
@@ -718,74 +722,55 @@ function initializeLocationViews() {
   const locationSection = document.querySelector('.location-section');
   if (!locationSection) return;
 
-  const viewSwitcher = document.createElement('div');
-  viewSwitcher.className = 'view-switcher';
-  viewSwitcher.innerHTML = `
-    <div class="toggle-buttons">
+  const originalContent = locationSection.innerHTML;
+
+  locationSection.innerHTML = `
+    <div class="toggle-buttons mb-6">
       <button type="button" class="view-button active" data-view="list">List View</button>
       <button type="button" class="view-button" data-view="map">Map View</button>
     </div>
-  `;
-
-  const viewsContainer = document.createElement('div');
-  viewsContainer.className = 'views-container';
-
-  const listView = document.createElement('div');
-  listView.className = 'view-content list-view active';
-  listView.innerHTML = locationSection.innerHTML;
-
-  const mapView = document.createElement('div');
-  mapView.className = 'view-content map-view';
-  mapView.innerHTML = `
-    <div class="map-wrapper">
-      <img src="../assets/campus-map.jpg" alt="Campus Map" id="campusMap">
-      <div id="mapOverlay"></div>
+    <div class="views-container">
+      <div class="view-content list-view active">
+        ${originalContent}
+      </div>
+      <div class="view-content map-view">
+        <div class="map-wrapper rounded-lg overflow-hidden">
+          <img src="../assets/campus-map.jpg" alt="Campus Map" class="w-full h-auto">
+          <div id="mapOverlay"></div>
+        </div>
+      </div>
     </div>
   `;
 
-  locationSection.innerHTML = '';
-  locationSection.appendChild(viewSwitcher);
-  viewsContainer.appendChild(listView);
-  viewsContainer.appendChild(mapView);
-  locationSection.appendChild(viewsContainer);
+  const viewButtons = locationSection.querySelectorAll('.view-button');
+  const listView = locationSection.querySelector('.list-view');
+  const mapView = locationSection.querySelector('.map-view');
 
-  initializeMapSelector();
-
-  // Handle view switching
-  const viewButtons = viewSwitcher.querySelectorAll('.view-button');
   viewButtons.forEach(button => {
     button.addEventListener('click', () => {
       const view = button.dataset.view;
       
-      // Toggle active states
       viewButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
       
-      document.querySelector('.list-view').classList.remove('active');
-      document.querySelector('.map-view').classList.remove('active');
-      document.querySelector(`.${view}-view`).classList.add('active');
+      listView.classList.toggle('active', view === 'list');
+      mapView.classList.toggle('active', view === 'map');
+      
+      if (view === 'map') {
+        initializeMapOverlay();
+      }
     });
   });
 }
 
-
-function initializeMapSelector() {
-  // Create map container and insert it before the location-section
-  const mapContainer = document.createElement('div');
-  mapContainer.className = 'map-selector';
-  mapContainer.innerHTML = `
-    <div class="map-container">
-      <img src="../assets/campus-map.png" alt="Campus Map" id="campusMap">
-      <div id="mapOverlay"></div>
-    </div>
-  `;
-
-  const locationSection = document.querySelector('.location-section');
-  if (locationSection) {
-    locationSection.insertBefore(mapContainer, locationSection.firstChild);
-  }
-
-  // Map of building codes to coordinates based on the provided map
+function initializeMapOverlay() {
+  const overlay = document.getElementById('mapOverlay');
+  const locationCheckboxes = document.querySelectorAll('.location-checkbox input');
+  
+  // Clear existing overlay content
+  overlay.innerHTML = '';
+  
+  // Complete building coordinates map
   const buildingCoordinates = {
     // Academic & Research
     'Amos Eaton Hall': { x: 220, y: 240, width: 30, height: 20 },
@@ -830,10 +815,6 @@ function initializeMapSelector() {
     'Voorhees Computing Center (VCC)': { x: 240, y: 250, width: 30, height: 25 }
   };
 
-  // Create clickable areas
-  const locationCheckboxes = document.querySelectorAll('.location-checkbox input');
-  const overlay = document.getElementById('mapOverlay');
-  
   locationCheckboxes.forEach(checkbox => {
     const locationName = checkbox.value;
     const coords = buildingCoordinates[locationName];
@@ -841,20 +822,65 @@ function initializeMapSelector() {
     if (coords) {
       const area = document.createElement('div');
       area.className = 'clickable-area';
-      area.style.left = `${coords.x}px`;
-      area.style.top = `${coords.y}px`;
-      area.style.width = `${coords.width}px`;
-      area.style.height = `${coords.height}px`;
+      
+      // Set position and size
+      area.style.cssText = `
+        position: absolute;
+        left: ${coords.x}px;
+        top: ${coords.y}px;
+        width: ${coords.width}px;
+        height: ${coords.height}px;
+        z-index: 10;
+      `;
       
       // Add tooltip
       area.title = locationName;
+      
+      // Set initial selected state if checkbox is checked
+      if (checkbox.checked) {
+        area.classList.add('selected');
+      }
+      
+      // Add hover effect
+      const createTooltip = () => {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'location-tooltip';
+        tooltip.textContent = locationName;
+        tooltip.style.cssText = `
+          position: absolute;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 5px 10px;
+          border-radius: 4px;
+          font-size: 12px;
+          white-space: nowrap;
+          pointer-events: none;
+          z-index: 100;
+          top: ${coords.y - 25}px;
+          left: ${coords.x}px;
+        `;
+        overlay.appendChild(tooltip);
+        return tooltip;
+      };
+      
+      let tooltip = null;
+      area.addEventListener('mouseenter', () => {
+        tooltip = createTooltip();
+      });
+      
+      area.addEventListener('mouseleave', () => {
+        if (tooltip) {
+          tooltip.remove();
+          tooltip = null;
+        }
+      });
       
       // Toggle checkbox on click
       area.addEventListener('click', () => {
         checkbox.checked = !checkbox.checked;
         checkbox.dispatchEvent(new Event('change'));
         area.classList.toggle('selected', checkbox.checked);
-        updateSelectedLocations(); // Update the selected locations list
+        updateSelectedLocations();
       });
       
       // Update area when checkbox changes
@@ -865,4 +891,20 @@ function initializeMapSelector() {
       overlay.appendChild(area);
     }
   });
+
+  const scaleIndicator = document.createElement('div');
+  scaleIndicator.className = 'map-scale';
+  scaleIndicator.style.cssText = `
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 20;
+  `;
+  scaleIndicator.textContent = 'Click on buildings to select locations';
+  overlay.appendChild(scaleIndicator);
 }
