@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Baloo-2';
+  src: url('assets/Baloo2-VariableFont_wght.ttf') format('truetype');
+}
+
 body,
 html {
   height: 100%;
@@ -33,17 +38,6 @@ html {
   background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
   color: white;
   text-align: center;
-}
-
-.logo {
-  font-size: 48px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.logo-image {
-  width: 50px;
-  height: auto;
 }
 
 .description {
@@ -153,6 +147,7 @@ html {
   right: 0;
   z-index: 1000;
   width: 100%;
+  font-family: 'Baloo-2';
 }
 
 .header-content {
@@ -163,10 +158,9 @@ html {
   box-sizing: border-box;
 }
 
-.logo {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
+.logo-image {
+  height: 40px;
+  width: auto;
 }
 
 .hamburger {
@@ -188,8 +182,13 @@ html {
   display: flex;
 }
 
-.nav-menu ul li {
+.nav-menu ul li{
   margin-left: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .nav-menu ul li a {
@@ -197,11 +196,42 @@ html {
   text-decoration: none;
   font-weight: bold;
   font-size: 18px;
-  transition: opacity 0.3s;
+  transition: 0.3s;
 }
 
-.nav-menu ul li a:hover {
-  opacity: 0.8;
+.nav-menu ul li a:not(.active) {
+  opacity: .8;
+  scale: .95;
+  font-weight: normal;
+}
+
+.nav-menu ul li a:not(.active):hover {
+  scale: 1.1;
+  opacity: .9;
+}
+
+#account-name-a {
+  display: flex;
+  font-size: 22px;
+  text-decoration: none;
+  font-weight: bold;
+  /* margin-right: 5px; */
+  transition: 1s;
+  padding: 5px;
+  min-width: 80px;
+  text-align: right;
+  justify-content: center;
+}
+
+#account-name-a:not(.logout-visible) {
+  color: white;
+}
+
+.logout-visible {
+  border-radius: 25px;
+  background-color: white;
+  color: black;
+  scale: 1.05;
 }
 
 /* Mobile Styles */

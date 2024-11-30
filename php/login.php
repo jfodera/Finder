@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "All fields are required";
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT user_id, email, password, is_recorder, is_verified FROM users WHERE email = ?");
+            $stmt = $pdo->prepare("SELECT user_id, first_name, email, password, is_recorder, is_verified FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
@@ -60,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($user['is_verified']) {
                     $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['email'] = $user['email'];
+                    $_SESSION['name'] = $user['first_name'];
                     $_SESSION['is_recorder'] = $user['is_recorder'];
                     
                     header("Location: dashboard.php");
