@@ -2,7 +2,7 @@
 <?php 
 //new session when go to this page 
 session_start();
-include 'header.php';
+// include 'header.php';
 require_once '../db/db_connect.php';
 require_once '../vendor/autoload.php';
 
