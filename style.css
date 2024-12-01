@@ -274,7 +274,7 @@ h1 {
 .tab-content.active .items-grid,
 .items-grid.tab-content.active {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr); 
   gap: 15px;
   padding: 20px;
   width: 100%;
