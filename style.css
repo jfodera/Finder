@@ -701,9 +701,10 @@ h1 {
 /* Grid layout for items inside active tab */
 .tab-content.active .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
 }
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .tab-content.active {
@@ -713,7 +714,7 @@ h1 {
 
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 20px;
   padding: 20px;
   width: 100%;
@@ -727,7 +728,7 @@ h1 {
 
 .items-grid.tab-content.active {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 20px;
 }
 
@@ -738,7 +739,6 @@ h1 {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
-
 .contact {
   min-height: 100vh;
   padding: 50px 20px;
