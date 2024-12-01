@@ -294,8 +294,6 @@ h1 {
 }
 
 .item-card {
-  flex: 1 1 300px;
-  max-width: 300px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   padding: 20px;
@@ -701,16 +699,11 @@ h1 {
 }
 
 /* Grid layout for items inside active tab */
-.tab-content.active .items-grid,
-.tab-content.active.items-grid {
+.tab-content.active .items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
 }
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .tab-content.active {
@@ -728,12 +721,10 @@ h1 {
   margin: 0 auto;
 }
 
-.items-grid.tab-content {
-  display: none;
-}
-
 .items-grid.tab-content.active {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .loading {
