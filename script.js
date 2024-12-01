@@ -1,11 +1,14 @@
-function createItemCard(item, type = "lost") {
+function createItemCard(item, type) {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
 
   // Determine which field to show based on type
-  const creatorLine = type === "lost" 
-    ? `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`
-    : `<div><strong>Found by:</strong> ${item.recorder_name || "N/A"}</div>`;
+  let creatorLine = "";
+  if (type === "lost") {
+    creatorLine = `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`;
+  } else if (type === "found") {
+    creatorLine = `<div><strong>Found by:</strong> ${item.recorder_name || "N/A"}</div>`;
+  }
 
   return `
         <div class="item-card ${statusClass}">
@@ -48,6 +51,7 @@ function initializeTabs() {
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
 
+  // Set the first tab as active by default
   if (tabButtons.length > 0) {
     tabButtons[0].classList.add("active");
     if (tabContents.length > 0) {
@@ -57,28 +61,29 @@ function initializeTabs() {
 
   tabButtons.forEach((button) => {
     button.addEventListener("click", async () => {
+    
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
+     
       button.classList.add("active");
       const baseId = button.dataset.tab;
       const tabId = window.isRecorder ? 
                     baseId + "ItemsGrid" : 
                     (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
-
+      
       const content = document.getElementById(tabId);
       if (content) {
         content.classList.add("active");
         if (baseId === 'matches') {
-          await renderMatches(); // Call renderMatches for both recorders and non-recorders
-        } else if (baseId === 'lost') {
-          await renderItems(); // Ensure lost items are rendered if needed
+          await renderMatches();
+        } else if (baseId === 'lost' || baseId === 'found') {
+          await renderItems();
         }
       }
     });
   });
 }
-
 
 async function renderItems() {
   if (window.isRecorder) {
