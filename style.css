@@ -282,25 +282,30 @@ h1 {
   margin: 0 auto;
 }
 
+/* large tablets */
+@media (max-width: 1024px) {
+  .items-grid,
+  .tab-content.active .items-grid,
+  .items-grid.tab-content.active {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
+/* small tablets */
 @media (max-width: 768px) {
   .items-grid,
   .tab-content.active .items-grid,
   .items-grid.tab-content.active {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    padding: 10px;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* small mobile devices */
 @media (max-width: 480px) {
   .items-grid,
   .tab-content.active .items-grid,
   .items-grid.tab-content.active {
-    grid-template-columns: 1fr;
-  }
-  
-  .item-card {
-    max-width: 100%;
+    grid-template-columns: 1fr; 
   }
 }
 
@@ -562,24 +567,27 @@ h1 {
 }
 
 #upload_image {
-  max-width: 100%;
-  height: 200px;
-  object-fit: cover;
+  width: 400px; 
+  height: 300px; 
+  object-fit: contain; 
   border-radius: 8px;
-  margin: 10px 0;
+  margin: 10px auto; 
   border: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.1); 
+  display: block; 
+  padding: 10px;
 }
 
 #item_img {
-  display: inline-block;
+  display: block;
+  width: fit-content; 
   padding: 8px 16px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   cursor: pointer;
-  margin: 10px 0;
+  margin: 10px auto; 
   transition: background 0.3s ease;
 }
-
 #item_img:hover {
   background: rgba(255, 255, 255, 0.3);
 }
@@ -717,16 +725,6 @@ h1 {
   .tab-content.active {
     padding: 10px;
   }
-}
-
-.items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 20px;
-  padding: 20px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .items-grid.tab-content {
@@ -1322,4 +1320,23 @@ textarea:-webkit-autofill:focus {
 .error a, .error button {
   color: white;
   text-decoration: underline;
+}
+
+.page-3{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview-container {
+  width: 400px;
+  height: 300px;
+  border-radius: 8px;
+  margin: 10px auto;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }

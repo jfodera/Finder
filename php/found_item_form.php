@@ -153,14 +153,14 @@ foreach ($locations as $location) {
 
                 <div class="page page-3">
                     <h2>Upload Item Image</h2>
-                    <h3>*Recommended for better identification*</h3>
-                    <img id="upload_image" src="../default_image.png" alt="Preview of the found item">
+                    <h3>*Optional but recommended for better identification*</h3>
+                    <div class="image-preview-container">
+                        <img id="upload_image" src="../default_image.png" alt="Preview of the item">
+                    </div>
                     <label id="item_img" for="input-file">Upload Image</label>
                     <div class="form_group">
-                        <input id="input-file" 
-                               type="file" 
-                               name="image" 
-                               accept="image/jpeg,image/png,image/jpg">
+                        <input id="input-file" type="file" name="image" accept="image/jpeg,image/png,image/jpg">
+                        <div class="error-message">Please upload a valid image file (JPG or PNG, max 5MB)</div>
                     </div>
                     <button type="button" class="prev-btn">Go Back</button>
                     <button type="button" class="next-btn">Continue</button>
