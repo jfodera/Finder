@@ -680,10 +680,27 @@ h1 {
 }
 
 .tab-content.active {
+  display: block;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Grid layout for items inside active tab */
+.tab-content.active .items-grid,
+.tab-content.active.items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tab-content.active {
+    padding: 10px;
+  }
 }
 
 .items-grid {
