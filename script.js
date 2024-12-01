@@ -18,9 +18,6 @@ function createItemCard(item, type) {
         <div class="item-card ${statusClass}">
             <div class="image-container" onclick="openImageModal('${item.image_url || "../default_image.png"}', '${item.item_type}')">
                 <img src="${item.image_url || "../default_image.png"}" alt="${item.item_type}" class="item-image">
-                <div class="image-overlay">
-                    <span class="zoom-icon">🔍</span>
-                </div>
             </div>
             <div class="item-header">
                 <div class="item-type">${item.item_type}</div>
@@ -834,21 +831,29 @@ function openImageModal(imageSrc, title) {
   const modalImg = document.getElementById('modalImage');
   const modalTitle = document.getElementById('modalTitle');
   
+  modal.style.display = "flex";
   modalImg.src = imageSrc;
   modalTitle.textContent = title;
-  modal.style.display = "flex";
+  
+  // fade in modal effect
+  setTimeout(() => {
+      modal.style.opacity = "1";
+  }, 100);
 }
 
-// Close the image modal
+// Close image modal
 function closeImageModal() {
   const modal = document.getElementById('imageModal');
-  modal.style.display = "none";
+  modal.style.opacity = "0";
+  setTimeout(() => {
+      modal.style.display = "none";
+  }, 300);
 }
 
 // Close modal when clicking outside the image
 window.onclick = function(event) {
   const modal = document.getElementById('imageModal');
   if (event.target === modal) {
-    closeImageModal();
+      closeImageModal();
   }
 }

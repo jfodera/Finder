@@ -63,6 +63,12 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
         <?php endif; ?>
     </div>
     
+
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <img id="modalImage" class="modal-content" src="" alt="Zoomed image">
+    </div>
     <?php if (isset($_SESSION['new_matches'])): ?>
     <script>
         const newMatchesCount = <?php echo $_SESSION['new_matches']; ?>;
