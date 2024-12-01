@@ -261,7 +261,7 @@ h1 {
 .items-grid.tab-content.active {
   display: grid !important;
   grid-template-columns: repeat(5, 1fr) !important;
-  gap: 35px;
+  gap: 200px;
   padding: 20px;
   width: 100%;
   max-width: 3000px;
@@ -298,7 +298,7 @@ h1 {
 .item-card {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
-  padding: 50px;
+  padding: 65px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
@@ -1129,6 +1129,10 @@ textarea:-webkit-autofill:focus {
 
 .potential-matches .user-match-card {
   margin-bottom: 20px;
+}
+
+.potential-matches.tab-content {
+  display: none !important;
 }
 
 .user-match-card {
