@@ -3,9 +3,7 @@ function createItemCard(item, type = "lost") {
   const statusClass = item.status.toLowerCase().replace(" ", "-");
   return `
         <div class="item-card ${statusClass}">
-            <img src="${item.image_url || "../default_image.png"}" alt="${
-    item.item_type
-  }" class="item-image">
+            <img src="${item.image_url || "../default_image.png"}" alt="${item.item_type}" class="item-image">
             <div class="item-header">
                 <div class="item-type">${item.item_type}</div>
                 <div class="item-status ${statusClass}">${item.status}</div>
@@ -13,24 +11,16 @@ function createItemCard(item, type = "lost") {
             <div class="item-description">
                 <div><strong>Brand:</strong> ${item.brand || "N/A"}</div>
                 <div><strong>Color:</strong> ${item.color || "N/A"}</div>
-                ${
-                  item.additional_info
-                    ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>`
-                    : ""
-                }
+                ${item.additional_info ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>` : ""}
                 <div><strong>Location:</strong> ${item.locations || "N/A"}</div>
-                <div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>
-                <div><strong>Found by:</strong> ${item.finder_name || "N/A"}</div>
+                ${type === "lost" 
+                  ? `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`
+                  : `<div><strong>Found by:</strong> ${item.recorder_name || "N/A"}</div>`
+                }
             </div>
             <div class="item-details">
-                <div><strong>${
-                  type === "lost" ? "Lost" : "Found"
-                } on:</strong> ${new Date(
-    item[dateField]
-  ).toLocaleString()}</div>
-                <div><strong>Reported on:</strong> ${new Date(
-                  item.created_at
-                ).toLocaleString()}</div>
+                <div><strong>${type === "lost" ? "Lost" : "Found"} on:</strong> ${new Date(item[dateField]).toLocaleString()}</div>
+                <div><strong>Reported on:</strong> ${new Date(item.created_at).toLocaleString()}</div>
                 <div><strong>Item ID:</strong> ${item.item_id}</div>
             </div>
         </div>

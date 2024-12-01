@@ -721,6 +721,10 @@ h1 {
   margin: 0 auto;
 }
 
+.items-grid.tab-content {
+  display: none;
+}
+
 .items-grid.tab-content.active {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
