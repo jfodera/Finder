@@ -270,36 +270,50 @@ h1 {
   text-align: center;
 }
 
-.items-grid {
+.items-grid,
+.tab-content.active .items-grid,
+.items-grid.tab-content.active {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
   padding: 20px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+
 @media (max-width: 768px) {
-  .items-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  .items-grid,
+  .tab-content.active .items-grid,
+  .items-grid.tab-content.active {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     padding: 10px;
   }
 }
 
 @media (max-width: 480px) {
-  .items-grid {
+  .items-grid,
+  .tab-content.active .items-grid,
+  .items-grid.tab-content.active {
     grid-template-columns: 1fr;
+  }
+  
+  .item-card {
+    max-width: 100%;
   }
 }
 
 .item-card {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
-  padding: 20px;
+  padding: 15px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  max-width: 300px; 
+  justify-self: center; 
+  width: 100%; 
 }
 
 .item-card:hover {
@@ -698,13 +712,6 @@ h1 {
   padding: 20px;
 }
 
-/* Grid layout for items inside active tab */
-.tab-content.active .items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .tab-content.active {
@@ -724,12 +731,6 @@ h1 {
 
 .items-grid.tab-content {
   display: none;
-}
-
-.items-grid.tab-content.active {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 20px;
 }
 
 .loading {

@@ -1,17 +1,11 @@
-function createItemCard(item, type = "lost", tabId = "") {
+function createItemCard(item, type = "lost") {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
-  
-  // Determine if we should show reporter/finder info based on tab
-  let creatorLine = '';
-  if (tabId === "lostItemsGrid") {
-    creatorLine = item.reporter_name ? 
-      `<div><strong>Reported by:</strong> ${item.reporter_name}</div>` : '';
-  } else if (tabId === "foundItemsGrid") {
-    creatorLine = item.recorder_name ? 
-      `<div><strong>Found by:</strong> ${item.recorder_name}</div>` : '';
-  }
-  // For itemsGrid (user's items), we show no creator line
+
+  // Determine which field to show based on type
+  const creatorLine = type === "lost" 
+    ? `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`
+    : `<div><strong>Found by:</strong> ${item.recorder_name || "N/A"}</div>`;
 
   return `
         <div class="item-card ${statusClass}">
@@ -88,31 +82,37 @@ function initializeTabs() {
 
 async function renderItems() {
   if (window.isRecorder) {
+    // Get active tab
+    const activeTab = document.querySelector('.tab-button.active').dataset.tab;
     const lostItemsGrid = document.getElementById("lostItemsGrid");
     const foundItemsGrid = document.getElementById("foundItemsGrid");
 
     try {
-      const [lostItems, foundItems] = await Promise.all([
-        fetchItems("getLostItems.php"),
-        fetchItems("getFoundItems.php")
-      ]);
-
-      if (lostItemsGrid) {
-        lostItemsGrid.innerHTML = lostItems.length > 0
-          ? lostItems.map(item => createItemCard(item, "lost", "lostItemsGrid")).join("")
-          : '<p class="no-items">No lost items reported.</p>';
+      if (activeTab === 'lost') {
+        const lostItems = await fetchItems("getLostItems.php");
+        if (lostItemsGrid) {
+          lostItemsGrid.innerHTML = lostItems.length > 0
+            ? lostItems.map(item => createItemCard(item, "lost")).join("")
+            : '<p class="no-items">No lost items reported.</p>';
+        }
       }
-
-      if (foundItemsGrid) {
-        foundItemsGrid.innerHTML = foundItems.length > 0
-          ? foundItems.map(item => createItemCard(item, "found", "foundItemsGrid")).join("")
-          : '<p class="no-items">No found items reported.</p>';
+      else if (activeTab === 'found') {
+        const foundItems = await fetchItems("getFoundItems.php");
+        if (foundItemsGrid) {
+          foundItemsGrid.innerHTML = foundItems.length > 0
+            ? foundItems.map(item => createItemCard(item, "found")).join("")
+            : '<p class="no-items">No found items reported.</p>';
+        }
       }
     } catch (error) {
       console.error("Error rendering items:", error);
       const errorMessage = '<p class="error-message">Failed to load items.</p>';
-      if (lostItemsGrid) lostItemsGrid.innerHTML = errorMessage;
-      if (foundItemsGrid) foundItemsGrid.innerHTML = errorMessage;
+      if (activeTab === 'lost' && lostItemsGrid) {
+        lostItemsGrid.innerHTML = errorMessage;
+      }
+      if (activeTab === 'found' && foundItemsGrid) {
+        foundItemsGrid.innerHTML = errorMessage;
+      }
     }
   } else {
     const itemsGrid = document.getElementById("itemsGrid");
@@ -121,7 +121,7 @@ async function renderItems() {
     try {
       const items = await fetchItems("getUserItems.php");
       itemsGrid.innerHTML = items.length > 0
-        ? items.map(item => createItemCard(item, "lost", "itemsGrid")).join("")
+        ? items.map(item => createItemCard(item, "lost")).join("")
         : '<p class="no-items">No items found.</p>';
     } catch (error) {
       console.error("Error rendering items:", error);
