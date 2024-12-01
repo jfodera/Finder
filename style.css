@@ -273,7 +273,7 @@ h1 {
 .items-grid,
 .tab-content.active .items-grid,
 .items-grid.tab-content.active {
-  display: grid !important;
+  display: grid;
   grid-template-columns: repeat(5, 1fr) !important;
   gap: 15px;
   padding: 20px;
@@ -312,11 +312,11 @@ h1 {
 .item-card {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
-  padding: 15px;
+  padding: 25px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  max-width: 300px; 
+  max-width: 500px; 
   justify-self: center; 
   width: 100%; 
 }
