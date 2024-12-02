@@ -3,16 +3,37 @@
   src: url('assets/Baloo2-VariableFont_wght.ttf') format('truetype');
 }
 
+:root {
+  --ff: "Montserrat", sans-serif;
+  --h1: 700 1.5rem/1.4em var(--ff);
+  --h2: 700 1.25rem/1.4em var(--ff);
+  --p: 400 1rem/1.4em var(--ff);
+  --p2: 400 .8625rem/1.4em var(--ff);
+  --gray100: hsl(0,0%, 100%);
+  --gray70: hsl(0,0%, 70%);
+  --gray30: hsl(0,0%, 30%);
+  --grayo: hsl(0,0%,0%);
+  --bgrnd: #1f1f1f;
+  --fgrnd: #eaeaea;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 body,
 html {
   height: 100%;
-  margin: 0;
-  min-height: 100vh;
+  min-height: 100svh;
+  max-height: 100lvh;
   display: flex;
   flex-direction: column;
-  font-family: "Montserrat", sans-serif;
-  background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
-  color: white;
+  font-family: var(--ff);
+  /* background: linear-gradient(to right, #0066cc 20%, #01f573 80%); */
+  background: var(--bgrnd);
+  color: var(--fgrnd);
 }
 
 .container {
@@ -27,6 +48,7 @@ html {
   text-align: center;
   width: 100%;
   box-sizing: border-box;
+  z-index: 100;
 }
 
 .home-container {
