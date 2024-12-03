@@ -367,6 +367,7 @@ async function renderItems() {
           itemsGrid.innerHTML = items
             .map((item) => createItemCard(item))
             .join("");
+            backgroundResize();
         } else {
           itemsGrid.innerHTML = '<p class="no-items">No items found.</p>';
         }
@@ -815,5 +816,28 @@ function updateMatchHighlighting() {
               card.classList.remove('new-match');
           }, 5000);
       });
+  }
+}
+
+function backgroundResize() {
+  const windowHeight = document.querySelector('body').offsetHeight;
+  document.querySelector('.under').style.height = String(windowHeight-1) + 'px';
+  
+  document.documentElement.style.setProperty('--background-under-height', String(windowHeight * -1.2) + 'px');
+  renderBubbles();
+}
+
+function renderBubbles() {
+  const bubble_container = document.querySelector(".under");
+  for (var i = 0; i < 20; i++) {
+      var new_bubble = '<div class="bubble" style="'
+      bubble_left = String(Math.random() * 90 + 5) + '%'
+      bubble_width =  String(Math.random() * 30 + 10) + 'px'
+      bubble_delay =  String(Math.random() * 10) + 's'
+      bubble_duration = String(Math.random() * 12 + 3) + 's'
+      var style = `left:${bubble_left}; width:${bubble_width}; 
+      animation-delay:${bubble_delay}; animation-duration:${bubble_duration};`
+      new_bubble += `${style}"></div>`
+      bubble_container.innerHTML += new_bubble
   }
 }

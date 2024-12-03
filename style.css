@@ -13,8 +13,12 @@
   --gray70: hsl(0,0%, 70%);
   --gray30: hsl(0,0%, 30%);
   --grayo: hsl(0,0%,0%);
-  --bgrnd: #1f1f1f;
   --fgrnd: #eaeaea;
+  --bgrnd: #1f1f1f;
+  --gradient-bgrnd1: #141414;
+  --gradient-bgrnd2: #2b2b2b;
+
+  --background-under-height: -120vh;
 }
 
 * {
@@ -25,15 +29,22 @@
 
 body,
 html {
-  height: 100%;
-  min-height: 100svh;
-  max-height: 100lvh;
+  /* height: 100%; */
+  min-height: 100dvh;
+  /* max-height: 100lvh; */
   display: flex;
   flex-direction: column;
   font-family: var(--ff);
   /* background: linear-gradient(to right, #0066cc 20%, #01f573 80%); */
   background: var(--bgrnd);
   color: var(--fgrnd);
+  overflow-x: hidden;
+}
+
+.background {
+  position: absolute;
+  width: 100dvw;
+  min-height: 100%;
 }
 
 .container {
@@ -53,6 +64,7 @@ html {
 
 .home-container {
   height: 100%;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -642,8 +654,9 @@ h1 {
   text-align: center;
   padding: 20px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 25px;
   margin: 20px 0;
+  backdrop-filter: blur(10px);
 }
 
 .error-message {
@@ -1241,7 +1254,7 @@ textarea:-webkit-autofill:focus {
 }
 
 .tab-content.active {
-  display: block !important;
+  display: flex !important;
 }
 
 .match-flow {
