@@ -62,6 +62,8 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
             </div>
         <?php endif; ?>
     </div>
+
+    <?php include 'background-under.php'; ?>
     
     <?php if (isset($_SESSION['new_matches'])): ?>
     <script>

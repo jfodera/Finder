@@ -3,16 +3,48 @@
   src: url('assets/Baloo2-VariableFont_wght.ttf') format('truetype');
 }
 
+:root {
+  --ff: "Montserrat", sans-serif;
+  --h1: 700 1.5rem/1.4em var(--ff);
+  --h2: 700 1.25rem/1.4em var(--ff);
+  --p: 400 1rem/1.4em var(--ff);
+  --p2: 400 .8625rem/1.4em var(--ff);
+  --gray100: hsl(0,0%, 100%);
+  --gray70: hsl(0,0%, 70%);
+  --gray30: hsl(0,0%, 30%);
+  --grayo: hsl(0,0%,0%);
+  --fgrnd: #eaeaea;
+  --bgrnd: #1f1f1f;
+  --gradient-bgrnd1: #141414;
+  --gradient-bgrnd2: #2b2b2b;
+
+  --background-under-height: -120vh;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 body,
 html {
-  height: 100%;
-  margin: 0;
-  min-height: 100vh;
+  /* height: 100%; */
+  min-height: 100dvh;
+  /* max-height: 100lvh; */
   display: flex;
   flex-direction: column;
-  font-family: "Montserrat", sans-serif;
-  background: linear-gradient(to right, #0066cc 20%, #01f573 80%);
-  color: white;
+  font-family: var(--ff);
+  /* background: linear-gradient(to right, #0066cc 20%, #01f573 80%); */
+  background: var(--bgrnd);
+  color: var(--fgrnd);
+  overflow-x: hidden;
+}
+
+.background {
+  position: absolute;
+  width: 100dvw;
+  min-height: 100%;
 }
 
 .container {
@@ -27,10 +59,12 @@ html {
   text-align: center;
   width: 100%;
   box-sizing: border-box;
+  z-index: 100;
 }
 
 .home-container {
   height: 100%;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -625,8 +659,9 @@ h1 {
   text-align: center;
   padding: 20px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 25px;
   margin: 20px 0;
+  backdrop-filter: blur(10px);
 }
 
 .error-message {
@@ -1224,7 +1259,7 @@ textarea:-webkit-autofill:focus {
 }
 
 .tab-content.active {
-  display: block !important;
+  display: flex !important;
 }
 
 .match-flow {
