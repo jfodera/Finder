@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <!DOCTYPE html>
 <html lang="en">
 <body>
-<header class="global-header">
+<header class="global-header transparent">
     <div class="header-content">
         <!-- Uses php for the source so that this header can be used on multiple pages -->
          <!-- directly acter questionmark is if evaluates to true, after colon is false -->
@@ -18,8 +18,8 @@ if (session_status() === PHP_SESSION_NONE) {
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
-            <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
-                <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo.svg' : '../assets/logo.svg'); ?>" alt="Finder Logo">
+            <a id="logoLin" href="../index.php">
+                <img class="logo-image" src="../assets/logo.svg" alt="Finder Logo">
             </a>
             <ul>
                 <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="dashboard.php">Home</a></li>
@@ -58,7 +58,6 @@ if (session_status() === PHP_SESSION_NONE) {
     });
     document.addEventListener("scroll", (event) => {
         const Yoffset = window.scrollY;
-        // console.log(Yoffset);
         if (Yoffset > 150) {
             header.classList.remove('transparent')
         } else {
