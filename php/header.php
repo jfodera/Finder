@@ -43,9 +43,10 @@ if (session_status() === PHP_SESSION_NONE) {
 </header>
 </body>
 <script>
-    
-    nameElement = document.querySelector('#account-name');
-    nameElementInner = document.querySelector('#account-name-a');
+    const nameElement = document.querySelector('#account-name');
+    const nameElementInner = document.querySelector('#account-name-a');
+    const header = document.querySelector('.global-header')
+
     nameElement.addEventListener("mouseover", () => {
         nameElementInner.classList.add("logout-visible")
         setTimeout(function() {nameElementInner.innerHTML = "Logout"}, 100);
@@ -54,6 +55,15 @@ if (session_status() === PHP_SESSION_NONE) {
     nameElement.addEventListener("mouseout", () => {
         nameElementInner.classList.remove("logout-visible")
         setTimeout(function() {nameElementInner.innerHTML = "<?php echo $_SESSION['name'] ?>" }, 100);
+    });
+    document.addEventListener("scroll", (event) => {
+        const Yoffset = window.scrollY;
+        // console.log(Yoffset);
+        if (Yoffset > 150) {
+            header.classList.remove('transparent')
+        } else {
+            header.classList.add('transparent')
+        }
     });
 </script>
 </html>

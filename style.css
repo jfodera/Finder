@@ -147,7 +147,12 @@ html {
   right: 0;
   z-index: 1000;
   width: 100%;
-  font-family: 'Baloo-2';
+  background-color: var(--gradient-bgrnd1);
+  transition: .5s
+}
+
+.global-header:not(.transparent) {
+  backdrop-filter: blur(10px);
 }
 
 .header-content {
