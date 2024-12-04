@@ -260,7 +260,7 @@ h1 {
 .tab-content.active .items-grid,
 .items-grid.tab-content.active {
   display: grid !important;
-  grid-template-columns: repeat(5, 1fr) !important;
+  grid-template-columns: repeat(4, 1fr) !important;
   gap: 200px;
   padding: 20px;
   width: 100%;
@@ -1248,7 +1248,7 @@ textarea:-webkit-autofill:focus {
 }
 
 .tab-content.active {
-  display: block !important;
+  display: block;
 }
 
 .match-flow {
