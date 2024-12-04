@@ -32,7 +32,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
                 </div>
             </div>
 
-            <div id="matchesGrid" class="items-grid tab-content active">
+            <div id="matchesGrid" class="tab-content active">
                 <div class="match-flow">
                     <div class="loading">Loading matches overview...</div>
                 </div>
