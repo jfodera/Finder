@@ -3,84 +3,103 @@ session_start();
 include 'header.php';
 require_once '../db/db_connect.php';
 
+// Security helper functions
+function validateAndSanitizePath($path) {
+    $path = str_replace('..', '', $path);
+    $realPath = realpath($path);
+    $baseDir = realpath($_SERVER['DOCUMENT_ROOT']);
+    if ($realPath === false || strpos($realPath, $baseDir) !== 0) {
+        throw new Exception('Invalid path detected');
+    }
+    return $realPath;
+}
 
-//verification email functionality
+function validateRPIEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) && 
+           preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email);
+}
+
 function sendVerificationEmail($email, $token) {
-    //last arg is encryption protocol
-    $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
-        ->setUsername($_ENV['SMTP_USER'])
-        ->setPassword($_ENV['SMTP_PASS']); 
-
-    $mailer = new Swift_Mailer($transport);
-
-    $domain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'yourdomain.com';
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+    if (!validateRPIEmail($email)) {
+        throw new Exception('Invalid email format');
+    }
     
-    // makes the link to send to our emails
-    $verificationLink = $protocol . $domain . "/" . $_ENV['URL'] . "/php/verify_email.php?email=" . urlencode($email) . "&token=" . $token;
-
-    $message = (new Swift_Message('Verify your Finder account'))
-        ->setFrom([$_ENV['SMTP_USER'] => 'Finder'])
-        ->setTo([$email])
-        ->setBody(
-            '<html>' .
-            '<body>' .
-            '<h1>Welcome to Finder!</h1>' .
-            '<p>Please click the link below to verify your account:</p>' .
-            '<p><a href="' . $verificationLink . '">Verify Account</a></p>' .
-            '</body>' .
-            '</html>',
-            'text/html'
-        );
-
     try {
-        $result = $mailer->send($message);
-        return true;
+        $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
+            ->setUsername($_ENV['SMTP_USER'])
+            ->setPassword($_ENV['SMTP_PASS']); 
+
+        $mailer = new Swift_Mailer($transport);
+
+        $domain = filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_STRING);
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+        
+        $basePath = validateAndSanitizePath($_ENV['URL'] . "/php/verify_email.php");
+        $verificationLink = $protocol . $domain . $basePath . 
+            "?email=" . urlencode($email) . 
+            "&token=" . urlencode($token);
+
+        $message = (new Swift_Message('Verify your Finder account'))
+            ->setFrom([$_ENV['SMTP_USER'] => 'Finder'])
+            ->setTo([$email])
+            ->setBody(
+                '<html>' .
+                '<body>' .
+                '<h1>Welcome to Finder!</h1>' .
+                '<p>Please click the link below to verify your account:</p>' .
+                '<p><a href="' . htmlspecialchars($verificationLink) . '">Verify Account</a></p>' .
+                '</body>' .
+                '</html>',
+                'text/html'
+            );
+
+        return $mailer->send($message);
     } catch (Exception $e) {
-        $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
-        header("Location: user_register.php");
-        return false;
+        throw new Exception("Failed to send verification email: " . $e->getMessage());
     }
 }
 
+// CSRF Protection
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
-
-//Form submission for recorder
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $code = $_POST['code'];
-    
-    if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password) || empty($code)) {
-        $_SESSION['error'] = "All fields are required";
-        header("Location: recorder_register.php");
-        exit();
-    }
-
-    //only rpi users with a @rpi.edu email can register
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
-        $_SESSION['error'] = "Email must be an @rpi.edu address";
-        header("Location: recorder_register.php");
-        exit();
-    }
-
-    //password confirm
-    if ($password !== $confirm_password) {
-        $_SESSION['error'] = "Passwords do not match";
-        header("Location: recorder_register.php");
-        exit();
-    }
-    
     try {
-        // Check if email already exists
+        // CSRF check
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            throw new Exception('Invalid CSRF token');
+        }
+
+        // Validate and sanitize inputs
+        $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+        $code = filter_var($_POST['code'], FILTER_SANITIZE_STRING);
+        
+        // Input validation
+        if (empty($full_name) || empty($email) || empty($password) || 
+            empty($confirm_password) || empty($code)) {
+            throw new Exception('All fields are required');
+        }
+
+        if (!validateRPIEmail($email)) {
+            throw new Exception('Email must be an @rpi.edu address');
+        }
+
+        if ($password !== $confirm_password) {
+            throw new Exception('Passwords do not match');
+        }
+        
+        // Database operations
+        $pdo->beginTransaction();
+        
+        // Check if email exists
         $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
-            $_SESSION['error'] = "Email already exists";
-            header("Location: recorder_register.php");
-            exit();
+            throw new Exception('Email already exists');
         }
         
         // Validate recorder code
@@ -89,25 +108,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $recorder_code = $stmt->fetch();
         
         if (!$recorder_code) {
-            $_SESSION['error'] = "Invalid or used recorder code";
-            header("Location: recorder_register.php");
-            exit();
+            throw new Exception('Invalid or used recorder code');
         }
         
-
-        
-
-        // Insert new user, making multiple sql statement so put in commit block
-        $pdo->beginTransaction();
-        
+        // Create new user
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
         $verification_token = bin2hex(random_bytes(32));
-        // Split full name into first and last name
+        
+        // Split full name
         $name_parts = explode(" ", $full_name, 2);
         $first_name = $name_parts[0];
         $last_name = isset($name_parts[1]) ? $name_parts[1] : "";
         
+        // Insert user
         $stmt = $pdo->prepare("INSERT INTO users (email, password, first_name, last_name, verification_token, is_recorder) VALUES (?, ?, ?, ?, ?, TRUE)");
         $stmt->execute([$email, $hashed_password, $first_name, $last_name, $verification_token]);
         $user_id = $pdo->lastInsertId();
@@ -116,31 +129,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare("UPDATE recorder_codes SET user_id = ? WHERE code = ?");
         $stmt->execute([$user_id, $code]);
         
+        // Send verification email
+        sendVerificationEmail($email, $verification_token);
+        
         $pdo->commit();
 
-        //send verif email 
-
-        sendVerificationEmail($email, $verification_token);
-
-        //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
+        // Create resend verification form
         $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
-        <form method='post' style='display:inline;'>
-            <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
-            <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
-            <input type='hidden' name='resend_verification' value='1'>
-            <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
-                Resend verification email
-            </button>
-        </form>";
+            <form method='post' style='display:inline;'>
+                <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
+                <input type='hidden' name='csrf_token' value='" . htmlspecialchars($_SESSION['csrf_token']) . "'>
+                <input type='hidden' name='resend_verification' value='1'>
+                <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
+                    Resend verification email
+                </button>
+            </form>";
         
         header("Location: login.php");
         exit();
         
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         if ($pdo->inTransaction()) {
-            $pdo->rollBack(); //sql insertion failed
+            $pdo->rollBack();
         }
-        $_SESSION['error'] = "Database error: " . $e->getMessage();
+        $_SESSION['error'] = $e->getMessage();
         header("Location: recorder_register.php");
         exit();
     }
@@ -149,13 +161,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Recorder Register</title>
     <link rel="stylesheet" href="../style.css">
+    <?php
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; frame-ancestors 'none'");
+    header("X-Frame-Options: DENY");
+    header("X-Content-Type-Options: nosniff");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    ?>
 </head>
 
 <body>
@@ -164,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="logo">Finder</div>
             <?php
             if (isset($_SESSION['error'])) {
-                echo '<div class="error">' . $_SESSION['error'] . '</div>';
+                echo '<div class="error">' . htmlspecialchars($_SESSION['error']) . '</div>';
                 unset($_SESSION['error']);
             }
             ?>
@@ -174,6 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
                 <input type="text" name="code" placeholder="Recorder Code" required>
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                 <button type="submit" class="button button-account">Sign Up</button>
             </form>
             <div class="switch">
@@ -183,5 +202,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <script src="../script.js"></script>
 </body>
-
 </html>
