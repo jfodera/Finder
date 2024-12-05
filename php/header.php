@@ -25,20 +25,19 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="dashboard.php">Home</a></li>
                 <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : ''); ?>" href="about.php">About</a></li>
                 <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''); ?>" href="contact.php">Contact</a></li>
-                
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <!-- Links for logged in users -->
-                    <?php if ($_SESSION['is_recorder']): ?>
-                        <li><a href="found_item_form.php">Add Found Item</a></li>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <!-- Links for guests -->
-                    <li><a href="login.php">Login</a></li>
-                    <li><a href="user_type.php">Register</a></li>
-                <?php endif; ?>
             </ul>
         </nav>
-        <div id="account-name"><a id="account-name-a" href="logout.php"><?php echo $_SESSION['name'] ?></a></div>
+        <div class="nav-account-buttons">
+            <div class="main-form-button-container">
+                <?php if ($_SESSION['is_recorder']): ?>
+                    <a href="found_item_form.php" class="button main-form found-from">Add Found Item</a>
+                <?php else: ?>
+                    <a href="item_form_user.php" class="button main-form lost-from">Report Lost Item</a>
+                <?php endif; ?>
+            </div>
+            <div id="account-name"><a id="account-name-a" href="logout.php"><?php echo $_SESSION['name'] ?></a></div>
+        </div>
+        
     </div>
 </header>
 </body>

@@ -97,6 +97,7 @@ html {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+
 .button-account {
   padding: 15px 40px;
   border: 2px solid white;
@@ -182,6 +183,7 @@ html {
 }
 
 .global-header:not(.transparent) {
+  background-color: var(--bgrnd);
   backdrop-filter: blur(10px);
 }
 
@@ -189,7 +191,7 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 15px 20px 10px;
   box-sizing: border-box;
 }
 
@@ -244,13 +246,48 @@ html {
   opacity: .9;
 }
 
+.nav-account-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
+}
+
+.main-form-button-container {
+  transition: .5s;
+}
+.main-form-button-container:hover {
+  scale: 1.1;
+}
+
+.main-form {
+  padding: 8px 14px;
+  border: double 2px transparent;
+  border-radius: 30px;
+  background-image: linear-gradient(to right, #0066cc 20%, #01f573 80%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 400% 400%;
+  animation: mainFormButtonGradient 6s ease-in-out infinite alternate;
+  transition: .5s;
+}
+
+@keyframes mainFormButtonGradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 100% 50%;
+	}
+}
+
 #account-name-a {
   display: flex;
   font-size: 22px;
   text-decoration: none;
   font-weight: bold;
-  padding: 5px;
-  min-width: 80px;
+  padding: 8px 14px;
+  min-width: 105px;
   text-align: right;
   justify-content: center;
   border-radius: 25px;
@@ -262,10 +299,8 @@ html {
 }
 
 .logout-visible {
-  /* border-radius: 25px; */
   background-color: white;
   color: black;
-  scale: 1.05;
 }
 
 /* Mobile Styles */
