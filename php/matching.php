@@ -57,7 +57,7 @@ try {
             }
       
             if ($data1['data']['group'] === $data2['data']['group']) {
-                return 1;
+                return 0.9;
             } else {
                 return 0; 
             }
