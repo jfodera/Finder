@@ -29,6 +29,44 @@ try {
         return $word . 's';
     }
 
+    function AreColorSimilar($word1, $word2)
+    {
+        // Remove extra whitespace from color names
+        $color1 = preg_replace('/\s+/', '', $word1);
+        $color2 = preg_replace('/\s+/', '', $word2);
+
+        try {
+            $apiUrlColor1 = "https://www.csscolorsapi.com/api/colors/" . urlencode($color1);
+            $apiUrlColor2 = "https://www.csscolorsapi.com/api/colors/" . urlencode($color2);
+
+            $context = stream_context_create(['http' => ['timeout' => 2]]);
+
+            $response1 = @file_get_contents($apiUrlColor1, false, $context);
+            $response2 = @file_get_contents($apiUrlColor2, false, $context);
+
+            if ($response1 === false || $response2 === false) {
+                debug_log("API call failed for color comparison");
+                return 0;
+            }
+            $data1 = json_decode($response1, true);
+            $data2 = json_decode($response2, true);
+
+            if (!isset($data1['data']['group']) || !isset($data2['data']['group'])) {
+                debug_log("Color group data is missing in the API response");
+                return 0;
+            }
+      
+            if ($data1['data']['group'] === $data2['data']['group']) {
+                return 1;
+            } else {
+                return 0; 
+            }
+        } catch (Exception $e) {
+            debug_log("Color comparison error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
     function areWordsSimilar($word1, $word2) {
         if ($word1 === $word2) {
             return 1; // Words are identical
