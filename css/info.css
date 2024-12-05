@@ -1,29 +1,29 @@
-
-
-
-.item_form_container {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 40px;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    width: 300px;
+.question {
+    height: fit-content;
+}
+.question > h1 {
+    margin: 20px 0 10px; 
 }
 
-
-
 .item_form_container {
     background: rgba(255, 255, 255, 0.1);
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 50%;
     backdrop-filter: blur(10px);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    max-width: 650px;
+    width: 45%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .item_form_container h2 {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
+    margin-bottom: 10px;
+}
+.page:not(.page-1) > h2 {
+    margin-bottom: -10px;
 }
 
 
@@ -31,21 +31,27 @@
     font-weight: 100;
     font-size: 1em; 
 }
-
+.page > h3 {
+    margin-bottom: 1.5rem;
+}
 
 .item_form_container form {
+    width: 70%;
+    aspect-ratio: 1;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
-    gap: 15px;
 }
 
 .item_form_container input {
     padding: 12px;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     background: rgba(255, 255, 255, 0.2);
     color: white;
     font-size: 16px;
+    margin-bottom: 0px;
 }
 
 .item_form_container input::placeholder {
@@ -59,13 +65,19 @@
 
 .page{
     display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    row-gap: 5px;
 }
+
 .page.active{
-    display: block;
+    display: flex;
 }
 
 .form_group {
-    margin-top: 20px;
     width: 100%;
 }
 .form_group input{
@@ -88,8 +100,6 @@ button.prev-btn{
 button.prev-btn,
 button.next-btn,
 button.submit-btn{
-    
-    margin-top: 20px;
     padding: 10px 30px;
     border: 2px solid white;
     color: black;
@@ -97,14 +107,22 @@ button.submit-btn{
     text-decoration: none;
     font-size: 18px;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: 0.5s;
 }
 
 button.prev-btn:hover,
 button.next-btn:hover,
 button.submit-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    scale: 1.1;
 } 
+
+.form-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
 
 #upload_image{
     width:180px;
@@ -114,13 +132,18 @@ button.submit-btn:hover {
 #item_img{
     display: block;
     width: 200px;
-    background: navy;
-    color:#fff;
-    padding: 12px;
-    margin: 10px auto;
-    border-radius: 5px;
+    background: var(--fgrnd);
+    color: var(--bgrnd);
+    padding: 8px 14px;
+    margin-top: 10px;
+    border-radius: 30px;
     cursor: pointer;
+    transition: .5s;
 }
+#item_img:hover {
+    scale: 1.1;
+}
+
 #input-file{
     display: none;
 }

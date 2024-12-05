@@ -16,7 +16,7 @@
             position: absolute;
             background-color: white;
             bottom: -50px;
-            opacity: 0.2;
+            opacity: 0.1;
             animation: bubble 15s ease-in-out infinite,
                 sideWays 4s ease-in-out infinite alternate;
         }
@@ -24,10 +24,10 @@
         @keyframes bubble {
             0% {
                 transform: translateY(0%);
-                opacity: 0.03;
+                opacity: 0.01;
             }
             90% {
-                opacity: .1;
+                opacity: .09;
             }
             100% {
                 transform: translateY(var(--background-under-height));

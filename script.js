@@ -820,11 +820,17 @@ function updateMatchHighlighting() {
 }
 
 function backgroundResize() {
-  const windowHeight = document.querySelector('body').offsetHeight;
-  document.querySelector('.under').style.height = String(windowHeight-1) + 'px';
+  const body = document.querySelector('body');
+  var bodyHeight;
+  setTimeout(function () {
+    bodyHeight = body.offsetHeight
+    console.log(bodyHeight)
+    document.querySelector('.under').style.height = String(bodyHeight-1) + 'px';
   
-  document.documentElement.style.setProperty('--background-under-height', String(windowHeight * -1.2) + 'px');
+  document.documentElement.style.setProperty('--background-under-height', String(bodyHeight * -1.2) + 'px');
   renderBubbles();
+  }, 20);
+  
 }
 
 function renderBubbles() {
@@ -840,4 +846,8 @@ function renderBubbles() {
       new_bubble += `${style}"></div>`
       bubble_container.innerHTML += new_bubble
   }
+}
+
+window.onload = function() {
+  backgroundResize();
 }
