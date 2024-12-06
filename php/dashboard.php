@@ -20,7 +20,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
 </head>
 <body>
     <div class="container">
-        <h1 class="dashboard-heading">Welcome to your Dashboard</h1>
+        <!-- <h1 class="dashboard-heading">Potenital Matches</h1> -->
         
         <?php if ($is_recorder): ?>
             <div class="action-buttons">

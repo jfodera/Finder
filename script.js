@@ -1,26 +1,30 @@
 function createItemCard(item, type = "lost") {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
+  console.log(item.image_url)
   return `
         <div class="item-card ${statusClass}">
-            <img src="${item.image_url || "../default_image.png"}" alt="${
+            <img src="${item.image_url || "./../assets/placeholderImg.svg" }" alt="${
     item.item_type
   }" class="item-image">
             <div class="item-header">
                 <div class="item-type">${item.item_type}</div>
+                <div>${item.brand || "N/A"} | ${item.color || "N/A"}</div>
+                ${item.status !== 'lost' ? `
                 <div class="item-status ${statusClass}">${item.status}</div>
+                ` : ''}
             </div>
             <div class="item-description">
-                <div><strong>Brand:</strong> ${item.brand || "N/A"}</div>
-                <div><strong>Color:</strong> ${item.color || "N/A"}</div>
                 ${
                   item.additional_info
                     ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>`
                     : ""
                 }
                 <div><strong>Location:</strong> ${item.locations || "N/A"}</div>
+                ${window.isRecorder ? `
                 <div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>
                 <div><strong>Found by:</strong> ${item.finder_name || "N/A"}</div>
+                ` : ''}
             </div>
             <div class="item-details">
                 <div><strong>${
@@ -31,7 +35,9 @@ function createItemCard(item, type = "lost") {
                 <div><strong>Reported on:</strong> ${new Date(
                   item.created_at
                 ).toLocaleString()}</div>
+                ${window.isRecorder ? `
                 <div><strong>Item ID:</strong> ${item.item_id}</div>
+                ` : ''}
             </div>
         </div>
     `;
@@ -180,7 +186,7 @@ function createMatchFlow(matches) {
 function createFlowCard(item, type) {
   return `
       <div class="flow-card" data-id="${item.item_id}">
-        <img src="${item.image_url || "../default_image.png"}" alt="${
+        <img src="${item.image_url || "./../assets/placeholderImg.svg"}" alt="${
     item.item_type
   }" class="item-thumb">
         <div class="flow-info">
@@ -199,7 +205,7 @@ function createUserMatchCard(match) {
       <div class="user-match-card ${match.status}">
         <div class="found-item-details">
           <img src="${
-            match.found_item.image_url || "../default_image.png"
+            match.found_item.image_url || "./../assets/placeholderImg.svg"
           }" alt="${match.found_item.item_type}" class="match-image">
           <div class="match-info">
             <h4>Potential Match Found!</h4>
@@ -494,7 +500,7 @@ function initializeForm() {
         if (!validTypes.includes(file.type)) {
           alert("Please upload only JPEG or PNG images");
           this.value = "";
-          imagePreview.src = "../default_image.png";
+          imagePreview.src = "./../assets/placeholderImg.svg";
           return;
         }
 
@@ -502,7 +508,7 @@ function initializeForm() {
         if (file.size > 5 * 1024 * 1024) {
           alert("Please upload an image smaller than 5MB");
           this.value = "";
-          imagePreview.src = "../default_image.png";
+          imagePreview.src = "./../assets/placeholderImg.svg";
           return;
         }
 
