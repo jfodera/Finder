@@ -1,6 +1,10 @@
 <?php 
 session_start();
-include 'header.php';
+$headerPath = realpath(__DIR__ . '/header.php');
+if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DOCUMENT_ROOT']))) {
+    die('Invalid header path');
+}
+include $headerPath;
 require_once '../db/db_connect.php';
 
 
