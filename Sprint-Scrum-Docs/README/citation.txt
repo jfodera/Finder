@@ -11,6 +11,8 @@ CDN
 Email:
 -Gmail SMTP: https://developers.google.com/gmail/imap/imap-smtp
 
+Groq (AI API): https://docs.x.ai/docs
+
 PHP Libraries
 -SwiftMailer  
 -Guzzle

@@ -1,8 +1,12 @@
 <?php
 require_once '../db/db_connect.php';
+require_once '../vendor/autoload.php';
 
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 if (!function_exists('debug_log')) {
     function debug_log($message, $data = null) {
