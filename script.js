@@ -857,3 +857,67 @@ window.onclick = function(event) {
       closeImageModal();
   }
 }
+
+async function getGrokScore(lostItem, foundItem) {
+  try {
+      // First get the API key
+      const keyResponse = await fetch('getApiKey.php');
+      const { key } = await keyResponse.json();
+
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + key
+          },
+          body: JSON.stringify({
+              messages: [
+                  {
+                      role: "system",
+                      content: "You are an AI system specialized in matching lost and found items. Compare items and rate their similarity from 0 to 1."
+                  },
+                  {
+                      role: "user",
+                      content: `Compare these items and return only a number between 0 and 1:
+                          Lost Item: ${lostItem.item_type}, ${lostItem.brand}, ${lostItem.color}
+                          Found Item: ${foundItem.item_type}, ${foundItem.brand}, ${foundItem.color}
+                          
+                          Consider:
+                          1. Core matching (40%): Same type of item?
+                          2. Brand/Model (25%): Exact or similar brands?
+                          3. Physical traits (20%): Color match?
+                          4. Time/Location (15%): Found after lost?
+                          
+                          Return only a number between 0 and 1.`
+                  }
+              ],
+              model: 'grok-beta',
+              stream: false,
+              temperature: 0.2
+          })
+      });
+
+      if (!response.ok) throw new Error('Grok API call failed');
+
+      const data = await response.json();
+      const score = parseFloat(data.choices[0].message.content);
+
+      // Send score back to PHP
+      const scoreResponse = await fetch('processGrokScore.php', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              lost_item_id: lostItem.item_id,
+              found_item_id: foundItem.item_id,
+              grok_score: score
+          })
+      });
+
+      return await scoreResponse.json();
+  } catch (error) {
+      console.error('Error:', error);
+      return null;
+  }
+}
