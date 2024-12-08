@@ -1,8 +1,12 @@
 <?php
 require_once '../db/db_connect.php';
+require_once '../vendor/autoload.php';
 
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 if (!function_exists('debug_log')) {
     function debug_log($message, $data = null) {
@@ -66,6 +70,74 @@ try {
         return 0;
     }
 
+    function getGrokScore($lostItem, $foundItem) {
+        try {
+            $ch = curl_init('https://api.x.ai/v1/chat/completions');
+            
+            $data = [
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => 'You are an AI system specialized in matching lost and found items. Compare items and rate their similarity from 0 to 1.'
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => "Compare these items and return only a number between 0 and 1:
+                            Lost Item: {$lostItem['item_type']}, {$lostItem['brand']}, {$lostItem['color']}
+                            Found Item: {$foundItem['item_type']}, {$foundItem['brand']}, {$foundItem['color']}
+                            
+                            Consider:
+                            1. Core matching (40%): Same type of item?
+                            2. Brand/Model (25%): Exact or similar brands?
+                            3. Physical traits (20%): Color match?
+                            4. Time/Location (15%): Found after lost?
+                            
+                            Return only a number between 0 and 1."
+                    ]
+                ],
+                'model' => 'grok-beta',
+                'stream' => false,
+                'temperature' => 0.2
+            ];
+
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $_ENV['XAI_API_KEY']
+                ],
+                CURLOPT_POSTFIELDS => json_encode($data)
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                debug_log("Grok API error", ['http_code' => $httpCode, 'response' => $response]);
+                return null;
+            }
+
+            if ($response) {
+                $result = json_decode($response, true);
+                $score = isset($result['choices'][0]['message']['content']) ? 
+                    floatval($result['choices'][0]['message']['content']) : null;
+                
+                debug_log("Grok score calculated", [
+                    'lost_item' => $lostItem['item_type'],
+                    'found_item' => $foundItem['item_type'],
+                    'score' => $score
+                ]);
+                
+                return $score;
+            }
+        } catch (Exception $e) {
+            debug_log("Grok API error", ['error' => $e->getMessage()]);
+        }
+        return null;
+    }
+
     function findMatchesForLostItems($pdo, $specificItemId = null) {
         debug_log("Starting findMatchesForLostItems", ['specificItemId' => $specificItemId]);
         
@@ -112,6 +184,7 @@ try {
                     $checkStmt->execute([$lostItem['item_id'], $foundItem['item_id']]);
                     
                     if (!$checkStmt->fetch()) {
+                        // Calculate traditional score
                         $typeScore = areWordsSimilar(
                             strtolower($lostItem['item_type']), 
                             strtolower($foundItem['item_type'])
@@ -126,17 +199,28 @@ try {
                         );
                         $dateScore = (strtotime($lostItem['lost_time']) >= strtotime($foundItem['found_time'])) ? 0 : 1;
 
-                        $similarityScore = 
+                        $traditionalScore = 
                             $weights['type'] * $typeScore +
                             $weights['color'] * $colorScore +
                             $weights['brand'] * $brandScore +
                             $weights['date'] * $dateScore;
+
+                        // Get Grok score
+                        $grokScore = getGrokScore($lostItem, $foundItem);
+
+                        // Calculate final similarity score
+                        $similarityScore = $grokScore !== null 
+                            ? ($grokScore * 0.6 + $traditionalScore * 0.4)  // 60% Grok, 40% traditional
+                            : $traditionalScore;  // Fallback to traditional if Grok fails
                         
                         debug_log("Calculated similarity", [
                             'lost_id' => $lostItem['item_id'],
                             'found_id' => $foundItem['item_id'],
-                            'score' => $similarityScore
+                            'traditional_score' => $traditionalScore,
+                            'grok_score' => $grokScore,
+                            'final_score' => $similarityScore
                         ]);
+
                         if ($similarityScore >= 0.5) {
                             try {
                                 $insertStmt = $pdo->prepare("
