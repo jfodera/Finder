@@ -1,5 +1,3 @@
-<?php include 'header.php'; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +7,9 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="container">
+    <?php include 'header.php'; ?>
+    <div class="container login-register">
         <div class="form-container">
-            <div class="logo">Finder</div>
             <h2>Regristration User Type</h2>
             <div class="buttons">
                 <a href="user_register.php" class="button">User</a>
@@ -22,6 +20,7 @@
             </div>
         </div>
     </div>
+    <?php include 'background-under.php'; ?>
     <script src="../script.js"></script>
 </body>
 </html>

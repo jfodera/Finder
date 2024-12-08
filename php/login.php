@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['error'] = "All fields are required";
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT user_id, email, password, is_recorder, is_verified FROM users WHERE email = ?");
+            $stmt = $pdo->prepare("SELECT user_id, first_name, email, password, is_recorder, is_verified FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
@@ -60,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($user['is_verified']) {
                     $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['email'] = $user['email'];
+                    $_SESSION['name'] = $user['first_name'];
                     $_SESSION['is_recorder'] = $user['is_recorder'];
                     
                     header("Location: dashboard.php");
@@ -118,9 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container login-register">
         <div class="form-container">
-            <div class="logo">Finder</div>
             <h2>Login</h2>
             <?php
                 if (isset($_SESSION['error'])) {
@@ -136,13 +136,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form action="login.php" method="post">
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" class="button button-account">Login</button>
+                <button type="submit" class="button button-account">Continue</button>
             </form>
             <div class="switch">
                 Don't have an account? <a href="user_type.php">Sign up</a>
             </div>
         </div>
     </div>
+    <?php include 'background-under.php'; ?>
     <script src="../script.js"></script>
 </body>
 </html>
