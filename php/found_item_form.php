@@ -159,10 +159,8 @@ foreach ($locations as $location) {
                     <img id="upload_image" src="./../assets/placeholderImg.svg" alt="Preview of the found item">
                     <label id="item_img" for="input-file">Upload Image</label>
                     <div class="form_group">
-                        <input id="input-file" 
-                               type="file" 
-                               name="image" 
-                               accept="image/jpeg,image/png,image/jpg">
+                        <input id="input-file" type="file" name="image" accept="image/jpeg,image/png,image/jpg">
+                        <div class="error-message">Please upload a valid image file (JPG or PNG, max 5MB)</div>
                     </div>
                     <div class="form-buttons">
                         <button type="button" class="prev-btn">Go Back</button>

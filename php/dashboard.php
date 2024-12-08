@@ -31,7 +31,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
                 </div>
             </div>
 
-            <div id="matchesGrid" class="items-grid tab-content active">
+            <div id="matchesGrid" class="tab-content active">
                 <div class="match-flow">
                     <div class="loading">Loading matches overview...</div>
                 </div>
@@ -54,7 +54,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
                 <div id="itemsGrid" class="items-grid tab-content active">
                     <div class="loading">Loading your items...</div>
                 </div>
-                <div id="userMatchesGrid" class="items-grid tab-content">
+                <div id="userMatchesGrid" class="potential-matches tab-content">
                     <div class="loading">Loading potential matches...</div>
                 </div>
             </div>
@@ -63,6 +63,12 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
 
     <?php include 'background-under.php'; ?>
     
+
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <img id="modalImage" class="modal-content" src="" alt="Zoomed image">
+    </div>
     <?php if (isset($_SESSION['new_matches'])): ?>
     <script>
         const newMatchesCount = <?php echo $_SESSION['new_matches']; ?>;

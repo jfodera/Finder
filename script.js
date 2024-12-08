@@ -1,12 +1,23 @@
-function createItemCard(item, type = "lost") {
+// itemcard for the dashboard
+function createItemCard(item, type) {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
-  console.log(item.image_url)
+
+  // Determine which field to show based on type
+  // if type is lost, show reporter_name
+  // if type is found, show recorder_name
+
+  let creatorLine = "";
+  if (type === "lost") {
+    creatorLine = `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`;
+  } else if (type === "found") {
+    creatorLine = `<div><strong>Found by:</strong> ${item.recorder_name || "N/A"}</div>`;
+  }
+
   return `
         <div class="item-card ${statusClass}">
-            <img src="${item.image_url || "./../assets/placeholderImg.svg" }" alt="${
-    item.item_type
-  }" class="item-image">
+            <img src="${item.image_url || "./../assets/placeholderImg.svg" }" alt="${item.item_type}" class="item-image">
+
             <div class="item-header">
                 <div class="item-type">${item.item_type}</div>
                 <div>${item.brand || "N/A"} | ${item.color || "N/A"}</div>
@@ -14,35 +25,23 @@ function createItemCard(item, type = "lost") {
                 <div class="item-status ${statusClass}">${item.status}</div>
                 ` : ''}
             </div>
+
             <div class="item-description">
-                ${
-                  item.additional_info
-                    ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>`
-                    : ""
-                }
+                ${item.additional_info ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>` : ""}
                 <div><strong>Location:</strong> ${item.locations || "N/A"}</div>
-                ${window.isRecorder ? `
-                <div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>
-                <div><strong>Found by:</strong> ${item.finder_name || "N/A"}</div>
-                ` : ''}
+                ${creatorLine}
             </div>
+
             <div class="item-details">
-                <div><strong>${
-                  type === "lost" ? "Lost" : "Found"
-                } on:</strong> ${new Date(
-    item[dateField]
-  ).toLocaleString()}</div>
-                <div><strong>Reported on:</strong> ${new Date(
-                  item.created_at
-                ).toLocaleString()}</div>
-                ${window.isRecorder ? `
-                <div><strong>Item ID:</strong> ${item.item_id}</div>
-                ` : ''}
+                <div><strong>${type === "lost" ? "Lost" : "Found"} on:</strong> ${new Date(item[dateField]).toLocaleString()}</div>
+                <div><strong>Reported on:</strong> ${new Date(item.created_at).toLocaleString()}</div>
+                ${window.isRecorder ? `<div><strong>Item ID:</strong> ${item.item_id}</div>` : ''}
             </div>
         </div>
     `;
 }
 
+// Fetch items from the db
 async function fetchItems(endpoint) {
   try {
     const response = await fetch(endpoint);
@@ -57,10 +56,12 @@ async function fetchItems(endpoint) {
   }
 }
 
+// function to initialize the tabs
 function initializeTabs() {
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
 
+  // Set the first tab as active by default
   if (tabButtons.length > 0) {
     tabButtons[0].classList.add("active");
     if (tabContents.length > 0) {
@@ -68,67 +69,85 @@ function initializeTabs() {
     }
   }
 
+  // allows the user to switch between tabs and renders the content of each tab
   tabButtons.forEach((button) => {
     button.addEventListener("click", async () => {
+      
+      // when a tab is clicked, remove the active class from all tabs and contents
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
+     
       button.classList.add("active");
       const baseId = button.dataset.tab;
       const tabId = window.isRecorder ? 
                     baseId + "ItemsGrid" : 
                     (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
-
+      
       const content = document.getElementById(tabId);
+      // if the tab is maches, render the matches and if the tab is lost or found, render the items
       if (content) {
         content.classList.add("active");
         if (baseId === 'matches') {
-          await renderMatches(); // Call renderMatches for both recorders and non-recorders
-        } else if (baseId === 'lost') {
-          await renderItems(); // Ensure lost items are rendered if needed
+          await renderMatches();
+        } else if (baseId === 'lost' || baseId === 'found') {
+          await renderItems();
         }
       }
     });
   });
 }
 
-
+// function to render everything on dasboard
 async function renderItems() {
+
+  // if the user is a recorder, render the items for the recorder
   if (window.isRecorder) {
+    // Get active tab
+    const activeTab = document.querySelector('.tab-button.active').dataset.tab;
     const lostItemsGrid = document.getElementById("lostItemsGrid");
     const foundItemsGrid = document.getElementById("foundItemsGrid");
 
     try {
-      const [lostItems, foundItems] = await Promise.all([
-        fetchItems("getLostItems.php"),
-        fetchItems("getFoundItems.php")
-      ]);
-
-      if (lostItemsGrid) {
-        lostItemsGrid.innerHTML = lostItems.length > 0
-          ? lostItems.map(item => createItemCard(item, "lost")).join("")
-          : '<p class="no-items">No lost items reported.</p>';
+      // if active tab is lost, fetch lost items
+      if (activeTab === 'lost') {
+        const lostItems = await fetchItems("getLostItems.php");
+        if (lostItemsGrid) {
+          lostItemsGrid.innerHTML = lostItems.length > 0
+            ? lostItems.map(item => createItemCard(item, "lost")).join("")
+            : '<p class="no-items">No lost items reported.</p>';
+            backgroundResize();
+        }
       }
-
-      if (foundItemsGrid) {
-        foundItemsGrid.innerHTML = foundItems.length > 0
-          ? foundItems.map(item => createItemCard(item, "found")).join("")
-          : '<p class="no-items">No found items reported.</p>';
+      // if active tab is found, fetch found items
+      else if (activeTab === 'found') {
+        const foundItems = await fetchItems("getFoundItems.php");
+        if (foundItemsGrid) {
+          foundItemsGrid.innerHTML = foundItems.length > 0
+            ? foundItems.map(item => createItemCard(item, "found")).join("")
+            : '<p class="no-items">No found items reported.</p>';
+            backgroundResize();
+        }
       }
     } catch (error) {
       console.error("Error rendering items:", error);
       const errorMessage = '<p class="error-message">Failed to load items.</p>';
-      if (lostItemsGrid) lostItemsGrid.innerHTML = errorMessage;
-      if (foundItemsGrid) foundItemsGrid.innerHTML = errorMessage;
+      if (activeTab === 'lost' && lostItemsGrid) {
+        lostItemsGrid.innerHTML = errorMessage;
+      }
+      if (activeTab === 'found' && foundItemsGrid) {
+        foundItemsGrid.innerHTML = errorMessage;
+      }
     }
   } else {
+    // else render the items for the regular user
     const itemsGrid = document.getElementById("itemsGrid");
     if (!itemsGrid) return;
-
+    // calls getUserItems.php to fetch all lost items for the user
     try {
       const items = await fetchItems("getUserItems.php");
       itemsGrid.innerHTML = items.length > 0
-        ? items.map(item => createItemCard(item)).join("")
+        ? items.map(item => createItemCard(item, "lost")).join("")
         : '<p class="no-items">No items found.</p>';
     } catch (error) {
       console.error("Error rendering items:", error);
@@ -137,6 +156,7 @@ async function renderItems() {
   }
 }
 
+// function to create the match flow 
 function createMatchFlow(matches) {
   let html = `
       <div class="match-flow">
@@ -183,6 +203,7 @@ function createMatchFlow(matches) {
   return html;
 }
 
+// creates the flow card for the match flow
 function createFlowCard(item, type) {
   return `
       <div class="flow-card" data-id="${item.item_id}">
@@ -200,6 +221,9 @@ function createFlowCard(item, type) {
     `;
 }
 
+// creates the middle card where the recorder can confirm or reject the match
+// idea behind this was for user to go to pubsafe
+// and pubsafe would reject or accept the match
 function createUserMatchCard(match) {
   return `
       <div class="user-match-card ${match.status}">
@@ -232,6 +256,7 @@ function createUserMatchCard(match) {
     `;
 }
 
+// function to handle the match for the recorder
 async function handleMatch(matchId, action) {
   try {
     const response = await fetch('handleMatch.php', {
@@ -255,6 +280,7 @@ async function handleMatch(matchId, action) {
   }
 }
 
+// function to handle the match for the user
 async function handleUserMatch(matchId, action) {
   try {
     const response = await fetch('handleUserMatch.php', {
@@ -277,6 +303,8 @@ async function handleUserMatch(matchId, action) {
     alert('An error occurred. Please try again.');
   }
 }
+
+// function to render the matches
 async function renderMatches() {
   // Clear current content first
   const matchesGrid = window.isRecorder ? 
@@ -286,6 +314,8 @@ async function renderMatches() {
   if (!matchesGrid) return;
   matchesGrid.innerHTML = '<div class="loading">Loading matches...</div>';
   updateMatchHighlighting();
+
+  // calls getMatches.php to fetch all the matches
   try {
     const matches = await fetchItems("getMatches.php");
 
@@ -294,7 +324,10 @@ async function renderMatches() {
         ? createMatchFlow(matches)
         : '<p class="no-items">No potential matches found.</p>';
       
+      // if there are matches, the recorder can confirm or reject the match
       if (matches.length) {
+        // when the recorder clicks on check mark it will confirm the match
+        // when the recorder clicks on the x it will reject the match
         matches.forEach(match => {
           const actionBtns = matchesGrid.querySelectorAll(`[data-match-id="${match.match_id}"] .action-btn`);
           actionBtns.forEach(btn => {
@@ -313,76 +346,6 @@ async function renderMatches() {
   } catch (error) {
     console.error("Error rendering matches:", error);
     matchesGrid.innerHTML = '<p class="error-message">Failed to load matches.</p>';
-  }
-}
-
-async function renderItems() {
-  if (window.isRecorder) {
-    const lostItemsGrid = document.getElementById("lostItemsGrid");
-    const foundItemsGrid = document.getElementById("foundItemsGrid");
-
-    try {
-      // Fetch lost items
-      const lostItems = await fetchItems("getLostItems.php");
-      if (lostItemsGrid) {
-        console.log("Lost items:", lostItems); // Debug log
-        if (lostItems && lostItems.length > 0) {
-          lostItemsGrid.innerHTML = lostItems
-            .map((item) => createItemCard(item, "lost"))
-            .join("");
-        } else {
-          lostItemsGrid.innerHTML =
-            '<p class="no-items">No lost items reported.</p>';
-        }
-      }
-
-      // Fetch found items
-      const foundItems = await fetchItems("getFoundItems.php");
-      if (foundItemsGrid) {
-        console.log("Found items:", foundItems); // Debug log
-        if (foundItems && foundItems.length > 0) {
-          foundItemsGrid.innerHTML = foundItems
-            .map((item) => createItemCard(item, "found"))
-            .join("");
-        } else {
-          foundItemsGrid.innerHTML =
-            '<p class="no-items">No found items reported.</p>';
-        }
-      }
-
-      // Ensure tabs are initialized after content is loaded
-      initializeTabs();
-    } catch (error) {
-      console.error("Error rendering items:", error);
-      if (lostItemsGrid) {
-        lostItemsGrid.innerHTML =
-          '<p class="error-message">Failed to load lost items.</p>';
-      }
-      if (foundItemsGrid) {
-        foundItemsGrid.innerHTML =
-          '<p class="error-message">Failed to load found items.</p>';
-      }
-    }
-  } else {
-    // Regular user view - fetch and display only their lost items
-    const itemsGrid = document.getElementById("itemsGrid");
-    if (itemsGrid) {
-      try {
-        const items = await fetchItems("getUserItems.php");
-        if (items && items.length > 0) {
-          itemsGrid.innerHTML = items
-            .map((item) => createItemCard(item))
-            .join("");
-            backgroundResize();
-        } else {
-          itemsGrid.innerHTML = '<p class="no-items">No items found.</p>';
-        }
-      } catch (error) {
-        console.error("Error rendering items:", error);
-        itemsGrid.innerHTML =
-          '<p class="error-message">Failed to load items. Please try again later.</p>';
-      }
-    }
   }
 }
 
@@ -825,6 +788,80 @@ function updateMatchHighlighting() {
   }
 }
 
+function handleImagePreview(imageInput, previewElement) {
+  imageInput.addEventListener("change", function(e) {
+    if (this.files && this.files[0]) {
+      const file = this.files[0];
+      const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+
+      if (!validTypes.includes(file.type)) {
+        alert("Please upload only JPEG or PNG images");
+        this.value = "";
+        previewElement.src = ".././../assets/placeholderImg.svg";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Please upload an image smaller than 5MB");
+        this.value = "";
+        previewElement.src = "./../assets/placeholderImg.svg";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Create a temporary image to get dimensions
+        const img = new Image();
+        img.onload = function() {
+          previewElement.src = e.target.result;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+// Initialize image handling in form initialization
+const imageInput = document.getElementById("input-file");
+const imagePreview = document.getElementById("upload_image");
+if (imageInput && imagePreview) {
+  handleImagePreview(imageInput, imagePreview);
+}
+
+// Image modal functionality
+function openImageModal(imageSrc, title) {
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const modalTitle = document.getElementById('modalTitle');
+  
+  modal.style.display = "flex";
+  modalImg.src = imageSrc;
+  modalTitle.textContent = title;
+  
+  // fade in modal effect
+  setTimeout(() => {
+      modal.style.opacity = "1";
+  }, 100);
+}
+
+// Close image modal
+function closeImageModal() {
+  const modal = document.getElementById('imageModal');
+  modal.style.opacity = "0";
+  setTimeout(() => {
+      modal.style.display = "none";
+  }, 300);
+}
+
+// Close modal when clicking outside the image
+window.onclick = function(event) {
+  const modal = document.getElementById('imageModal');
+  if (event.target === modal) {
+      closeImageModal();
+  }
+}
+
 function backgroundResize() {
   const body = document.querySelector('body');
   var bodyHeight;
@@ -835,7 +872,7 @@ function backgroundResize() {
   
   document.documentElement.style.setProperty('--background-under-height', String(bodyHeight * -1.2) + 'px');
   renderBubbles();
-  }, 20);
+  }, 100);
   
 }
 

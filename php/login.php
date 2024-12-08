@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     
     if (empty($email) || empty($password)) {
-        $error = "All fields are required";
+        $_SESSION['error'] = "All fields are required";
     } else {
         try {
             $stmt = $pdo->prepare("SELECT user_id, first_name, email, password, is_recorder, is_verified FROM users WHERE email = ?");
@@ -87,9 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 Resend verification email
                             </button>
                         </form>";
-
                     } else {
-                        
                         $_SESSION['error'] = "Please verify your email before logging in. 
                                 <form method='post' style='display:inline;'>
                                     <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
@@ -103,11 +101,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             } else {
                 $_SESSION['error'] = "Invalid email or password";
-                exit();
             }
         } catch (PDOException $e) {
             $_SESSION['error'] = "Database error: " . $e->getMessage();
-            exit();
         }
     }
 }
@@ -128,13 +124,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h2>Login</h2>
             <?php
                 if (isset($_SESSION['error'])) {
-                  echo '<div class="error">' . $_SESSION['error'] . '</div>';
-                  unset($_SESSION['error']);
-               }
-               //so they can see verif message
-               if (isset($_SESSION['mess'])) {
-                echo '<div class="error">' . $_SESSION['mess'] . '</div>';
-                unset($_SESSION['mess']);
+                    echo '<div class="error">' . $_SESSION['error'] . '</div>';
+                    unset($_SESSION['error']);
+                }
+                //so they can see verif message
+                if (isset($_SESSION['mess'])) {
+                    echo '<div class="error">' . $_SESSION['mess'] . '</div>';
+                    unset($_SESSION['mess']);
                 }
             ?>
             <form action="login.php" method="post">

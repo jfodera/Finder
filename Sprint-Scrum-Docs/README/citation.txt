@@ -1,7 +1,21 @@
 This page contain the sources that we use for finder 
 
+Technologies Used:
 
 Matching algoritm
 -Datamuse API: https://www.datamuse.com/api/ (Use for finding synonym for item type that are the same/similar but worded differently)
+
+CDN
+-Cloudinary: https://cloudinary.com/
+
+Email:
+-Gmail SMTP: https://developers.google.com/gmail/imap/imap-smtp
+
+PHP Libraries
+-SwiftMailer  
+-Guzzle
+-Dotenv
+-Cloudinary_php
+
 
 
