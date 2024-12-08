@@ -1,6 +1,6 @@
 <?php 
 session_start();
-// include 'header.php';
+include 'header.php';
 require_once '../db/db_connect.php';
 
 
@@ -159,9 +159,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <div class="container">
+    <div class="container login-register">
         <div class="form-container">
-            <div class="logo">Finder</div>
+            <h2>Register</h2>
             <?php
             if (isset($_SESSION['error'])) {
                 echo '<div class="error">' . $_SESSION['error'] . '</div>';
@@ -174,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
                 <input type="text" name="code" placeholder="Recorder Code" required>
-                <button type="submit" class="button button-account">Sign Up</button>
+                <button type="submit" class="button button-account">Register</button>
             </form>
             <div class="switch">
                 Already have an account? <a href="login.php">Login</a>

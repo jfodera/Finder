@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <?php include 'php/header.php'; ?>
     <div class="home-container">
         <div class="logo"><img src="assets/full_logo_white.svg" alt="Finder Logo"> </div>
         <p class="description">A secure lost and found application built to manage, protect, and return your misplaced

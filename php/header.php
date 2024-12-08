@@ -18,16 +18,20 @@ if (session_status() === PHP_SESSION_NONE) {
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
-            <a id="logoLin" href="../index.php">
-                <img class="logo-image" src="../assets/logo.svg" alt="Finder Logo">
+            <a id="logoLin" href="../index.php" style="">
+                <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo_offwhite.svg' : '../assets/logo.svg'); ?> " alt="Finder Logo">
             </a>
             <ul>
-                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="dashboard.php">Home</a></li>
-                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : ''); ?>" href="about.php">About</a></li>
-                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''); ?>" href="contact.php">Contact</a></li>
+                <li style="<?php echo (!$_SESSION['email'] ? 'display: none;' : ''); ?>">
+                    <a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="dashboard.php">Home</a>
+                </li>
+                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : ''); ?>" 
+                href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/about.php' : 'about.php'); ?>">About</a></li>
+                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''); ?>" 
+                href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/contact.php' : 'contact.php'); ?>">Contact</a></li>
             </ul>
         </nav>
-        <div class="nav-account-buttons">
+        <div class="nav-account-buttons" style="<?php echo (!$_SESSION['email'] ? 'display: none;' : ''); ?>">
             <div class="main-form-button-container">
                 <?php if ($_SESSION['is_recorder']): ?>
                     <a href="found_item_form.php" class="button main-form found-from">Add Found Item</a>

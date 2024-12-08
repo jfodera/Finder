@@ -1,6 +1,6 @@
 <?php 
 session_start();
-// include 'header.php';
+include 'header.php';
 require_once '../db/db_connect.php';
 require_once '../vendor/autoload.php';
 
@@ -123,9 +123,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container login-register">
         <div class="form-container">
-            <div class="logo">Finder</div>
             <h2>Login</h2>
             <?php
                 if (isset($_SESSION['error'])) {
@@ -141,13 +140,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form action="login.php" method="post">
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" class="button button-account">Login</button>
+                <button type="submit" class="button button-account">Continue</button>
             </form>
             <div class="switch">
                 Don't have an account? <a href="user_type.php">Sign up</a>
             </div>
         </div>
     </div>
+    <?php include 'background-under.php'; ?>
     <script src="../script.js"></script>
 </body>
 </html>

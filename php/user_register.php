@@ -2,7 +2,7 @@
 <?php 
 //new session when go to this page 
 session_start();
-// include 'header.php';
+include 'header.php';
 require_once '../db/db_connect.php';
 require_once '../vendor/autoload.php';
 
@@ -142,9 +142,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <div class="container">
+    <div class="container login-register">
         <div class="form-container">
-            <div class="logo">Finder</div>
+            <h2>Register</h2>
             <?php
             if (isset($_SESSION['error'])) {
                 echo '<div class="error">' . $_SESSION['error'] . '</div>';
@@ -160,13 +160,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" name="email" placeholder="Email (@rpi.edu)" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <button type="submit" class="button button-account">Sign Up</button>
+                <button type="submit" class="button button-account">Register</button>
             </form>
             <div class="switch">
                 Already have an account? <a href="login.php">Login</a>
             </div>
         </div>
     </div>
+    <?php include 'background-under.php'; ?>
     <script src="../script.js"></script>
 </body>
 
