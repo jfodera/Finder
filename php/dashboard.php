@@ -19,7 +19,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container dashboard">
         <!-- <h1 class="dashboard-heading">Potenital Matches</h1> -->
         
         <?php if ($is_recorder): ?>
