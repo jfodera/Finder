@@ -21,6 +21,9 @@
             <p>Sincerely, Finder Development Team</p>
         </div>
     </div>
+
+    <?php include 'background-under.php'; ?>
+    
     <script src="../script.js"></script>
 </body>
 </html>

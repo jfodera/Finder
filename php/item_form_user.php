@@ -41,7 +41,7 @@ foreach ($locations as $location) {
 <body>
     <div class="container">
         <section class="question">
-            <h1>Describe Your Lost Item Below:</h1>
+            <h1>Tell us more to help us help you:</h1>
         </section>
         <div class="item_form_container">
             <?php if (isset($_SESSION['error'])): ?>
@@ -55,7 +55,7 @@ foreach ($locations as $location) {
 
             <form id="infoForm" action="lostFormHandler.php" method="post" enctype="multipart/form-data">
                 <div class="page page-1 index active">
-                    <h2>What type of item was it?</h2>
+                    <h2>What is the item you lost?</h2>
                     <div class="form_group">
                         <input type="text" 
                                name="type" 
@@ -86,7 +86,7 @@ foreach ($locations as $location) {
                 </div>
 
                 <div class="page page-2">
-                    <h2>When did you lose it?</h2>
+                    <h2>When did you lose the item?</h2>
                     <h3>*Required - please provide approximate time*</h3>
                     <div class="form_group">
                         <input type="datetime-local" 
@@ -95,23 +95,25 @@ foreach ($locations as $location) {
                                required>
                         <div class="error-message">Please select a valid date and time</div>
                     </div>
-                    <button type="button" class="prev-btn">Go Back</button>
-                    <button type="button" class="next-btn">Continue</button>
+                    <div class="form-buttons">
+                        <button type="button" class="prev-btn">Go Back</button>
+                        <button type="button" class="next-btn">Continue</button>
+                    </div>
                 </div>
 
                 <div class="page page-3">
-                    <h2>Upload Item Image</h2>
+                    <h2>Do you have an image of the item?</h2>
                     <h3>*Optional but recommended for better identification*</h3>
-                    <div class="image-preview-container">
-                        <img id="upload_image" src="../default_image.png" alt="Preview of the item">
-                    </div>
-                    <label id="item_img" for="input-file">Upload Image</label>
+                    <img id="upload_image" src="../assets/placeholderImg.svg" alt="image of the item">
+                    <label id="item_img" for="input-file">upload image</label>
                     <div class="form_group">
                         <input id="input-file" type="file" name="image" accept="image/jpeg,image/png,image/jpg">
                         <div class="error-message">Please upload a valid image file (JPG or PNG, max 5MB)</div>
                     </div>
-                    <button type="button" class="prev-btn">Go Back</button>
-                    <button type="button" class="next-btn">Continue</button>
+                    <div class="form-buttons">
+                        <button type="button" class="prev-btn">Go Back</button>
+                        <button type="button" class="next-btn">Continue</button>
+                    </div>
                 </div>
 
                 <div class="page page-4">
@@ -153,17 +155,18 @@ foreach ($locations as $location) {
                             <div class="error-message">Please select at least one location</div>
                         </div>
                     </div>
-
-                    <button type="button" class="prev-btn">Go Back</button>
-                    <button type="submit" class="submit-btn" disabled>
-                        Submit
-                        <span class="loading-indicator">⭕</span>
-                    </button>
+                    <div class="form-buttons">                              
+                        <button type="button" class="prev-btn">Go Back</button>
+                        <button type="submit" class="submit-btn" disabled>
+                            Submit
+                            <span class="loading-indicator">⭕</span>
+                        </button>
+                    </div>
                 </div>
-                <p>Page <span id="pgnum">1</span> of 4 </p>
             </form>
         </div>
     </div>
+    <?php include 'background-under.php'; ?>
     <script src="../script.js"></script>
     <script src="../jquery-3.6.1.min.js"></script>
 </body>

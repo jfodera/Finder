@@ -37,7 +37,7 @@ try {
             'additional_info' => $item['additional_info'] ?? '',
             'found_time' => $item['found_time'],
             'status' => $item['status'],
-            'image_url' => $item['image_url'] ?? '../default_image.png',
+            'image_url' => $item['image_url'] ?? './../assets/placeholderImg.svg',
             'locations' => $item['locations'] ? explode(',', $item['locations']) : [],
             'created_at' => $item['created_at'],
             'recorder_name' => $item['recorder_name'] ?? 'Unknown'

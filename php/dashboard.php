@@ -19,12 +19,11 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="dashboard-heading">Welcome to your Dashboard</h1>
+    <div class="container dashboard">
+        <!-- <h1 class="dashboard-heading">Potenital Matches</h1> -->
         
         <?php if ($is_recorder): ?>
             <div class="action-buttons">
-                <a href="found_item_form.php" class="button">Add Found Item</a>
                 <div class="dashboard-tabs">
                     <button class="tab-button active" data-tab="matches">Matches Overview</button>
                     <button class="tab-button" data-tab="lost">Lost Items</button>
@@ -46,7 +45,6 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
         <?php else: ?>
             <div class="user-dashboard">
                 <div class="action-buttons">
-                    <a href="item_form_user.php" class="button">Report Lost Item</a>
                     <div class="dashboard-tabs">
                         <button class="tab-button active" data-tab="items">My Lost Items</button>
                         <button class="tab-button" data-tab="matches">Potential Matches</button>
@@ -62,6 +60,8 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
             </div>
         <?php endif; ?>
     </div>
+
+    <?php include 'background-under.php'; ?>
     
 
     <div id="imageModal" class="image-modal">

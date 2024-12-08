@@ -16,24 +16,26 @@ function createItemCard(item, type) {
 
   return `
         <div class="item-card ${statusClass}">
-            <div class="image-container" onclick="openImageModal('${item.image_url || "../default_image.png"}', '${item.item_type}')">
-                <img src="${item.image_url || "../default_image.png"}" alt="${item.item_type}" class="item-image">
-            </div>
+            <img src="${item.image_url || "./../assets/placeholderImg.svg" }" alt="${item.item_type}" class="item-image">
+
             <div class="item-header">
                 <div class="item-type">${item.item_type}</div>
+                <div>${item.brand || "N/A"} | ${item.color || "N/A"}</div>
+                ${item.status !== 'lost' ? `
                 <div class="item-status ${statusClass}">${item.status}</div>
+                ` : ''}
             </div>
+
             <div class="item-description">
-                <div><strong>Brand:</strong> ${item.brand || "N/A"}</div>
-                <div><strong>Color:</strong> ${item.color || "N/A"}</div>
                 ${item.additional_info ? `<div><strong>Additional Info:</strong> ${item.additional_info}</div>` : ""}
                 <div><strong>Location:</strong> ${item.locations || "N/A"}</div>
                 ${creatorLine}
             </div>
+
             <div class="item-details">
                 <div><strong>${type === "lost" ? "Lost" : "Found"} on:</strong> ${new Date(item[dateField]).toLocaleString()}</div>
                 <div><strong>Reported on:</strong> ${new Date(item.created_at).toLocaleString()}</div>
-                <div><strong>Item ID:</strong> ${item.item_id}</div>
+                ${window.isRecorder ? `<div><strong>Item ID:</strong> ${item.item_id}</div>` : ''}
             </div>
         </div>
     `;
@@ -114,6 +116,7 @@ async function renderItems() {
           lostItemsGrid.innerHTML = lostItems.length > 0
             ? lostItems.map(item => createItemCard(item, "lost")).join("")
             : '<p class="no-items">No lost items reported.</p>';
+            backgroundResize();
         }
       }
       // if active tab is found, fetch found items
@@ -123,6 +126,7 @@ async function renderItems() {
           foundItemsGrid.innerHTML = foundItems.length > 0
             ? foundItems.map(item => createItemCard(item, "found")).join("")
             : '<p class="no-items">No found items reported.</p>';
+            backgroundResize();
         }
       }
     } catch (error) {
@@ -203,7 +207,7 @@ function createMatchFlow(matches) {
 function createFlowCard(item, type) {
   return `
       <div class="flow-card" data-id="${item.item_id}">
-        <img src="${item.image_url || "../default_image.png"}" alt="${
+        <img src="${item.image_url || "./../assets/placeholderImg.svg"}" alt="${
     item.item_type
   }" class="item-thumb">
         <div class="flow-info">
@@ -225,7 +229,7 @@ function createUserMatchCard(match) {
       <div class="user-match-card ${match.status}">
         <div class="found-item-details">
           <img src="${
-            match.found_item.image_url || "../default_image.png"
+            match.found_item.image_url || "./../assets/placeholderImg.svg"
           }" alt="${match.found_item.item_type}" class="match-image">
           <div class="match-info">
             <h4>Potential Match Found!</h4>
@@ -459,7 +463,7 @@ function initializeForm() {
         if (!validTypes.includes(file.type)) {
           alert("Please upload only JPEG or PNG images");
           this.value = "";
-          imagePreview.src = "../default_image.png";
+          imagePreview.src = "./../assets/placeholderImg.svg";
           return;
         }
 
@@ -467,7 +471,7 @@ function initializeForm() {
         if (file.size > 5 * 1024 * 1024) {
           alert("Please upload an image smaller than 5MB");
           this.value = "";
-          imagePreview.src = "../default_image.png";
+          imagePreview.src = "./../assets/placeholderImg.svg";
           return;
         }
 
@@ -793,14 +797,14 @@ function handleImagePreview(imageInput, previewElement) {
       if (!validTypes.includes(file.type)) {
         alert("Please upload only JPEG or PNG images");
         this.value = "";
-        previewElement.src = "../default_image.png";
+        previewElement.src = ".././../assets/placeholderImg.svg";
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
         alert("Please upload an image smaller than 5MB");
         this.value = "";
-        previewElement.src = "../default_image.png";
+        previewElement.src = "./../assets/placeholderImg.svg";
         return;
       }
 
@@ -856,4 +860,37 @@ window.onclick = function(event) {
   if (event.target === modal) {
       closeImageModal();
   }
+}
+
+function backgroundResize() {
+  const body = document.querySelector('body');
+  var bodyHeight;
+  setTimeout(function () {
+    bodyHeight = body.offsetHeight
+    console.log(bodyHeight)
+    document.querySelector('.under').style.height = String(bodyHeight-1) + 'px';
+  
+  document.documentElement.style.setProperty('--background-under-height', String(bodyHeight * -1.2) + 'px');
+  renderBubbles();
+  }, 100);
+  
+}
+
+function renderBubbles() {
+  const bubble_container = document.querySelector(".under");
+  for (var i = 0; i < 20; i++) {
+      var new_bubble = '<div class="bubble" style="'
+      bubble_left = String(Math.random() * 90 + 5) + '%'
+      bubble_width =  String(Math.random() * 30 + 10) + 'px'
+      bubble_delay =  String(Math.random() * 10) + 's'
+      bubble_duration = String(Math.random() * 12 + 3) + 's'
+      var style = `left:${bubble_left}; width:${bubble_width}; 
+      animation-delay:${bubble_delay}; animation-duration:${bubble_duration};`
+      new_bubble += `${style}"></div>`
+      bubble_container.innerHTML += new_bubble
+  }
+}
+
+window.onload = function() {
+  backgroundResize();
 }

@@ -72,7 +72,7 @@ try {
                 'additional_info' => $match['additional_info'] ?? '',
                 'lost_time' => $match['lost_time'],
                 'locations' => $match['lost_locations'] ? explode(',', $match['lost_locations']) : [],
-                'image_url' => $match['image_url'] ?? '../default_image.png',
+                'image_url' => $match['image_url'] ?? './../assets/placeholderImg.svg',
                 'reporter_name' => $match['reporter_name'] ?? 'Unknown'
             ],
             'found_item' => [
@@ -83,7 +83,7 @@ try {
                 'additional_info' => $match['additional_info'] ?? '',
                 'found_time' => $match['found_time'],
                 'locations' => $match['found_locations'] ? explode(',', $match['found_locations']) : [],
-                'image_url' => $match['image_url'] ?? '../default_image.png',
+                'image_url' => $match['image_url'] ?? './../assets/placeholderImg.svg',
                 'finder_name' => $match['finder_name'] ?? 'Unknown'
             ]
         ];

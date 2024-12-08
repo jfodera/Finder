@@ -5,47 +5,67 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="../style.css">
-</head>
 <body>
-<header class="global-header">
+<header class="global-header transparent">
     <div class="header-content">
         <!-- Uses php for the source so that this header can be used on multiple pages -->
          <!-- directly acter questionmark is if evaluates to true, after colon is false -->
-        <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
+        <!-- <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
             <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo.svg' : '../assets/logo.svg'); ?>" alt="Finder Logo">
-        </a>
+        </a> -->
         
         <div class="hamburger" id="hamburger">
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
+            <a id="logoLin" href="../index.php" style="">
+                <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo_offwhite.svg' : '../assets/logo.svg'); ?> " alt="Finder Logo">
+            </a>
             <ul>
-                <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'index.php' : '../index.php'; ?>">Home</a></li>
-                <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/about.php' : 'about.php'; ?>">About</a></li>
-                <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/contact.php' : 'contact.php'; ?>">Contact</a></li>
-                
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <!-- Links for logged in users -->
-                    <?php if ($_SESSION['is_recorder']): ?>
-                        <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/found_item_form.php' : 'found_item_form.php'; ?>">Add Found Item</a></li>
-                    <?php endif; ?>
-                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/item_form_user.php' : 'item_form_user.php'; ?>">Report Lost Item</a></li>
-                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/dashboard.php' : 'dashboard.php'; ?>">Dashboard</a></li>
-                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/logout.php' : 'logout.php'; ?>">Logout</a></li>
-                <?php else: ?>
-                    <!-- Links for guests -->
-                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/login.php' : 'login.php'; ?>">Login</a></li>
-                    <li><a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'php/user_type.php' : 'user_type.php'; ?>">Register</a></li>
-                <?php endif; ?>
+                <li style="<?php echo (!$_SESSION['email'] ? 'display: none;' : ''); ?>">
+                    <a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="dashboard.php">Home</a>
+                </li>
+                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : ''); ?>" 
+                href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/about.php' : 'about.php'); ?>">About</a></li>
+                <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''); ?>" 
+                href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/contact.php' : 'contact.php'); ?>">Contact</a></li>
             </ul>
         </nav>
+        <div class="nav-account-buttons" style="<?php echo (!$_SESSION['email'] ? 'display: none;' : ''); ?>">
+            <div class="main-form-button-container">
+                <?php if ($_SESSION['is_recorder']): ?>
+                    <a href="found_item_form.php" class="button main-form found-from">Add Found Item</a>
+                <?php else: ?>
+                    <a href="item_form_user.php" class="button main-form lost-from">Report Lost Item</a>
+                <?php endif; ?>
+            </div>
+            <div id="account-name"><a id="account-name-a" href="logout.php"><?php echo $_SESSION['name'] ?></a></div>
+        </div>
+        
     </div>
 </header>
 </body>
+<script>
+    const nameElement = document.querySelector('#account-name');
+    const nameElementInner = document.querySelector('#account-name-a');
+    const header = document.querySelector('.global-header')
+
+    nameElement.addEventListener("mouseover", () => {
+        nameElementInner.classList.add("logout-visible")
+        setTimeout(function() {nameElementInner.innerHTML = "Logout"}, 100);
+        
+    });
+    nameElement.addEventListener("mouseout", () => {
+        nameElementInner.classList.remove("logout-visible")
+        setTimeout(function() {nameElementInner.innerHTML = "<?php echo $_SESSION['name'] ?>" }, 100);
+    });
+    document.addEventListener("scroll", (event) => {
+        const Yoffset = window.scrollY;
+        if (Yoffset > 150) {
+            header.classList.remove('transparent')
+        } else {
+            header.classList.add('transparent')
+        }
+    });
+</script>
 </html>
