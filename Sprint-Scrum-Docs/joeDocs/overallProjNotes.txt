@@ -25,10 +25,6 @@ Important Notes:
    PhpMailer: 
       does not work when you are sending an email to yourself from XAMPP 
 
-   Cooldown does not work on Xampp 
-
-   Also if there are 2 matches, and one is claimed, the other is updated 
-
 Current: 
    Working in CSS issue fix, see last commit in CSS-Issue-Fix Branch 
    
@@ -74,8 +70,6 @@ to do:
 Questions: 
    how did you block users from just messing with the title, in order to get to the next page
 
-Things I learned: 
-   important to document errors in log as done throughout
 
 Quiz 2 notes: 
    Security things we added: 
