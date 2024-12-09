@@ -77,13 +77,27 @@ function initializeTabs() {
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
-     
+     //adds active ot button that was clicked 
       button.classList.add("active");
+      //defines base id 'aka 'matches''
       const baseId = button.dataset.tab;
-      const tabId = window.isRecorder ? 
-                    baseId + "ItemsGrid" : 
-                    (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
       
+      //defining how we are going to identify content picker 
+      var tabId = 'null';
+      if(window.isRecorder){
+        if(baseId == 'matches'){
+          tabId = 'matchesGrid'; 
+        }else{
+          tabId = baseId + 'ItemsGrid'; 
+        }
+      }else{ 
+        if(baseId == 'matches'){
+          tabId = 'userMatchesGrid'; 
+        }else{
+          tabId = 'itemsGrid'; 
+        }
+      }
+
       const content = document.getElementById(tabId);
       // if the tab is maches, render the matches and if the tab is lost or found, render the items
       if (content) {
@@ -221,7 +235,8 @@ function createFlowCard(item, type) {
     `;
 }
 
-// creates the middle card where the recorder can confirm or reject the match
+
+//here the user never actually accepts or rejects anything 
 // idea behind this was for user to go to pubsafe
 // and pubsafe would reject or accept the match
 function createUserMatchCard(match) {
@@ -242,16 +257,6 @@ function createUserMatchCard(match) {
             <p>Status: ${match.status}</p>
           </div>
         </div>
-        ${
-          match.status === "pending"
-            ? `
-          <div class="match-actions">
-            <button onclick="handleUserMatch(${match.match_id}, 'confirm')" class="button confirm">This is my item</button>
-            <button onclick="handleUserMatch(${match.match_id}, 'reject')" class="button reject">Not my item</button>
-          </div>
-        `
-            : ""
-        }
       </div>
     `;
 }
@@ -280,29 +285,30 @@ async function handleMatch(matchId, action) {
   }
 }
 
-// function to handle the match for the user
-async function handleUserMatch(matchId, action) {
-  try {
-    const response = await fetch('handleUserMatch.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ match_id: matchId, action: action })
-    });
+//Never Used -> future implementation
+// // function to handle the match for the user
+// async function handleUserMatch(matchId, action) {
+//   try {
+//     const response = await fetch('handleUserMatch.php', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ match_id: matchId, action: action })
+//     });
     
-    if (!response.ok) throw new Error('Network response was not ok');
+//     if (!response.ok) throw new Error('Network response was not ok');
     
-    const result = await response.json();
-    if (result.success) {
-      // Refresh both matches and items views after action
-      await Promise.all([renderMatches(), renderItems()]);
-    } else {
-      alert(result.message || 'Failed to process match');
-    }
-  } catch (error) {
-    console.error('Error handling user match:', error);
-    alert('An error occurred. Please try again.');
-  }
-}
+//     const result = await response.json();
+//     if (result.success) {
+//       // Refresh both matches and items views after action
+//       await Promise.all([renderMatches(), renderItems()]);
+//     } else {
+//       alert(result.message || 'Failed to process match');
+//     }
+//   } catch (error) {
+//     console.error('Error handling user match:', error);
+//     alert('An error occurred. Please try again.');
+//   }
+// }
 
 // function to render the matches
 async function renderMatches() {
@@ -867,7 +873,6 @@ function backgroundResize() {
   var bodyHeight;
   setTimeout(function () {
     bodyHeight = body.offsetHeight
-    console.log(bodyHeight)
     document.querySelector('.under').style.height = String(bodyHeight-1) + 'px';
   
   document.documentElement.style.setProperty('--background-under-height', String(bodyHeight * -1.2) + 'px');

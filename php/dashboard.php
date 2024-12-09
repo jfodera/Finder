@@ -43,7 +43,7 @@ $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
                 <div class="loading">Loading found items...</div>
             </div>
         <?php else: ?>
-            <div class="user-dashboard">
+            <div class="user">
                 <div class="action-buttons">
                     <div class="dashboard-tabs">
                         <button class="tab-button active" data-tab="items">My Lost Items</button>

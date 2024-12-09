@@ -79,11 +79,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Only RPI users with a @rpi.edu email can register
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
-        $_SESSION['error'] = "Email must be an @rpi.edu address";
-        header("Location: user_register.php");
-        exit();
-    }
+    // if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
+    //     $_SESSION['error'] = "Email must be an @rpi.edu address";
+    //     header("Location: user_register.php");
+    //     exit();
+    // }
         
 
     if ($password !== $confirm_password) {

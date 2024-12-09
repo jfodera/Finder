@@ -1,4 +1,5 @@
 <?php
+// <!-- NEVER USED BUT KEPT FOR FUTURE IMPLEMENTATION -->
 session_start();
 require_once '../db/db_connect.php';
 
