@@ -27,7 +27,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <ul>
                 <!-- home tab going to dashmboard only if logged in -->
                 <li style="<?php echo (!$_SESSION['email'] ? 'display: none;' : ''); ?>">
-                    <a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'dashboard.php' : 'php/dashboard.php'); ?>">Home</a>
+                    <a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/dashboard.php' : 'dashboard.php'); ?>">Home</a>
                 </li>
                 
                 <!-- About -->
@@ -44,12 +44,12 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php if ($_SESSION['is_recorder'] == 1) { ?>
                 <div class="main-form-button-container">
                     <!-- So that for recorder, add found item is first thing they see -->
-                    <a href="found_item_form.php" class="button main-form found-from">Add Found Item</a>
+                    <a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/found_item_form.php' : 'found_item_form.php'); ?>" class="button main-form found-from">Add Found Item</a>
                 </div>
             <?php } ?>
 
             <div class="main-form-button-container">
-                <a href="item_form_user.php" class="button main-form lost-from">Report Lost Item</a>
+                <a href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/item_form_user.php' : 'item_form_user.php'); ?>" class="button main-form lost-from">Report Lost Item</a>
                 
             </div>
             <div id="account-name"><a id="account-name-a" href="logout.php"><?php echo $_SESSION['name'] ?></a></div>

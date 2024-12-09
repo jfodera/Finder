@@ -26,7 +26,7 @@ Important Notes:
       does not work when you are sending an email to yourself from XAMPP 
 
 Current: 
-   Working in CSS issue fix, see last commit =
+   Working in CSS issue fix, see last commit in CSS-Issue-Fix Branch 
    
 
 Notes for future: 
