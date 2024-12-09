@@ -257,7 +257,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             ob_end_clean();
             require_once 'matching.php';
-            //returns a list of potential matho for lost items
             $newMatches = findMatchesForLostItems($pdo, $item_id);
             
             if (!empty($newMatches)) {
