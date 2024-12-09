@@ -18,15 +18,23 @@ if (session_status() === PHP_SESSION_NONE) {
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
-            <a id="logoLin" href="../index.php" style="">
+
+        <!-- Fin -->
+            <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>" style="">
+                <!-- so logo is white on homepage -->
                 <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo_offwhite.svg' : '../assets/logo.svg'); ?> " alt="Finder Logo">
             </a>
             <ul>
+                <!-- home tab going to dashmboard only if logged in -->
                 <li style="<?php echo (!$_SESSION['email'] ? 'display: none;' : ''); ?>">
-                    <a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="dashboard.php">Home</a>
+                    <a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''); ?>" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'dashboard.php' : 'php/dashboard.php'); ?>">Home</a>
                 </li>
+                
+                <!-- About -->
                 <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : ''); ?>" 
                 href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/about.php' : 'about.php'); ?>">About</a></li>
+
+                <!-- Contact -->
                 <li><a class="<?php echo (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''); ?>" 
                 href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'php/contact.php' : 'contact.php'); ?>">Contact</a></li>
             </ul>
