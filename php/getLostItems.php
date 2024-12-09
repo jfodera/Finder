@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_recorder']) || !$_SESSI
 }
 
 try {
+    // Fetch all lost items from the database
     $stmt = $pdo->prepare("
         SELECT 
             li.*,
@@ -27,7 +28,7 @@ try {
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Format the items
+    // Format the items array to include only the necessary fields
     $formattedItems = array_map(function($item) {
         return [
             'item_id' => $item['item_id'],

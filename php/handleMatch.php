@@ -4,12 +4,14 @@ require_once '../db/db_connect.php';
 
 header('Content-Type: application/json');
 
+// Check if user is logged in and is a recorder
 if (!isset($_SESSION['user_id']) || !$_SESSION['is_recorder']) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit();
 }
 
+// Handle match confirmation/rejection
 $data = json_decode(file_get_contents('php://input'), true);
 if (!isset($data['match_id']) || !isset($data['action'])) {
     http_response_code(400);

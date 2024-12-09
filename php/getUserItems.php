@@ -5,6 +5,7 @@ require_once '../db/db_connect.php';
 
 header('Content-Type: application/json');
 
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([
         'success' => false,
@@ -14,6 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 try {
+    // Fetch all items from the database
     $stmt = $pdo->prepare("
         SELECT 
             li.*,
@@ -28,7 +30,7 @@ try {
     $stmt->execute([$_SESSION['user_id']]);
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Format the items
+    // Format the items array to include only the necessary fields
     $formattedItems = array_map(function($item) {
         return [
             'item_id' => $item['item_id'],

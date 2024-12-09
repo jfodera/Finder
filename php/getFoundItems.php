@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_recorder']) || !$_SESSI
     exit();
 }
 
+// Fetch all found items from the database
 try {
     $stmt = $pdo->prepare("
         SELECT 
@@ -27,7 +28,7 @@ try {
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Format the items
+    // Format the items array to include only the necessary fields
     $formattedItems = array_map(function($item) {
         return [
             'item_id' => $item['item_id'],

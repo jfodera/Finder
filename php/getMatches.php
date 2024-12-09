@@ -4,16 +4,21 @@ require_once '../db/db_connect.php';
 
 header('Content-Type: application/json');
 
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit();
 }
 
+// Fetch all matches from the database
 $user_id = $_SESSION['user_id'];
 $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
 
 try {
+    // Fetch all matches from the database based on user role
+    // If user is a recorder, fetch all matches
+    // else fetch only matches where the user is the owner of the lost item
     if ($is_recorder) {
         $query = "
             SELECT 
@@ -59,6 +64,7 @@ try {
 
     $matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Format the matches array to include only the necessary fields
     $formattedMatches = array_map(function($match) {
         return [
             'match_id' => $match['match_id'],
