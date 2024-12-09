@@ -4,26 +4,36 @@ require_once '../db/db_connect.php';
 
 header('Content-Type: application/json');
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit();
 }
 
-// Fetch all matches from the database
 $user_id = $_SESSION['user_id'];
 $is_recorder = isset($_SESSION['is_recorder']) && $_SESSION['is_recorder'];
 
 try {
-    // Fetch all matches from the database based on user role
-    // If user is a recorder, fetch all matches
-    // else fetch only matches where the user is the owner of the lost item
     if ($is_recorder) {
         $query = "
             SELECT 
-                m.*,
-                l.*, f.*,
+                m.match_id,
+                m.status AS status,
+                m.match_time,
+                l.item_id AS lost_item_id, 
+                l.item_type AS lost_type,
+                l.brand AS lost_brand,
+                l.color AS lost_color,
+                l.additional_info AS lost_info,
+                l.lost_time,
+                l.image_url AS lost_image_url,
+                f.item_id AS found_item_id,
+                f.item_type AS found_type,
+                f.brand AS found_brand,
+                f.color AS found_color,
+                f.additional_info AS found_info,
+                f.found_time,
+                f.image_url AS found_image_url,
                 GROUP_CONCAT(DISTINCT il_lost.location) as lost_locations,
                 GROUP_CONCAT(DISTINCT il_found.location) as found_locations,
                 CONCAT(u_lost.first_name, ' ', u_lost.last_name) as reporter_name,
@@ -43,8 +53,23 @@ try {
     } else {
         $query = "
             SELECT 
-                m.*,
-                l.*, f.*,
+                m.match_id,
+                m.status AS status,
+                m.match_time,
+                l.item_id AS lost_item_id, 
+                l.item_type AS lost_type,
+                l.brand AS lost_brand,
+                l.color AS lost_color,
+                l.additional_info AS lost_info,
+                l.lost_time,
+                l.image_url AS lost_image_url,
+                f.item_id AS found_item_id,
+                f.item_type AS found_type,
+                f.brand AS found_brand,
+                f.color AS found_color,
+                f.additional_info AS found_info,
+                f.found_time,
+                f.image_url AS found_image_url,
                 GROUP_CONCAT(DISTINCT il_lost.location) as lost_locations,
                 GROUP_CONCAT(DISTINCT il_found.location) as found_locations,
                 CONCAT(u_found.first_name, ' ', u_found.last_name) as finder_name
@@ -64,32 +89,31 @@ try {
 
     $matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Format the matches array to include only the necessary fields
     $formattedMatches = array_map(function($match) {
         return [
             'match_id' => $match['match_id'],
-            'stat' => $match['status'],
+            'status' => $match['status'],
             'match_time' => $match['match_time'],
             'lost_item' => [
                 'item_id' => $match['lost_item_id'],
-                'item_type' => $match['item_type'],
-                'brand' => $match['brand'] ?? 'N/A',
-                'color' => $match['color'] ?? 'N/A',
-                'additional_info' => $match['additional_info'] ?? '',
+                'item_type' => $match['lost_type'],
+                'brand' => $match['lost_brand'] ?? 'N/A',
+                'color' => $match['lost_color'] ?? 'N/A',
+                'additional_info' => $match['lost_info'] ?? '',
                 'lost_time' => $match['lost_time'],
                 'locations' => $match['lost_locations'] ? explode(',', $match['lost_locations']) : [],
-                'image_url' => $match['image_url'] ?? './../assets/placeholderImg.svg',
+                'image_url' => $match['lost_image_url'] ?? './../assets/placeholderImg.svg',
                 'reporter_name' => $match['reporter_name'] ?? 'Unknown'
             ],
             'found_item' => [
                 'item_id' => $match['found_item_id'],
-                'item_type' => $match['item_type'],
-                'brand' => $match['brand'] ?? 'N/A',
-                'color' => $match['color'] ?? 'N/A',
-                'additional_info' => $match['additional_info'] ?? '',
+                'item_type' => $match['found_type'],
+                'brand' => $match['found_brand'] ?? 'N/A',
+                'color' => $match['found_color'] ?? 'N/A',
+                'additional_info' => $match['found_info'] ?? '',
                 'found_time' => $match['found_time'],
                 'locations' => $match['found_locations'] ? explode(',', $match['found_locations']) : [],
-                'image_url' => $match['image_url'] ?? './../assets/placeholderImg.svg',
+                'image_url' => $match['found_image_url'] ?? './../assets/placeholderImg.svg',
                 'finder_name' => $match['finder_name'] ?? 'Unknown'
             ]
         ];
