@@ -77,13 +77,23 @@ function initializeTabs() {
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
-     
+     //adds active ot button that was clicked 
       button.classList.add("active");
+      //defines base id 'aka 'matches''
       const baseId = button.dataset.tab;
-      const tabId = window.isRecorder ? 
-                    baseId + "ItemsGrid" : 
-                    (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
       
+      //defining how we are going to identify content picker 
+      var tabId = 'null';
+      if(window.isRecorder){
+        if(baseId == 'matches'){
+          tabId = 'matchesGrid'; 
+        }else{
+          tabId = baseId + 'ItemsGrid' ; 
+        }
+      }else{ 
+        tabID = (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
+      }
+
       const content = document.getElementById(tabId);
       // if the tab is maches, render the matches and if the tab is lost or found, render the items
       if (content) {
@@ -867,7 +877,6 @@ function backgroundResize() {
   var bodyHeight;
   setTimeout(function () {
     bodyHeight = body.offsetHeight
-    console.log(bodyHeight)
     document.querySelector('.under').style.height = String(bodyHeight-1) + 'px';
   
   document.documentElement.style.setProperty('--background-under-height', String(bodyHeight * -1.2) + 'px');
