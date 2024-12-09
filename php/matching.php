@@ -147,7 +147,42 @@ try {
         return null;
     }
 
-    // function to find matches for lost items
+    function sendNotification($email, $token) {
+        $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
+            ->setUsername($_ENV['SMTP_USER'])
+            ->setPassword($_ENV['SMTP_PASS']); 
+    
+        $mailer = new Swift_Mailer($transport);
+    
+        $domain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'yourdomain.com';
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+        
+        $verificationLink = $protocol . $domain . "/" . $_ENV['URL'] . "/php/verify_email.php?email=" . urlencode($email) . "&token=" . $token;
+    
+        $message = (new Swift_Message('Verify your Finder account'))
+            ->setFrom([$_ENV['SMTP_USER'] => 'Finder'])
+            ->setTo([$email])
+            ->setBody(
+                '<html>' .
+                '<body>' .
+                '<h1>Welcome to Finder!</h1>' .
+                '<p>Please click the link below to verify your account:</p>' .
+                '<p><a href="' . $verificationLink . '">Verify Account</a></p>' .
+                '</body>' .
+                '</html>',
+                'text/html'
+            );
+    
+        try {
+            $result = $mailer->send($message);
+            return true;
+        } catch (Exception $e) {
+            error_log("Failed to send verification email: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // function to find matches for lost items -> think of as main 
     function findMatchesForLostItems($pdo, $specificItemId = null) {
         debug_log("Starting findMatchesForLostItems", ['specificItemId' => $specificItemId]);
         
@@ -244,7 +279,7 @@ try {
                             'final_score' => $similarityScore
                         ]);
 
-                        // if similarity score is greater than 0.5, create a match
+                        // if similarity score is greater than 0.5, create a match, updates DB Accordingly 
                         if ($similarityScore >= 0.5) {
                             try {
                                 $insertStmt = $pdo->prepare("
@@ -283,6 +318,8 @@ try {
                 }
             }
             
+            //send email descripbing which matches were found if any 
+
             debug_log("Matching complete", ['new_matches_count' => count($newMatches)]);
             return $newMatches;
 

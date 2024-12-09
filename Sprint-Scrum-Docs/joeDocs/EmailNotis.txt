@@ -1,4 +1,7 @@
-Task
+Task: 
+   Email user when a match is calculated -> Tell them to go to pubsafe to retrieve the item 
+   Email user if Item is claimed by someone else (this item is no longer available) 
+
 
 
 
