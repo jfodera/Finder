@@ -68,7 +68,7 @@ try {
     $formattedMatches = array_map(function($match) {
         return [
             'match_id' => $match['match_id'],
-            'status' => $match['status'],
+            'stat' => $match['status'],
             'match_time' => $match['match_time'],
             'lost_item' => [
                 'item_id' => $match['lost_item_id'],

@@ -191,7 +191,7 @@ function createMatchFlow(matches) {
                 (match) => `
               <div class="connection" data-lost="${match.lost_item.item_id}" data-found="${match.found_item.item_id}">
                 <div class="line"></div>
-                <div class="match-status ${match.status}">${match.status}</div>
+                <div class="match-status ${match.stat}">${match.stat}</div>
                 <div class="match-actions">
                   <button onclick="handleMatch(${match.match_id}, 'confirm')" class="action-btn confirm">✓</button>
                   <button onclick="handleMatch(${match.match_id}, 'reject')" class="action-btn reject">✗</button>
