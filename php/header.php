@@ -8,17 +8,11 @@ if (session_status() === PHP_SESSION_NONE) {
 <body>
 <header class="global-header transparent">
     <div class="header-content">
-        <!-- Uses php for the source so that this header can be used on multiple pages -->
-         <!-- directly acter questionmark is if evaluates to true, after colon is false -->
-        <!-- <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
-            <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo.svg' : '../assets/logo.svg'); ?>" alt="Finder Logo">
-        </a> -->
-        
         <div class="hamburger" id="hamburger">
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
-            <a id="logoLin" href="../index.php" style="">
+            <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
                 <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo_offwhite.svg' : '../assets/logo.svg'); ?> " alt="Finder Logo">
             </a>
             <ul>
