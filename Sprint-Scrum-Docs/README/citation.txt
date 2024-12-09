@@ -19,5 +19,8 @@ PHP Libraries
 -Dotenv
 -Cloudinary_php
 
+https://swiftmailer.symfony.com/docs/introduction.html
+https://docs.guzzlephp.org/en/stable/
+https://github.com/vlucas/phpdotenv
 
 
