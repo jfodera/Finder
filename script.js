@@ -2,9 +2,11 @@ function createItemCard(item, type) {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
 
-  // Determine which field to show based on type
-  // if type is lost, show reporter_name
-  // if type is found, show recorder_name
+
+    // Determine which field to show based on type
+    // if type is lost, show reporter_name
+    // if type is found, show recorder_name
+
   let creatorLine = "";
   if (type === "lost") {
     creatorLine = `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`;
@@ -14,12 +16,10 @@ function createItemCard(item, type) {
 
   return `
         <div class="item-card ${statusClass}">
-            <div class="item-image-container" style="width: 100%; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <div class="item-image-container" onclick="openImageModal('${item.image_url || "./../assets/placeholderImg.svg"}', '${item.item_type}')">
                 <img src="${item.image_url || "./../assets/placeholderImg.svg"}" 
                      alt="${item.item_type}" 
-                     class="item-image"
-                     onclick="openImageModal('${item.image_url || "./../assets/placeholderImg.svg"}', '${item.item_type}')"
-                     style="cursor: pointer; width: 100%; height: 100%; object-fit: contain;">
+                     class="item-image">
             </div>
 
             <div class="item-header">
@@ -179,7 +179,7 @@ function createMatchFlow(matches) {
             ${matches
               .map(
                 (match) => {
-                  const displayStatus = match.stat === 'confirmed' ? 'claimed' : match.stat;
+                  const displayStatus = match.status === 'confirmed' ? 'claimed' : match.status;
                   return `
                     <div class="connection" data-lost="${match.lost_item.item_id}" data-found="${match.found_item.item_id}">
                       <div class="line"></div>
