@@ -175,9 +175,9 @@ function handleCloudinaryUpload($image) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Check cooldown
-        if (!checkSubmissionCooldown($pdo, $_SESSION['user_id'])) {
-            throw new Exception("Please wait 5 minutes between submissions.");
-        }
+        // if (!checkSubmissionCooldown($pdo, $_SESSION['user_id'])) {
+        //     throw new Exception("Please wait 5 minutes between submissions.");
+        // }
 
         // Validate and sanitize input
         $item_type = sanitize_input($_POST['type']);
@@ -258,7 +258,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Update cooldown
-        updateCooldown($pdo, $_SESSION['user_id']);
+        // updateCooldown($pdo, $_SESSION['user_id']);
 
         $pdo->commit();
         debug_log("Transaction completed successfully");
