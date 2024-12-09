@@ -88,10 +88,14 @@ function initializeTabs() {
         if(baseId == 'matches'){
           tabId = 'matchesGrid'; 
         }else{
-          tabId = baseId + 'ItemsGrid' ; 
+          tabId = baseId + 'ItemsGrid'; 
         }
       }else{ 
-        tabID = (baseId === 'matches' ? 'userMatchesGrid' : 'itemsGrid');
+        if(baseId == 'matches'){
+          tabId = 'userMatchesGrid'; 
+        }else{
+          tabId = 'itemsGrid'; 
+        }
       }
 
       const content = document.getElementById(tabId);
@@ -231,7 +235,8 @@ function createFlowCard(item, type) {
     `;
 }
 
-// creates the middle card where the recorder can confirm or reject the match
+
+//here the user never actually accepts or rejects anything 
 // idea behind this was for user to go to pubsafe
 // and pubsafe would reject or accept the match
 function createUserMatchCard(match) {
@@ -252,16 +257,7 @@ function createUserMatchCard(match) {
             <p>Status: ${match.status}</p>
           </div>
         </div>
-        ${
           match.status === "pending"
-            ? `
-          <div class="match-actions">
-            <button onclick="handleUserMatch(${match.match_id}, 'confirm')" class="button confirm">This is my item</button>
-            <button onclick="handleUserMatch(${match.match_id}, 'reject')" class="button reject">Not my item</button>
-          </div>
-        `
-            : ""
-        }
       </div>
     `;
 }
@@ -290,29 +286,30 @@ async function handleMatch(matchId, action) {
   }
 }
 
-// function to handle the match for the user
-async function handleUserMatch(matchId, action) {
-  try {
-    const response = await fetch('handleUserMatch.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ match_id: matchId, action: action })
-    });
+//Never Used -> future implementation
+// // function to handle the match for the user
+// async function handleUserMatch(matchId, action) {
+//   try {
+//     const response = await fetch('handleUserMatch.php', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ match_id: matchId, action: action })
+//     });
     
-    if (!response.ok) throw new Error('Network response was not ok');
+//     if (!response.ok) throw new Error('Network response was not ok');
     
-    const result = await response.json();
-    if (result.success) {
-      // Refresh both matches and items views after action
-      await Promise.all([renderMatches(), renderItems()]);
-    } else {
-      alert(result.message || 'Failed to process match');
-    }
-  } catch (error) {
-    console.error('Error handling user match:', error);
-    alert('An error occurred. Please try again.');
-  }
-}
+//     const result = await response.json();
+//     if (result.success) {
+//       // Refresh both matches and items views after action
+//       await Promise.all([renderMatches(), renderItems()]);
+//     } else {
+//       alert(result.message || 'Failed to process match');
+//     }
+//   } catch (error) {
+//     console.error('Error handling user match:', error);
+//     alert('An error occurred. Please try again.');
+//   }
+// }
 
 // function to render the matches
 async function renderMatches() {
