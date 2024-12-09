@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
+// function to log debug messages
 if (!function_exists('debug_log')) {
     function debug_log($message, $data = null) {
         error_log(print_r([
@@ -18,19 +19,22 @@ if (!function_exists('debug_log')) {
     }
 }
 
+// try the matching process
+// there are two parts to this process
+// 1st: traditional matching (type, color, brand, date) 40% of the weight
+// 2nd: grok matching (using x.ai's grok api) 60% of the weight
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // function to convert singular to plural 
     function convertToPlural($word) {
-        if (preg_match('/(s|x|z|sh|ch)$/', $word)) {
-            return $word . 'es';
-        }
-        if (preg_match('/[aeiou]y$/', $word) === 0 && substr($word, -1) === 'y') {
-            return substr($word, 0, -1) . 'ies';
-        }
-        if (substr($word, -1) === 'y' && preg_match('/[aeiou]y$/', $word)) {
-            return $word . 's';
-        }
+        // check if word is already plural
+        if (preg_match('/(s|x|z|sh|ch)$/', $word)) return $word . 'es';
+        // check if word ends in 'y' and is not preceded by a vowel
+        if (preg_match('/[aeiou]y$/', $word) === 0 && substr($word, -1) === 'y')  return substr($word, 0, -1) . 'ies';
+        // check if word ends in 'f' or 'fe'
+        if (substr($word, -1) === 'y' && preg_match('/[aeiou]y$/', $word)) return $word . 's';
+        // check if word ends in 'f' or 'fe'
         if (substr($word, -1) === 'f') {
             if (substr($word, -2) === 'fe') {
                 return substr($word, 0, -2) . 'ves';
@@ -39,12 +43,14 @@ try {
         }
         return $word . 's';
     }
-
+    
+    // api call to get similar words
     function areWordsSimilar($word1, $word2) {
         if ($word1 === $word2) return 1;
         if (convertToPlural($word1) === $word2) return 1;
         if ($word1 === convertToPlural($word2)) return 1;
 
+        // calls data muse api to get similar words
         try {
             $apiUrl = "https://api.datamuse.com/words?rel_syn=" . urlencode($word1);
             $context = stream_context_create(['http' => ['timeout' => 2]]);
@@ -70,10 +76,13 @@ try {
         return 0;
     }
 
+    // function to get grok score
     function getGrokScore($lostItem, $foundItem) {
+        // calls x.ai grok api to get similarity score
         try {
             $ch = curl_init('https://api.x.ai/v1/chat/completions');
             
+            // the prompt to send to the grok api
             $data = [
                 'messages' => [
                     [
@@ -138,8 +147,17 @@ try {
         return null;
     }
 
+    // function to find matches for lost items
     function findMatchesForLostItems($pdo, $specificItemId = null) {
         debug_log("Starting findMatchesForLostItems", ['specificItemId' => $specificItemId]);
+        
+
+        // weights for traditional matching
+        // type is the most important, followed by color, brand, and date
+        // logic behind this:
+        // 1. type is the most important because it's the most unique identifier
+        // 2. color and brand is the next most important because it's a common identifier
+        // 3. date is the least important because it's not always accurate (you might not know the exact time)
         
         try {
             $weights = [
@@ -151,6 +169,7 @@ try {
             
             $newMatches = [];
 
+            // query to get all lost items
             $query = $specificItemId 
                 ? "SELECT * FROM lost_items WHERE status = 'lost' AND item_id = ?"
                 : "SELECT * FROM lost_items WHERE status = 'lost'";
@@ -162,6 +181,7 @@ try {
                 $stmt->execute();
             }
             
+            // get all lost items
             $lostItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
             debug_log("Found lost items", ['count' => count($lostItems)]);
 
@@ -170,6 +190,7 @@ try {
                 return [];
             }
 
+            // get all found items that are available
             foreach ($lostItems as $lostItem) {
                 debug_log("Processing lost item", [
                     'item_id' => $lostItem['item_id'],
@@ -183,6 +204,7 @@ try {
                     $checkStmt = $pdo->prepare("SELECT * FROM matches WHERE lost_item_id = ? AND found_item_id = ?");
                     $checkStmt->execute([$lostItem['item_id'], $foundItem['item_id']]);
                     
+                    // check if match already exists
                     if (!$checkStmt->fetch()) {
                         // Calculate traditional score
                         $typeScore = areWordsSimilar(
@@ -198,7 +220,8 @@ try {
                             strtolower($foundItem['color'])
                         );
                         $dateScore = (strtotime($lostItem['lost_time']) >= strtotime($foundItem['found_time'])) ? 0 : 1;
-
+                        
+                        //Calculate traditional score
                         $traditionalScore = 
                             $weights['type'] * $typeScore +
                             $weights['color'] * $colorScore +
@@ -221,6 +244,7 @@ try {
                             'final_score' => $similarityScore
                         ]);
 
+                        // if similarity score is greater than 0.5, create a match
                         if ($similarityScore >= 0.5) {
                             try {
                                 $insertStmt = $pdo->prepare("

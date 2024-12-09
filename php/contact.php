@@ -5,10 +5,14 @@ require_once '../vendor/autoload.php';
 $statusMsg = '';
 $statusClass = '';
 
+// sends email to finderitws@gmail.com
+// basically works by sending email to itself
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
     $dotenv->load();
 
+    // swiftmailer setup to send email
     try {
         $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
             ->setUsername($_ENV['SMTP_USER'])
@@ -19,7 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST['full_name'];
         $emailFrom = $_POST['email'];
         $userMessage = $_POST['message'];
-
+        
+        // email message setup with the user's input
         $message = (new Swift_Message('New Contact Form Message'))
             ->setFrom([$_ENV['SMTP_USER'] => 'Finder Contact Form'])
             ->setReplyTo([$emailFrom => $name])
@@ -36,7 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 '</html>',
                 'text/html'
             );
-
+        
+        // sends the email and sets the status message
         $result = $mailer->send($message);
         if ($result) {
             $statusMsg = "Thank you! Your message has been sent successfully.";
