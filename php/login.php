@@ -7,6 +7,11 @@ require_once '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+
 function sendVerificationEmail($email, $token) {
     $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
         ->setUsername($_ENV['SMTP_USER'])
