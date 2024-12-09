@@ -11,66 +11,7 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['is_recorder']) {
 
 require_once '../db/db_connect.php';
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     // Validate and sanitize input
-//     $item_type = trim(filter_var($_POST['type'], FILTER_SANITIZE_STRING));
-//     $brand = trim(filter_var($_POST['brand'], FILTER_SANITIZE_STRING));
-//     $color = trim(filter_var($_POST['color'], FILTER_SANITIZE_STRING));
-//     $additional_info = trim(filter_var($_POST['addInfo'], FILTER_SANITIZE_STRING));
-//     $found_time = $_POST['date'];
-//     $locations = $_POST['locations'] ?? [];
 
-//     $errors = [];
-
-//     // Validate required fields -
-//     if (empty($item_type)) $errors[] = "Item type is required";
-//     if (empty($brand)) $errors[] = "Brand is required";
-//     if (empty($color)) $errors[] = "Color is required";
-//     if (empty($additional_info)) $errors[] = "Additional information is required";
-//     if (empty($found_time)) $errors[] = "Found time is required";
-//     if (empty($locations)) $errors[] = "At least one location must be selected";
-
-//     if (empty($errors)) {
-//         try {
-//             $pdo->beginTransaction();
-            
-//             // Insert into found_items
-//             $stmt = $pdo->prepare("INSERT INTO found_items (item_type, brand, color, additional_info, found_time, recorder_id) 
-//                                 VALUES (?, ?, ?, ?, ?, ?)");
-//             $stmt->execute([$item_type, $brand, $color, $additional_info, $found_time, $_SESSION['user_id']]);
-            
-//             $item_id = $pdo->lastInsertId();
-            
-//             //inserts locs
-//             if (!empty($locations)) {
-//                 $stmt = $pdo->prepare("INSERT INTO item_locations (item_id, item_type, location) VALUES (?, 'found', ?)");
-//                 foreach ($locations as $location) {
-//                     $stmt->execute([$item_id, $location]);
-//                 }
-//             }
-            
-//             // if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-//             //     $image = $_FILES['image'];
-//             //     $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
-                
-//             //     if (in_array($image['type'], $allowed_types)) {
-//             //         // CLOUDINARY LOGIC SOON
-//             //     }
-//             // }
-            
-//             $pdo->commit();
-//             $_SESSION['success'] = "Item successfully recorded!";
-//             header("Location: dashboard.php");
-//             exit();
-            
-//         } catch (PDOException $e) {
-//             $pdo->rollBack();
-//             $error = "Database error: " . $e->getMessage();
-//         }
-//     } else {
-//         $error = implode("<br>", $errors);
-//     }
-// }
 
 // Fetch locations from database
 $stmt = $pdo->query("SELECT * FROM locations ORDER BY category, name");

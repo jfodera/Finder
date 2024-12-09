@@ -25,8 +25,9 @@ Important Notes:
    PhpMailer: 
       does not work when you are sending an email to yourself from XAMPP 
 
-Current State: 
-   Vendor is where all of our libraries are stored 
+Current: 
+   Working in CSS issue fix, see last commit in CSS-Issue-Fix Branch 
+   
 
 Notes for future: 
    Only really need one phpmyadmin for an entire server 
