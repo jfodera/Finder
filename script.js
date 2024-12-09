@@ -1,4 +1,3 @@
-// itemcard for the dashboard
 function createItemCard(item, type) {
   const dateField = type === "lost" ? "lost_time" : "found_time";
   const statusClass = item.status.toLowerCase().replace(" ", "-");
@@ -6,7 +5,6 @@ function createItemCard(item, type) {
   // Determine which field to show based on type
   // if type is lost, show reporter_name
   // if type is found, show recorder_name
-
   let creatorLine = "";
   if (type === "lost") {
     creatorLine = `<div><strong>Reported by:</strong> ${item.reporter_name || "N/A"}</div>`;
@@ -16,7 +14,13 @@ function createItemCard(item, type) {
 
   return `
         <div class="item-card ${statusClass}">
-            <img src="${item.image_url || "./../assets/placeholderImg.svg" }" alt="${item.item_type}" class="item-image">
+            <div class="item-image-container" style="width: 100%; height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img src="${item.image_url || "./../assets/placeholderImg.svg"}" 
+                     alt="${item.item_type}" 
+                     class="item-image"
+                     onclick="openImageModal('${item.image_url || "./../assets/placeholderImg.svg"}', '${item.item_type}')"
+                     style="cursor: pointer; width: 100%; height: 100%; object-fit: contain;">
+            </div>
 
             <div class="item-header">
                 <div class="item-type">${item.item_type}</div>
@@ -188,16 +192,19 @@ function createMatchFlow(matches) {
           <div class="connection-lines">
             ${matches
               .map(
-                (match) => `
-              <div class="connection" data-lost="${match.lost_item.item_id}" data-found="${match.found_item.item_id}">
-                <div class="line"></div>
-                <div class="match-status ${match.status}">${match.status}</div>
-                <div class="match-actions">
-                  <button onclick="handleMatch(${match.match_id}, 'confirm')" class="action-btn confirm">✓</button>
-                  <button onclick="handleMatch(${match.match_id}, 'reject')" class="action-btn reject">✗</button>
-                </div>
-              </div>
-            `
+                (match) => {
+                  const displayStatus = match.stat === 'confirmed' ? 'claimed' : match.stat;
+                  return `
+                    <div class="connection" data-lost="${match.lost_item.item_id}" data-found="${match.found_item.item_id}">
+                      <div class="line"></div>
+                      <div class="match-status ${displayStatus}">${displayStatus}</div>
+                      <div class="match-actions">
+                        <button onclick="handleMatch(${match.match_id}, 'confirm')" class="action-btn confirm">✓</button>
+                        <button onclick="handleMatch(${match.match_id}, 'reject')" class="action-btn reject">✗</button>
+                      </div>
+                    </div>
+                  `;
+                }
               )
               .join("")}
           </div>
