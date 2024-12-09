@@ -2,26 +2,19 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$imgHREF = (!$_SESSION['email'] ? '../index.php' : 'dashboard.php'); // directs to dashboard when logged in 
+$imgHREF = (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : $imgHREF); // directs to index otherwise (need to edit path to index when on index.php)
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <body>
 <header class="global-header transparent">
     <div class="header-content">
-        <!-- Uses php for the source so that this header can be used on multiple pages -->
-         <!-- directly acter questionmark is if evaluates to true, after colon is false -->
-        <!-- <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
-            <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo.svg' : '../assets/logo.svg'); ?>" alt="Finder Logo">
-        </a> -->
-        
         <div class="hamburger" id="hamburger">
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
-
-        <!-- Fin -->
-            <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>" style="">
-                <!-- so logo is white on homepage -->
+            <a id="logoLin" href="<?php echo ($imgHREF); ?>">
                 <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo_offwhite.svg' : '../assets/logo.svg'); ?> " alt="Finder Logo">
             </a>
             <ul>

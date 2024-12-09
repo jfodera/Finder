@@ -211,6 +211,12 @@ html {
   height: 40px;
   width: auto;
 }
+#logoLin {
+  transition: .5s;
+}
+#logoLin:hover {
+  scale: 1.1;
+}
 
 .hamburger {
   display: none; /* Hidden by default */
@@ -1213,7 +1219,8 @@ textarea:-webkit-autofill:focus {
   padding: 20px;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  justify-content: center;
 }
 
 .potential-matches .user-match-card {
