@@ -257,7 +257,6 @@ function createUserMatchCard(match) {
             <p>Status: ${match.status}</p>
           </div>
         </div>
-          match.status === "pending"
       </div>
     `;
 }
