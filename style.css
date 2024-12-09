@@ -211,6 +211,12 @@ html {
   height: 40px;
   width: auto;
 }
+#logoLin {
+  transition: .5s;
+}
+#logoLin:hover {
+  scale: 1.1;
+}
 
 .hamburger {
   display: none; /* Hidden by default */

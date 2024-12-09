@@ -2,6 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$imgHREF = (!$_SESSION['email'] ? '../index.php' : 'dashboard.php'); // directs to dashboard when logged in 
+$imgHREF = (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : $imgHREF); // directs to index otherwise (need to edit path to index when on index.php)
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
             &#9776;
         </div>
         <nav id="nav-menu" class="nav-menu">
-            <a id="logoLin" href="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'index.php' : '../index.php'); ?>">
+            <a id="logoLin" href="<?php echo ($imgHREF); ?>">
                 <img class="logo-image" src="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'assets/logo_offwhite.svg' : '../assets/logo.svg'); ?> " alt="Finder Logo">
             </a>
             <ul>
