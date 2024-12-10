@@ -32,7 +32,6 @@ foreach ($locations as $location) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Recorder Item Info</title>
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../css/info.css">
 </head>
 
 <body>
