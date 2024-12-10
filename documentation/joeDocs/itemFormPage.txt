@@ -1,0 +1,83 @@
+Task: 
+Make Item Form PAge -> front end looking nice, Understand how to link that to the sql database setup -> use ITWS lab
+   Connect form to DB 
+
+
+
+Summary: 
+
+
+
+
+Plan: 
+
+   Going to have field for: 
+
+      user: 
+         Type -> item_type (varchar for no but will change) -> predefined
+         Color -> color 
+         brand -> brand
+         Additional info -> description 
+         Location Lost -> location (varchar for now but will change) -> predefined, convert 
+         When did you lose it -> lost_time
+
+         Image -> *no box for that yet*
+
+      recorder: 
+
+         Type -> item_type (varchar for no but will change) -> predefined
+         Color -> color 
+         brand -> brand
+         Additional info -> description 
+         Location Lost -> location (varchar for now but will change) -> predefined, convert 
+         When was it found -> found_time
+
+         Image -> *no box for that yet*
+
+
+
+
+Before submit checklist: 
+
+
+
+Questions: 
+
+
+
+Outline: 
+
+
+
+Debug: 
+
+
+
+Things I learned: 
+   .form-container h2 {
+      margin-bottom: 20px;
+   }
+      Any element within class 'form-container' with the name h2 will have this 
+
+
+
+
+Any challenges I came across: 
+
+Citations:
+   Char limits: 
+      https://www.geeksforgeeks.org/how-to-specify-minimum-maximum-number-of-characters-allowed-in-an-input-field-in-html/
+
+
+
+
+Current:
+   Going through and appending form pages , on where did you loose item_type √
+   update found_item_form accordingly √
+
+
+Helpful Code Chunks: 
+
+
+
+

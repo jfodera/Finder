@@ -1,4 +1,0 @@
-Good feature to have in the future. 
-The goal would be that every time a match is calculated, the list of people who made the lost items request will be notified via email. 
-Main error ran into was in matching.php as $newMatches was empty when it wasn't supposed to be, can try to debug if have time and figure it out but not
-looking likely 

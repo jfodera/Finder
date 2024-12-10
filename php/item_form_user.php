@@ -35,7 +35,6 @@ foreach ($locations as $location) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Finder - Report Lost Item</title>
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../css/info.css">
 </head>
 
 <body>

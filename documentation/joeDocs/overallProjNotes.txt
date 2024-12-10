@@ -1,0 +1,86 @@
+Important Notes: 
+   Vendor is the Library folder holding all of the libraries that we are using for the project
+
+   Database: 
+      One in XAMPP Testing and one for our actual group server. Load in the db.sql for Xampp testing, 
+
+      When developing, just use .env variables, if our group server database is the same as our xampp database then all of the code should work
+      perfect and the only thing you would need to change when switching between the 2 is the .env files (for the mysqli calls) 
+         in order to do so on our group server, you would use nano 
+
+      .env for xampp (already set up in github rn ):
+      DB_HOST=localhost
+      DB_NAME=finder_db
+      DB_USER=root
+      DB_PASS=''
+      
+      using cloudinary to manage our images 
+         reasoning is because we don't want our db to be too heavy. 
+         putting images directly into it will slow it down significantly 
+
+   Normal users without a recorder passkey can only make lost item requests
+   In order for a lost item to be added to the database, a user must find it, they can click on a report lost item button and it will give them 
+      instructions to bring it to the neareast apo office. Once it gets there, a recorder can add it to the database
+
+   PhpMailer: 
+      does not work when you are sending an email to yourself from XAMPP 
+
+Current: 
+   Working in CSS issue fix, see last commit in CSS-Issue-Fix Branch 
+   
+
+Notes for future: 
+   Only really need one phpmyadmin for an entire server 
+
+Takeaways from presentation: 
+   prebuilt location categories
+   prebuilt item type categories
+   maybe defining feature
+   
+
+XAMMP Notes: 
+   Literally just a live webserver good for development that running locally off my computer, no pulling needed. 
+   made an Alias of htDocs and that is where my repo is going to live for now 
+   Auto updated testing through XAMPP: http://localhost/ITWS-2110-F24-Find-er/
+   Link to our DB 
+
+
+Preface for Midterm Presentation: 
+   "before we get started with the demo, we just wanted to preface you with some areas in which we are specifically looking for feedback: 
+      we are going to go over some lost item submission forms, We'd love to know if you think theres anything we should also add. 
+      We have a home dashboard so our user has easy acsess to all of there actions, We'd love some constructive critisism on the layout. 
+      Also any comments on the layout of the form submissions would be appreciated
+
+Midterm Takeaways: 
+   When trying to match an item, It should respond with either "FOUND" or "not found yet, will notify you if anything enters the database 
+   matching this description" 
+
+to do: 
+   Make Item Form PAge -> front end looking nice, √
+   familiar with entire site operations √
+   predefined tags -> put char limits on html's √
+   Go through opps for improvement on lab6
+   learn cloudinary 
+   Found items form functionality to the DB
+   connect to xampp database and get .env's working
+      Just note:    PhpMailer: 
+      does not work when you are sending an email to yourself from XAMPP  
+ 
+
+Questions: 
+   how did you block users from just messing with the title, in order to get to the next page
+
+
+Quiz 2 notes: 
+   Security things we added: 
+
+      To stop people that are not logged in to getting to pages they are not supposed to, 
+      we stored the user_id and related information in session variables, along with wether 
+      they are a recorder or a user. 
+      if (!isset($_SESSION['user_id'])) {
+         header("Location: login.php");
+         exit();
+      }
+
+Optimizations: 
+   Put Javascript file at the bottom of the HTML to help the page run faster
