@@ -1,31 +1,15 @@
-<?php
-declare(strict_types=1);
-
-// Security headers
-header("X-Content-Type-Options: nosniff");
-header("X-Frame-Options: DENY");
-header("X-XSS-Protection: 1; mode=block");
-header("Content-Security-Policy: default-src 'self'");
-
+<?php 
 session_start();
+$headerPath = realpath(__DIR__ . '/header.php');
+if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DOCUMENT_ROOT']))) {
+    die('Invalid header path');
+}
+include $headerPath;
+require_once '../db/db_connect.php';
 
-// Use absolute paths for includes
-$headerPath = __DIR__ . '/header.php';
-require_once $headerPath;
-require_once __DIR__ . '/../db/db_connect.php';
 
 //verification email functionality
 function sendVerificationEmail($email, $token) {
-    // Validate email and token before processing
-    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        throw new Exception('Invalid email format');
-    }
-    
-    if (!preg_match('/^[a-f0-9]{64}$/i', $token)) {
-        throw new Exception('Invalid token format');
-    }
-
     //last arg is encryption protocol
     $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
         ->setUsername($_ENV['SMTP_USER'])
@@ -33,48 +17,23 @@ function sendVerificationEmail($email, $token) {
 
     $mailer = new Swift_Mailer($transport);
 
-    // Validate domain
-    $domain = '';
-    if (isset($_SERVER['HTTP_HOST']) && preg_match('/^[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}$/', $_SERVER['HTTP_HOST'])) {
-        $domain = $_SERVER['HTTP_HOST'];
-    } else {
-        $domain = 'yourdomain.com';
-    }
-    
+    $domain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'yourdomain.com';
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     
-    // makes the link to send to our emails with proper encoding
-    $verificationLink = sprintf(
-        '%s%s/%s/php/verify_email.php?email=%s&token=%s',
-        $protocol,
-        htmlspecialchars($domain),
-        $_ENV['URL'],
-        urlencode($email),
-        urlencode($token)
-    );
-
-    // Secure HTML template
-    $emailTemplate = <<<EOT
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify your Finder account</title>
-</head>
-<body>
-    <h1>Welcome to Finder!</h1>
-    <p>Please click the link below to verify your account:</p>
-    <p><a href="%s">Verify Account</a></p>
-</body>
-</html>
-EOT;
+    // makes the link to send to our emails
+    $verificationLink = $protocol . $domain . "/" . $_ENV['URL'] . "/php/verify_email.php?email=" . urlencode($email) . "&token=" . $token;
 
     $message = (new Swift_Message('Verify your Finder account'))
         ->setFrom([$_ENV['SMTP_USER'] => 'Finder'])
         ->setTo([$email])
         ->setBody(
-            sprintf($emailTemplate, htmlspecialchars($verificationLink)),
+            '<html>' .
+            '<body>' .
+            '<h1>Welcome to Finder!</h1>' .
+            '<p>Please click the link below to verify your account:</p>' .
+            '<p><a href="' . $verificationLink . '">Verify Account</a></p>' .
+            '</body>' .
+            '</html>',
             'text/html'
         );
 
@@ -82,30 +41,24 @@ EOT;
         $result = $mailer->send($message);
         return true;
     } catch (Exception $e) {
-        $_SESSION['error'] = "Failed to send verification email: " . htmlspecialchars($e->getMessage());
+        $_SESSION['error'] ="Failed to send verification email: " . $e->getMessage();
         header("Location: user_register.php");
         return false;
     }
 }
 
+
+
 //Form submission for recorder
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Enhanced input validation
-    $full_name = trim(filter_var($_POST['full_name'] ?? '', FILTER_SANITIZE_STRING));
-    $email = trim(filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL));
-    $password = $_POST['password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
-    $code = trim($_POST['code'] ?? '');
+    $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $code = $_POST['code'];
     
     if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password) || empty($code)) {
         $_SESSION['error'] = "All fields are required";
-        header("Location: recorder_register.php");
-        exit();
-    }
-
-    // Additional validation
-    if (strlen($full_name) < 2 || strlen($full_name) > 100) {
-        $_SESSION['error'] = "Name must be between 2 and 100 characters";
         header("Location: recorder_register.php");
         exit();
     }
@@ -144,6 +97,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: recorder_register.php");
             exit();
         }
+        
+
+        
 
         // Insert new user, making multiple sql statement so put in commit block
         $pdo->beginTransaction();
@@ -166,21 +122,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $pdo->commit();
 
-        //send verif email
+        //send verif email 
+
         sendVerificationEmail($email, $verification_token);
 
-        //creates form with submit button hidden, appears as a link and sets $_POST['resend_verification'] to 1
-        $_SESSION['mess'] = sprintf(
-            "Verification Email Sent! Must verify before logging in!
-            <form method='post' style='display:inline;'>
-                <input type='hidden' name='email' value='%s'>
-                <input type='hidden' name='resend_verification' value='1'>
-                <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
-                    Resend verification email
-                </button>
-            </form>",
-            htmlspecialchars($email)
-        );
+        //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
+        $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
+        <form method='post' style='display:inline;'>
+            <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>
+            <input type='hidden' name='password' value='" . htmlspecialchars($password) . "'>
+            <input type='hidden' name='resend_verification' value='1'>
+            <button type='submit' style='background:none;border:none;color:white;text-decoration:underline;cursor:pointer;'>
+                Resend verification email
+            </button>
+        </form>";
         
         header("Location: login.php");
         exit();
@@ -189,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($pdo->inTransaction()) {
             $pdo->rollBack(); //sql insertion failed
         }
-        $_SESSION['error'] = "Database error: " . htmlspecialchars($e->getMessage());
+        $_SESSION['error'] = "Database error: " . $e->getMessage();
         header("Location: recorder_register.php");
         exit();
     }
@@ -198,6 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -205,13 +161,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Finder - Recorder Register</title>
     <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
     <div class="container login-register">
         <div class="form-container">
             <h2>Register</h2>
             <?php
             if (isset($_SESSION['error'])) {
-                echo '<div class="error">' . htmlspecialchars($_SESSION['error']) . '</div>';
+                echo '<div class="error">' . $_SESSION['error'] . '</div>';
                 unset($_SESSION['error']);
             }
             ?>
@@ -230,4 +187,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <script src="../script.js"></script>
 </body>
+
 </html>
