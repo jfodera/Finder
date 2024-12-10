@@ -7,7 +7,6 @@ if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DO
 include $headerPath;
 require_once '../db/db_connect.php';
 
-
 //verification email functionality
 function sendVerificationEmail($email, $token) {
     //last arg is encryption protocol
@@ -47,12 +46,20 @@ function sendVerificationEmail($email, $token) {
     }
 }
 
-
-
 //Form submission for recorder
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
+    
+    // Sanitize email input
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Invalid email format";
+        header("Location: recorder_register.php");
+        exit();
+    }
+
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $code = $_POST['code'];
@@ -97,9 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: recorder_register.php");
             exit();
         }
-        
-
-        
 
         // Insert new user, making multiple sql statement so put in commit block
         $pdo->beginTransaction();
@@ -123,7 +127,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->commit();
 
         //send verif email 
-
         sendVerificationEmail($email, $verification_token);
 
         //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
