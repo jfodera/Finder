@@ -1,4 +1,0 @@
-Work on Front End styling 
-   - Derek and copper discuss about styling dashboard.php
-
-Work on the searching algorithm 

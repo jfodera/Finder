@@ -6,6 +6,8 @@ Final:
    Comment as much as possible
    Put slideshow into repo 
    Readme instructions 
+   Kanban Boards are up to date and good 
+   
 
 
 Demo Order: 
