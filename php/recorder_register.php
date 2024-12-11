@@ -71,15 +71,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Sanitize and validate password
-    $password = trim($_POST['password']);
-    if (empty($password) || strlen($password) < 8) { // Example: minimum length of 8
-        $_SESSION['error'] = "Password must be at least 8 characters long";
+    $password = filter_var(trim($_POST['password']), FILTER_SANITIZE_STRING);
+    if (empty($password) || strlen($password) < 8 || 
+        !preg_match('/[A-Z]/', $password) || // At least one uppercase letter
+        !preg_match('/[a-z]/', $password) || // At least one lowercase letter
+        !preg_match('/[0-9]/', $password) || // At least one digit
+        !preg_match('/[\W_]/', $password)) { // At least one special character
+        $_SESSION['error'] = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.";
         header("Location: recorder_register.php");
         exit();
     }
 
     // Sanitize and validate confirm password
-    $confirm_password = trim($_POST['confirm_password']);
+    $confirm_password = filter_var(trim($_POST['confirm_password']), FILTER_SANITIZE_STRING);
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match";
         header("Location: recorder_register.php");
