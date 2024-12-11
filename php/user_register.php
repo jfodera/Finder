@@ -2,14 +2,18 @@
 // new session when go to this page 
 session_start();
 
-// SECURE VERSION: Using absolute path resolution with directory traversal protection
-$headerPath = realpath(dirname(__DIR__) . '/php/header.php');
-if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DOCUMENT_ROOT']))) {
-    die('Header file not found');
+$baseDir = dirname(__DIR__); 
+$headerPath = $baseDir . '/php/header.php'; 
+$realHeaderPath = realpath($headerPath); 
+
+if ($realHeaderPath === false || !is_file($realHeaderPath) || 
+    strpos($realHeaderPath, realpath($baseDir)) !== 0) {
+    die('Invalid header path');
 }
-include $headerPath;
-require_once '../db/db_connect.php';
-require_once '../vendor/autoload.php';
+
+require_once $realHeaderPath; 
+require_once $baseDir . '/db/db_connect.php';
+require_once $baseDir . '/vendor/autoload.php';
 
 /* 
 
