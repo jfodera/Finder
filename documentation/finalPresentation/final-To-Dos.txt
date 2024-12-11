@@ -1,13 +1,17 @@
 Final: 
    Add in future additions √
-   Insert Zap
-   Organize Repo
-   Cite Repo 
-   Comment as much as possible
-   Put slideshow into repo 
-   Readme instructions 
-   Kanban Boards are up to date and good 
+   Insert Zap √
+   Organize Repo √
+   validate pages √
+   Kanban Boards are up to date and good √
+   Readme instructions √
+   Cite Repo √
+   Comment as much as possible √
+   Put slideshow into repo √ 
    
+
+   
+
 
 
 Demo Order: 
