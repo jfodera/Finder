@@ -1,24 +1,21 @@
-
 <?php 
-//new session when go to this page 
+// new session when go to this page 
 session_start();
 
 // SECURE VERSION: Using absolute path resolution with directory traversal protection
-$headerPath = dirname(__DIR__) . '/php/header.php';
-if (!file_exists($headerPath)) {
+$headerPath = realpath(dirname(__DIR__) . '/php/header.php');
+if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DOCUMENT_ROOT']))) {
     die('Header file not found');
 }
-require_once $headerPath;
+include $headerPath;
 require_once '../db/db_connect.php';
 require_once '../vendor/autoload.php';
-
 
 /* 
 
 Thought process:
 only users should need to verify their emails to confirm they go to RPI as the recorders technically
 don't need verification because we give them a unique recorder code
-
 
 How it works:
 the sendVerificationEmail sends email when u register and when you click on the link it auto verifies email
@@ -28,7 +25,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 function sendVerificationEmail($email, $token) {
-    //last arg is encryption protocol
+    // last arg is encryption protocol
     $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], 'tls'))
         ->setUsername($_ENV['SMTP_USER'])
         ->setPassword($_ENV['SMTP_PASS']); 
@@ -66,25 +63,32 @@ function sendVerificationEmail($email, $token) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    
-    if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password)) {
-        $_SESSION['error'] = "All fields are required";
+    // Sanitize and validate full name
+    $full_name = filter_var(trim($_POST['full_name']), FILTER_SANITIZE_STRING);
+    if (empty($full_name)) {
+        $_SESSION['error'] = "Full name is required";
         header("Location: user_register.php");
         exit();
     }
 
-    // Only RPI users with a @rpi.edu email can register
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
-        $_SESSION['error'] = "Email must be an @rpi.edu address";
+    // Sanitize and validate email input
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Invalid email format";
         header("Location: user_register.php");
         exit();
     }
-        
 
+    // Sanitize and validate password
+    $password = trim($_POST['password']);
+    if (empty($password) || strlen($password) < 8) { // Example: minimum length of 8
+        $_SESSION['error'] = "Password must be at least 8 characters long";
+        header("Location: user_register.php");
+        exit();
+    }
+
+    // Sanitize and validate confirm password
+    $confirm_password = trim($_POST['confirm_password']);
     if ($password !== $confirm_password) {
         $_SESSION['error'] = "Passwords do not match";
         header("Location: user_register.php");
@@ -92,6 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     try {
+        // Check if email already exists
         $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
@@ -102,9 +107,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $verification_token = bin2hex(random_bytes(32));
         
-        //encrypts so cannot be seen in database 
+        // Encrypt password
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
+        // Split full name into first and last name
         $name_parts = explode(" ", $full_name, 2);
         $first_name = $name_parts[0];
         $last_name = isset($name_parts[1]) ? $name_parts[1] : "";
@@ -114,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         sendVerificationEmail($email, $verification_token);
 
-        //creates form with submit button hiden, appears as a link and sets $_POST['resend_verification'] to 1
+        // Creates form with submit button hidden, appears as a link and sets $_POST['resend_verification'] to 1
         $_SESSION['mess'] = "Verification Email Sent! Must verify before logging in!
         <form method='post' style='display:inline;'>
             <input type='hidden' name='email' value='" . htmlspecialchars($email) . "'>

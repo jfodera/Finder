@@ -1,10 +1,10 @@
 <?php 
 session_start();
-$headerPath = dirname(__DIR__) . '/php/header.php';
-if (!file_exists($headerPath)) {
-    die('Header file not found');
+$headerPath = realpath(__DIR__ . '/header.php');
+if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DOCUMENT_ROOT']))) {
+    die('Invalid header path');
 }
-require_once $headerPath;
+include $headerPath;
 require_once '../db/db_connect.php';
 
 //verification email functionality
@@ -48,38 +48,49 @@ function sendVerificationEmail($email, $token) {
 
 //Form submission for recorder
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $full_name = filter_var($_POST['full_name'], FILTER_SANITIZE_STRING);
-    
-    // Sanitize email input
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    
-    // Validate email format
+    // Sanitize and validate full name
+    $full_name = filter_var(trim($_POST['full_name']), FILTER_SANITIZE_STRING);
+    if (empty($full_name)) {
+        $_SESSION['error'] = "Full name is required";
+        header("Location: recorder_register.php");
+        exit();
+    }
+
+    // Sanitize and validate email input
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = "Invalid email format";
         header("Location: recorder_register.php");
         exit();
     }
 
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $code = $_POST['code'];
-    
-    if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password) || empty($code)) {
-        $_SESSION['error'] = "All fields are required";
+    // Sanitize and validate password
+    $password = trim($_POST['password']);
+    if (empty($password) || strlen($password) < 8) { // Example: minimum length of 8
+        $_SESSION['error'] = "Password must be at least 8 characters long";
         header("Location: recorder_register.php");
         exit();
     }
 
+    // Sanitize and validate confirm password
+    $confirm_password = trim($_POST['confirm_password']);
+    if ($password !== $confirm_password) {
+        $_SESSION['error'] = "Passwords do not match";
+        header("Location: recorder_register.php");
+        exit();
+    }
+
+    // Sanitize and validate recorder code
+    $code = filter_var(trim($_POST['code']), FILTER_SANITIZE_STRING);
+    if (empty($code)) {
+        $_SESSION['error'] = "Recorder code is required";
+        header("Location: recorder_register.php");
+        exit();
+    }
+    
     //only rpi users with a @rpi.edu email can register
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@rpi\.edu$/', $email)) {
         $_SESSION['error'] = "Email must be an @rpi.edu address";
-        header("Location: recorder_register.php");
-        exit();
-    }
-
-    //password confirm
-    if ($password !== $confirm_password) {
-        $_SESSION['error'] = "Passwords do not match";
         header("Location: recorder_register.php");
         exit();
     }
