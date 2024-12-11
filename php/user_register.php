@@ -2,19 +2,21 @@
 // new session when go to this page 
 session_start();
 
-$baseDir = dirname(__DIR__); 
-$headerPath = $baseDir . '/php/header.php'; 
-$realHeaderPath = realpath($headerPath); 
+$baseDir = realpath(__DIR__ . '/..');
+$headerPath = realpath($baseDir . '/php/header.php');
 
-if ($realHeaderPath === false || !is_file($realHeaderPath) || 
-    strpos($realHeaderPath, realpath($baseDir)) !== 0) {
+if ($headerPath === false || !is_file($headerPath)) {
     die('Invalid header path');
 }
 
-require_once $realHeaderPath; 
-require_once $baseDir . '/db/db_connect.php';
-require_once $baseDir . '/vendor/autoload.php';
+// Extra security: ensure the file is within our project directory
+if (strpos($headerPath, $baseDir) !== 0) {
+    die('Invalid file location');
+}
 
+require_once $headerPath;
+require_once realpath($baseDir . '/db/db_connect.php');
+require_once realpath($baseDir . '/vendor/autoload.php');
 /* 
 
 Thought process:
