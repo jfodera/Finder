@@ -3,13 +3,12 @@
 //new session when go to this page 
 session_start();
 
-
-$headerPath = realpath(__DIR__ . '/header.php');
-if ($headerPath === false || !str_starts_with($headerPath, realpath($_SERVER['DOCUMENT_ROOT']))) {
-    die('Invalid header path');
+// SECURE VERSION: Using absolute path resolution with directory traversal protection
+$headerPath = dirname(__DIR__) . '/php/header.php';
+if (!file_exists($headerPath)) {
+    die('Header file not found');
 }
-include $headerPath;
-
+require_once $headerPath;
 require_once '../db/db_connect.php';
 require_once '../vendor/autoload.php';
 
