@@ -1,15 +1,14 @@
 # Finder
 
-## Note to Grader: 
+## Note to User: 
+
+The Database the live version is connected to is a 'mock' DB. It is not filled with real lost/found items and is instead meant to be played with in order to undertand the functionality of the site. So feel free to add lost/found items or match them if you decide to log in as a recorder. 
 
 Link to site: https://finder.eastus.cloudapp.azure.com/finder
 
-In order to see the user and recorder views of the site, who has already entered some items, log in with the credientials below or make your own using our IAM system (use your RPI Email): 
+There are 2 different account types: 'users' and 'recorders'. Users can only subit lost items while recorders act as an admin (like public safety) that can creat matches and add found items. Log ins for each are below:
 
-User: 
-   email: foderj@rpi.edu 
-   password: pass
-
+```
 User (more lost items submitted): 
    email: kellyc9@rpi.edu
    password: password
@@ -17,6 +16,10 @@ User (more lost items submitted):
 Recorder (view matches and entire DB): 
    email: leed22@rpi.edu  
    password: password 
+```
+
+Note: We did implement an entire IAM with email verification setup and working. If you would like to test that out, feel free to make your own user account. 
+
 
 ## Summary of Project
 
