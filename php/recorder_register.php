@@ -4,6 +4,13 @@ session_start();
 $baseDir = realpath(__DIR__ . '/..');
 $headerPath = realpath($baseDir . '/php/header.php');
 
+
+// So can't if already logged in
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+
 if ($headerPath === false || !is_file($headerPath)) {
     die('Invalid header path');
 }

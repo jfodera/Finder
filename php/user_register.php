@@ -9,6 +9,12 @@ if ($headerPath === false || !is_file($headerPath)) {
     die('Invalid header path');
 }
 
+// So can't if already logged in
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+
 // Extra security: ensure the file is within our project directory
 if (strpos($headerPath, $baseDir) !== 0) {
     die('Invalid file location');

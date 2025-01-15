@@ -1,6 +1,6 @@
 <?php 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: php/dashboard.php");
     exit();
 }
 ?>
