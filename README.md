@@ -2,7 +2,7 @@
 
 ## Note to User: 
 
-There are 2 different account types: 'users' and 'recorders'. Users can only subit lost items while recorders act as an admin (like public safety) that can creat matches and add found items. Log ins for each are below:
+There are 2 different account types: 'users' and 'recorders'. Users can only subit lost items while recorders act as an admin (like public safety) that can create matches and add found items. Logins for each are below:
 
 The Database the live version is connected to is a 'mock' DB. It is not filled with real lost/found items and is instead meant to be played with in order to undertand the functionality of the site. So feel free to add lost/found items or match them when logged in as a recorder. 
 
