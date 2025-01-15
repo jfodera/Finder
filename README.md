@@ -9,7 +9,7 @@ The Database the live version is connected to is a 'mock' DB. It is not filled w
 Link to site: https://finder.eastus.cloudapp.azure.com/finder
 
 ```
-User (more lost items submitted): 
+User: 
    email: kellyc9@rpi.edu
    password: password
 
